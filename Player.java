@@ -113,8 +113,8 @@ public class Player implements Entity{
     +"\ntraversal boost: "+ this.item.getTraverseBoost()
     +"\n"
     +"\nPlayer: (effected by "+this.item.toString()+")"
-    +"\nHp: "+this.hp
-    +"\nArmor: "+this.armor
+    +"\nHp: "+this.hp+ "+("+this.item.getHpBoost()+")"
+    +"\nArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
     +"\n";
     } else{
       display += 
@@ -125,8 +125,8 @@ public class Player implements Entity{
     +"\nranged: "+ this.weapon.isRanged()
     +"\n"
     +"\nPlayer:"
-    +"\nHp: "+this.hp+ "+("+this.item.getHpBoost()+")"
-    +"\nArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
+    +"\nHp: "+this.hp
+    +"\nArmor: "+this.armor
     +"\n";
     }
 
