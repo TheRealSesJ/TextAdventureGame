@@ -1,6 +1,6 @@
 import GameObjects.Weapons.*;
 import GameObjects.Items.*;
-import StaticData.*;
+//import StaticData.*;
 import Interfaces.*;
 
 public class Player implements Entity{

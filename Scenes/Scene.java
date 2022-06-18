@@ -1,7 +1,7 @@
 package Scenes;
 import GameObjects.Enemies.*;
 import GameObjects.Items.*;
-import GameObjects.Weapons.*;
+//import GameObjects.Weapons.*;
 
 public class Scene {
 

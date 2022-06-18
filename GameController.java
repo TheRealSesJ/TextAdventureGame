@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import Scenes.*;
 import GameObjects.Enemies.*;
 import GameObjects.Items.*;
-import GameObjects.Weapons.*;
+//import GameObjects.Weapons.*;
 
 //prints to console, only object allowed to do so
 public class GameController{
