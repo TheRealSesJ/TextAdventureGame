@@ -16,21 +16,19 @@ Only this class and GameController are "allowed" to print to the console
 ### Normal Commands: 
 scan: gives the user information about what is in the current scene
 scan <x> <y>: gives the user information about what is in the scene at (x,y) relative to the player
-move <x> <y>: moves the player to the scene at (x,y) relative to the player
 interact <object>: gives the player information about the <enemy> or <item> in the current scene
 minimap: displays the minimap (does not use a turn)
 stats: displays the stats of the player (does not use a turn)
-help: displays this command list (does not use a turn)    
+help: displays this command list (does not use a turn) 
+end_game: pauses thread for 2 seconds then ends the game  
+
+
+### World Commands:
+move <x> <y>: moves the player to the scene at (x,y) relative to the player
 grab_item: equips the item in the current scene to the player, the player drops its old item
 
 ### Combat Commands:
 fight: takes a combat turn against the enemy
 run: attempts to flee the scene to a nearby scene
-scan: gives the user information about what is in the current scene
-scan <x> <y>: gives the user information about what is in the scene at (x,y) relative to the player
-interact <object>: gives the player information about the <enemy> or <item> in the current scene
-minimap: displays the minimap (does not use a turn)
-stats: displays the stats of the player (does not use a turn)
-help: displays this command list (does not use a turn)
     
 ### all coordinates are assumed to be Cartesian ordered pairs
