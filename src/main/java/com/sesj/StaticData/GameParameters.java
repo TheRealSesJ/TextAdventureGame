@@ -41,7 +41,7 @@ public class GameParameters{
   
       //wild beast
       public static Enemy newWildBeast(){
-        return new Enemy(25, new Claws(), 5, "Wild Beast +heheheha+");
+        return new Enemy(25, new Claws(), 5, "Wild Beast");
       }
     
       //witch
