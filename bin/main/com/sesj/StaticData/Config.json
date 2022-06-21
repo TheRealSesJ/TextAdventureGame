@@ -1,0 +1,10 @@
+{
+    "world":{
+        "row5":["forest","moutains","mountains","mountains","forest"],
+        "row4":["forest","moutains","mountains","desert","forest"],
+        "row3":["forest","forest","desert","desert","desert"],
+        "row2":["forest","lake","lake","desert","desert"],
+        "row1":["forest","lake","lake","desert","mountains"]
+    } 
+    
+}  
