@@ -82,6 +82,7 @@ public class Player implements Entity{
     } else {
 //return null if item never existed in the first place
       this.item = item;
+      this.weapon.effect(this.item);
       return null;
     }
   }
