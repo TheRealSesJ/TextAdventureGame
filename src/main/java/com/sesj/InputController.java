@@ -110,7 +110,7 @@ public class InputController{
       case "help": //always false
         return GameController.getHelp();
       case "end_game":
-        return GameController.endGame();
+        throw new InterruptedIOException();
       default:
         return false;
     }

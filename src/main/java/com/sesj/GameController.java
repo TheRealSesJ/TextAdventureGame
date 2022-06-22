@@ -2,7 +2,6 @@
 package com.sesj;
 
 import java.util.*;
-import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import com.sesj.Scenes.*;
 import com.sesj.StaticData.GameParameters;
@@ -298,10 +297,4 @@ public class GameController{
 
 
 
-
-
-//--------------end the game
-  public static boolean endGame() throws InterruptedIOException{
-    throw new InterruptedIOException();
-  }
 }
