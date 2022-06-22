@@ -28,7 +28,7 @@ public class InputController{
       
 //----------------------------take turn
       try{
-        while(!scanWorldInput(SCAN.nextLine(), player)){
+        while(!scanInput(SCAN.nextLine(), player, "world")){
           p.println("please enter an action");
         }
         p.println("\nNext turn:\n");
@@ -38,7 +38,7 @@ public class InputController{
           p.println("\nAn enemy approaches...\n");
           p.println(World.getLocation(player).getEnemy().getStats());
 
-          while(!scanCombatInput(SCAN.nextLine(), player)){
+          while(!scanInput(SCAN.nextLine(), player, "combat")){
           p.println("please enter an action");
           }
   
@@ -74,43 +74,30 @@ public class InputController{
     SCAN.nextLine();
   }
 
-
-  public static boolean scanWorldInput(String input, Player player) throws InterruptedIOException{
-    String[] inputArr = input.split(" ");
-    //normal inputs
-    if(scanInput(input, player)) return true;
-    //world inputs
-    switch(inputArr[0].toLowerCase()){
-      case "move":
-        return GameController.translate(inputArr, player);
-      case "grab_item":
-        return GameController.grabItem(player);
-      default:
-        return false;
-    }
-  }
-
-//input mappings for combat, works in similar fashion to main commands
-  public static boolean scanCombatInput(String input, Player player) throws InterruptedIOException{
-    String[] inputArr = input.split(" ");
-    //normal inputs
-    if(scanInput(input, player)) return true;
-    //combat inputs
-    switch(inputArr[0].toLowerCase()){
-      case "fight":
-        return GameController.combat(player);
-      case "run":
-        return GameController.run(player);
-      default:
-        return false;
-    }
-  }
-
-
   //input mappings for normal inputs, uses up one turn if a correct input is executed
   //methods here can return false in order to not advance the player turn, namely the help function
-  public static boolean scanInput(String input, Player player) throws InterruptedIOException{
+  public static boolean scanInput(String input, Player player, String type) throws InterruptedIOException{
     String[] inputArr = input.split(" ");
+    //check if world input
+    if(type.equals("world")){
+      switch(inputArr[0].toLowerCase()){
+        case "move":
+          return GameController.translate(inputArr, player);
+        case "grab_item":
+          return GameController.grabItem(player);
+        default:
+      }
+    //check if combat input
+    } else if (type.equals("combat")){
+      switch(inputArr[0].toLowerCase()){
+        case "fight":
+          return GameController.combat(player);
+        case "run":
+          return GameController.run(player);
+        default:
+      }
+    }
+    //readoff normal inputs
     switch(inputArr[0].toLowerCase()){
       case "scan":
         return GameController.scan(inputArr, player);
