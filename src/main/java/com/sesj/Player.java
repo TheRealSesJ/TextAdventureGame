@@ -4,7 +4,7 @@ import com.sesj.GameObjects.Weapons.*;
 import com.sesj.GameObjects.Items.*;
 import com.sesj.StaticData.*;
 import com.sesj.Interfaces.*;
-//import com.sesj.Scenes.*;
+import com.sesj.Exceptions.*;
 
 public class Player implements Entity{
   //world position
@@ -23,18 +23,21 @@ public class Player implements Entity{
 
   //takes into account the ammount of tiles the player is allowed to move, as well as whether or not the area being entered is traversible. *also takes item buffs into consideration*
   //illegal acess exception used for case where tile is not traversible
-  public boolean translate(int xTiles, int yTiles) throws IllegalAccessException, IndexOutOfBoundsException{
-    
-    if(!World.getLocation(this, xTiles, yTiles).isTraversible()){
-      if(this.item==null || !this.item.getTraverseBoost()){
-        throw new IllegalAccessException();
+  public boolean translate(int xTiles, int yTiles) throws NotTraversibleException, MovementOutOfRangeException, MovementOutOfBoundsException {
+    try{
+      if(!World.getLocation(this, xTiles, yTiles).isTraversible()){
+        if(this.item==null || !this.item.getTraverseBoost()){
+          throw new NotTraversibleException();
+        }
       }
+    //convert index out of bounds into movement out of bounds for specificity
+    }catch(IndexOutOfBoundsException e){
+      throw new MovementOutOfBoundsException();
     }
     if(move<Math.abs(xTiles) || move<Math.abs(yTiles)){
       if(this.item==null || (move+this.item.getMoveBoost()<Math.abs(xTiles) || move+this.item.getMoveBoost()<Math.abs(yTiles))){
-        throw new IndexOutOfBoundsException();
+        throw new MovementOutOfRangeException();
       }
-      
     }
     yPos+=yTiles;
     xPos+=xTiles;
@@ -101,6 +104,10 @@ public class Player implements Entity{
       return this.armor+this.item.getArmorBoost();
     }
     return this.armor;
+  }
+
+  public int getMovement(){
+    return this.move;
   }
 
   //returns the players stats as a string, intended to give the user information

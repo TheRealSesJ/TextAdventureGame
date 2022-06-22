@@ -60,11 +60,11 @@ public class Scene {
 
   public String getInfo(){
     String data = "";
-    try{ data += this.enemy.toString()+" "; } 
-    catch(NullPointerException e){ data += "no enemy ";}
-    try{ data += this.item.toString()+" "; } 
-    catch(NullPointerException e){ data += "no item ";}
-    return "Scene info: "+data+"inside "+ this.biome;
+    try{ data += this.enemy.getStats()+""; } 
+    catch(NullPointerException e){ data += "\nno enemy\n";}
+    try{ data += this.item.getStats()+""; } 
+    catch(NullPointerException e){ data += "\nno item\n";}
+    return this.biome+":\n"+data;
   }
 
   public boolean isEscapable(){

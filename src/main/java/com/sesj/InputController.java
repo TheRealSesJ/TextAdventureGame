@@ -3,6 +3,9 @@ package com.sesj;
 
 //import com.sesj.Scenes.*;
 import java.util.*;
+
+import com.sesj.Exceptions.*;
+
 import java.io.*;
 
 public class InputController{
@@ -29,7 +32,7 @@ public class InputController{
 //----------------------------take turn
       try{
         while(!scanInput(SCAN.nextLine(), player, "world")){
-          p.println("please enter an action");
+          p.println("\nplease enter an action\n");
         }
         p.println("\nNext turn:\n");
 
@@ -39,7 +42,7 @@ public class InputController{
           p.println(World.getLocation(player).getEnemy().getStats());
 
           while(!scanInput(SCAN.nextLine(), player, "combat")){
-          p.println("please enter an action");
+          p.println("\nplease enter an action\n");
           }
   
 //------check for game over condition
@@ -79,41 +82,65 @@ public class InputController{
   public static boolean scanInput(String input, Player player, String type) throws InterruptedIOException{
     String[] inputArr = input.split(" ");
     //check if world input
-    if(type.equals("world")){
-      switch(inputArr[0].toLowerCase()){
-        case "move":
-          return GameController.translate(inputArr, player);
-        case "grab_item":
-          return GameController.grabItem(player);
-        default:
+    try{
+      if(type.equals("world")){
+        switch(inputArr[0].toLowerCase()){
+          case "move":
+            return GameController.translate(inputArr, player);
+          case "grab_item":
+            return GameController.grabItem(player);
+          default:
+        }
+      //check if combat input
+      } else if (type.equals("combat")){
+        switch(inputArr[0].toLowerCase()){
+          case "fight":
+            return GameController.combat(player);
+          case "run":
+            return GameController.run(player);
+          default:
+        }
       }
-    //check if combat input
-    } else if (type.equals("combat")){
+      //readoff normal inputs
       switch(inputArr[0].toLowerCase()){
-        case "fight":
-          return GameController.combat(player);
-        case "run":
-          return GameController.run(player);
+        case "scan":
+          return GameController.scan(inputArr, player);
+        case "interact":
+          return GameController.interact(inputArr, player);
+        case "minimap": //always false
+          return GameController.displayMinimap(player);
+        case "stats": //always false
+          return GameController.displayStats(player);
+        case "help": //always false
+          return GameController.getHelp();
+        case "end_game":
+          throw new InterruptedIOException();
         default:
+          return false;
       }
+    } catch(IndexOutOfBoundsException e){
+      p.println(e.getMessage());
+      return false;
+    } catch(NumberFormatException e){
+      p.println("Coordinate undefined "+e.getMessage());
+      return false;
+    } catch(MovementOutOfBoundsException e){
+      p.println(e.getMessage());
+      return false;
+    } catch(MovementOutOfRangeException e){
+      p.println(e.getMessage());
+      return false;
+    } catch(NotTraversibleException e){
+      p.println(e.getMessage());
+      return false;
+    } catch(MissingParameterException e){
+      p.println(e.getMessage());
+      return false;
+    } catch(NullGameObjectException e){
+      p.println(e.getMessage());
+      return false;
     }
-    //readoff normal inputs
-    switch(inputArr[0].toLowerCase()){
-      case "scan":
-        return GameController.scan(inputArr, player);
-      case "interact":
-        return GameController.interact(inputArr, player);
-      case "minimap": //always false
-        return GameController.displayMinimap(player);
-      case "stats": //always false
-        return GameController.displayStats(player);
-      case "help": //always false
-        return GameController.getHelp();
-      case "end_game":
-        throw new InterruptedIOException();
-      default:
-        return false;
-    }
+    
   }
 
   

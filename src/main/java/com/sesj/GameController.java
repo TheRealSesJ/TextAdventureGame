@@ -1,12 +1,14 @@
 //this is static game code that *is* player initiated
 package com.sesj;
 
-import java.util.*;
 import java.io.PrintStream;
-import com.sesj.Scenes.*;
-import com.sesj.StaticData.GameParameters;
-import com.sesj.GameObjects.Enemies.*;
-import com.sesj.GameObjects.Items.*;
+import java.util.ArrayList;
+import java.util.Random;
+
+import com.sesj.Exceptions.*;
+import com.sesj.GameObjects.Enemies.Enemy;
+import com.sesj.GameObjects.Items.Item;
+import com.sesj.Scenes.Scene;
 
 //prints to console, only object allowed to do so
 public class GameController{
@@ -17,30 +19,39 @@ public class GameController{
   
 //maps from scanInput()
   
-  public static boolean scan(String[] input, Player player){
-    if(input.length<3){
-      p.println(World.getLocation(player).getInfo());
-    } else {
-      try{
-        Integer.parseInt(input[1]);
-        Integer.parseInt(input[2]);
-      } catch(NumberFormatException e){
-        p.println("provide integers in fields 2 and 3");
-        return false;
+  public static boolean scan(String[] input, Player player) throws MissingParameterException, NumberFormatException,
+  MovementOutOfRangeException, MovementOutOfBoundsException{
+      if(input.length==1){
+        p.println(World.getLocation(player).getInfo());
+      } else {
+//make sure scan is less than player move capabilities
+          if(Math.abs(Integer.parseInt(input[1]))>player.getMovement() || Math.abs(Integer.parseInt(input[2]))>player.getMovement()){
+            throw new MovementOutOfRangeException();
+          }
+//look for missing input parameters throw exception 
+          try{input[2].equals("");}
+          catch (IndexOutOfBoundsException e){
+            throw new MissingParameterException();
+          }
+//look for missing index in world array throw exception
+          try{
+            p.println(World.getLocation(player, Integer.parseInt(input[1]), Integer.parseInt(input[2])).getInfo()); 
+          } catch(IndexOutOfBoundsException e){
+            throw new MovementOutOfBoundsException();
+          }
+          
       } 
-      try{
-        if(Integer.parseInt(input[1])>GameParameters.playerMovement || Integer.parseInt(input[2])>GameParameters.playerMovement){
-          throw new IndexOutOfBoundsException();
-        }
-        p.println(World.getLocation(player, Integer.parseInt(input[1]), Integer.parseInt(input[2])).getInfo()); 
-      }
-      catch (IndexOutOfBoundsException e){
-      p.println("invalid input, out of bounds");
-      return false;
-      }
-    }
     return true;
   }
+
+
+
+
+
+//planning to remove------------------------------------
+//-----------------------------------------------------
+
+
 
   public static boolean interact(String[] input, Player player){
     if(input.length<2){
@@ -66,25 +77,21 @@ public class GameController{
     return true;   
   }
 
-  public static boolean translate(String[] input, Player player){
-    if(input.length<3){
-      p.println("invalid input, make sure all fields are specified");
-      return false;
-    }
+
+
+
+//planning to remove------------------------------------
+//-----------------------------------------------------
+
+
+
+  public static boolean translate(String[] input, Player player) throws NumberFormatException, 
+  NotTraversibleException, MovementOutOfRangeException, MovementOutOfBoundsException, MissingParameterException{
+  //convert IndexOutOfBounds into MissingParameterException 
     try{
-      Integer.parseInt(input[1]);
-      Integer.parseInt(input[2]);
-    } catch(NumberFormatException e){
-      p.println("provide integers in fields 2 and 3");
-      return false;
-    } 
-    try{player.translate(Integer.parseInt(input[1]), Integer.parseInt(input[2]));}
-    catch(IllegalAccessException e){
-      p.println("You cannot go there yet");
-      return false; 
+      player.translate(Integer.parseInt(input[1]), Integer.parseInt(input[2]));
     } catch(IndexOutOfBoundsException e){
-      p.println("invalid input, out of bounds");
-      return false;
+      throw new MissingParameterException();
     }
     
     displayMinimap(player);
@@ -92,30 +99,28 @@ public class GameController{
     return true;
   }
 
-  //displays the players stats to the screen 
-  //always returns false so turn does not pass
+//displays the players stats to the screen 
+//always returns false so turn does not pass
   public static boolean displayStats(Player player){
     p.println(player.getStats());
     return false;
   }
   
-  public static boolean grabItem(Player player){
+  public static boolean grabItem(Player player) throws NullGameObjectException{
     Scene scene = World.getLocation(player);
-    if(scene.getItem()==null){
-      p.println("there is no item here");
-      return false; 
-    }
-    if(player.getItem()!=null){
+    try{
       Item old = player.equip(scene.getItem());
       scene.setItem(old);
       p.println("you grabbed "+player.getItem().toString());
       p.println(""+old.toString()+" was dropped");
+      player.equip(scene.getItem());
+      p.println("you grabbed "+player.getItem().toString());
+      scene.setItem(null);
       return true;
+    } catch(NullPointerException e){
+      throw new NullGameObjectException();
     }
-    player.equip(scene.getItem());
-    p.println("you grabbed "+player.getItem().toString());
-    scene.setItem(null);
-    return true;
+    
   }
 
 
@@ -151,7 +156,8 @@ public class GameController{
     return true;
   }
 
-  public static boolean run(Player player){
+  public static boolean run(Player player) throws NumberFormatException, 
+  NotTraversibleException, MovementOutOfRangeException, MovementOutOfBoundsException, MissingParameterException{
     Scene scene = World.getLocation(player);
     //get a random moveable location and pass into translate
     int[] locs = getRandomMove(player);
@@ -251,8 +257,8 @@ public class GameController{
     for(int i=-1;i<2;i++){
       for(int j=-1;j<2;j++){
         try{
-          World.getLocation(player, i-1, j-1);
-          if(!(i==0 && j==0)){
+          Scene loc = World.getLocation(player, i, j);
+          if(!(i==0 && j==0) && loc.isTraversible()){
             int[] coords = {i,j};
             locations.add(coords);
           }
