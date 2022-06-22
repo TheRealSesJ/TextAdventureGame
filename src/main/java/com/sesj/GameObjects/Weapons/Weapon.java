@@ -9,13 +9,14 @@ public class Weapon {
   private int accuracy;
   private boolean ranged;
   
-  protected String name = "Indeterminant Enemy";
+  private String name;
   
-  public Weapon(int attack, int speed, int accuracy, boolean ranged){
+  public Weapon(int attack, int speed, int accuracy, boolean ranged, String name){
     this.attack = attack;
     this.speed = speed;
     this.accuracy = accuracy;
     this.ranged = ranged;
+    this.name=name;
   }
 
   public int getAttack(){
@@ -34,7 +35,7 @@ public class Weapon {
     return ranged;
   }
 
-  public String toString(){ return name; }
+  public String toString(){ return this.name; }
 
   public Weapon effect(Item item){
     this.attack+= item.getAttackBoost();

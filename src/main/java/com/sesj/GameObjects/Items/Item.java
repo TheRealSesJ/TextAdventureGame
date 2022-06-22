@@ -3,9 +3,6 @@
 package com.sesj.GameObjects.Items;
 
 public class Item{
-  //protected changeable attributes
-  private String name;
-  
   //weapon related
   private int attackBoost;
   private int speedBoost;
@@ -16,7 +13,9 @@ public class Item{
   private int moveBoost;
   private boolean traverseBoost;
   private int hpBoost;
-  private int armorBoost;  
+  private int armorBoost; 
+
+  private String name;
 
   public Item(int attack, int speed, int accuracy, boolean range, int movement, boolean traversal, int hp, int armor, String name){
     this.attackBoost=attack;
