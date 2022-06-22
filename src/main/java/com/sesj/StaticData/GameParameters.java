@@ -6,8 +6,15 @@ import com.sesj.GameObjects.Weapons.*;
 import com.sesj.Scenes.*;
 
 public class GameParameters{
-
+  //player stats
+    public static final Weapon playerWeapon = newSword();
+    
+    public static final int playerMovement = 1;
+    public static final int playerHp = 30;
+    public static final int playerArmor = 1;
   
+
+
   
   //World Map
     public static final Scene[] row4 = 
@@ -32,9 +39,19 @@ public class GameParameters{
 
   public static final Scene[][] world = {row0, row1, row2, row3, row4};
 
+  //procedural generation
 
+
+  //all enemies array
+  public static final Enemy[] enemies = {newWitch(), newWitch(), newWitch(), newWildBeast(), newWildBeast(), newWildBeast(), newWildBeast()};
+
+  //all items array
+    public static final Item[] items = {newHolySandals(), newHolySandals(), newPowerAmulet(), newPowerAmulet(), newChainmail()};
 
   
+
+
+
   //GameObjects
     //enemy constructors
         //hp //weapon //armor //name
@@ -97,6 +114,8 @@ public class GameParameters{
 
 
 
+
+
   //scenes
     //scene
       //escapable (true)
@@ -109,15 +128,4 @@ public class GameParameters{
 
     //lake
       public static final boolean lakeTraversible = false;
-
-
-//procedural generation
-
-
-//all enemies array
-  public static final Enemy[] enemies = {newWitch(), newWitch(), newWitch(), newWildBeast(), newWildBeast(), newWildBeast(), newWildBeast()};
-
-
-//all items array
-  public static final Item[] items = {newHolySandals(), newHolySandals(), newPowerAmulet(), newPowerAmulet(), newChainmail()};
 } 

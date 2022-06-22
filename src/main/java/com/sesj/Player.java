@@ -2,20 +2,21 @@ package com.sesj;
 
 import com.sesj.GameObjects.Weapons.*;
 import com.sesj.GameObjects.Items.*;
-//import com.sesj.StaticData.*;
+import com.sesj.StaticData.*;
 import com.sesj.Interfaces.*;
 //import com.sesj.Scenes.*;
 
 public class Player implements Entity{
+  //world position
   private int xPos = 0;
   private int yPos = 0;
 
-  private Weapon weapon = new Sword();
-  private Item item;
+  private Weapon weapon = GameParameters.playerWeapon;
+  private Item item; //starts empty
 
-  private int move = 1;
-  private int hp = 30;
-  private int armor=1;
+  private int move = GameParameters.playerMovement;
+  private int hp = GameParameters.playerHp;
+  private int armor=GameParameters.playerArmor;
   
   public Player(){ 
   }
@@ -76,6 +77,7 @@ public class Player implements Entity{
       this.weapon.unEffect(this.item);
       Item old=this.item;
       this.item= item;
+      this.weapon.effect(this.item);
       return old;
     } else {
 //return null if item never existed in the first place
