@@ -5,9 +5,9 @@ import java.util.*;
 import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import com.sesj.Scenes.*;
+import com.sesj.StaticData.GameParameters;
 import com.sesj.GameObjects.Enemies.*;
 import com.sesj.GameObjects.Items.*;
-//import GameObjects.Weapons.*;
 
 //prints to console, only object allowed to do so
 public class GameController{
@@ -22,9 +22,21 @@ public class GameController{
     if(input.length<3){
       p.println(World.getLocation(player).getInfo());
     } else {
-      try{ p.println(World.getLocation(player, Integer.parseInt(input[1]), Integer.parseInt(input[2])).getInfo()); }
+      try{
+        Integer.parseInt(input[1]);
+        Integer.parseInt(input[2]);
+      } catch(NumberFormatException e){
+        p.println("provide integers in fields 2 and 3");
+        return false;
+      } 
+      try{
+        if(Integer.parseInt(input[1])>GameParameters.playerMovement || Integer.parseInt(input[2])>GameParameters.playerMovement){
+          throw new IndexOutOfBoundsException();
+        }
+        p.println(World.getLocation(player, Integer.parseInt(input[1]), Integer.parseInt(input[2])).getInfo()); 
+      }
       catch (IndexOutOfBoundsException e){
-      System.out.println("invalid input, out of bounds");
+      p.println("invalid input, out of bounds");
       return false;
       }
     }
@@ -57,15 +69,22 @@ public class GameController{
 
   public static boolean translate(String[] input, Player player){
     if(input.length<3){
-      System.out.println("invalid input, make sure all fields are specified");
+      p.println("invalid input, make sure all fields are specified");
       return false;
     }
+    try{
+      Integer.parseInt(input[1]);
+      Integer.parseInt(input[2]);
+    } catch(NumberFormatException e){
+      p.println("provide integers in fields 2 and 3");
+      return false;
+    } 
     try{player.translate(Integer.parseInt(input[1]), Integer.parseInt(input[2]));}
     catch(IllegalAccessException e){
-      System.out.println("You cannot go there yet");
+      p.println("You cannot go there yet");
       return false; 
     } catch(IndexOutOfBoundsException e){
-       System.out.println("invalid input, out of bounds");
+      p.println("invalid input, out of bounds");
       return false;
     }
     
@@ -81,6 +100,24 @@ public class GameController{
     return false;
   }
   
+  public static boolean grabItem(Player player){
+    Scene scene = World.getLocation(player);
+    if(scene.getItem()==null){
+      p.println("there is no item here");
+      return false; 
+    }
+    if(player.getItem()!=null){
+      Item old = player.equip(scene.getItem());
+      scene.setItem(old);
+      p.println("you grabbed "+player.getItem().toString());
+      p.println(""+old.toString()+" was dropped");
+      return true;
+    }
+    player.equip(scene.getItem());
+    p.println("you grabbed "+player.getItem().toString());
+    scene.setItem(null);
+    return true;
+  }
 
 
   //map from scanCombatInput
@@ -129,26 +166,6 @@ public class GameController{
       p.println("you escaped!");
       return true;
     }
-  }
-
-
-  public static boolean grabItem(Player player){
-    Scene scene = World.getLocation(player);
-    if(scene.getItem()==null){
-      p.println("there is no item here");
-      return false; 
-    }
-    if(player.getItem()!=null){
-      Item old = player.equip(scene.getItem());
-      scene.setItem(old);
-      p.println("you grabbed "+player.getItem().toString());
-      p.println(""+old.toString()+" was dropped");
-      return true;
-    }
-    player.equip(scene.getItem());
-    p.println("you grabbed "+player.getItem().toString());
-    scene.setItem(null);
-    return true;
   }
 
 
