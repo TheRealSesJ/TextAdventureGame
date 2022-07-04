@@ -13,3 +13,27 @@ jar {
         attributes 'Main-Class': 'com.sesj.InputController'
     }
 }
+
+
+//compiles the jar file with dependencies inside
+task fatJar(type: Jar){
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes 'Main-Class': 'com.sesj.InputController'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+}

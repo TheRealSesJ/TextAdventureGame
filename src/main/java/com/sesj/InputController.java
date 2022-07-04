@@ -5,6 +5,7 @@ package com.sesj;
 import java.util.*;
 
 import com.sesj.Exceptions.*;
+import com.sesj.StaticData.ConfigLoader;
 
 import java.io.*;
 
@@ -20,12 +21,26 @@ public class InputController{
     //playing boolean
     boolean playing = true;
     
+    p.println(System.getProperty("user.dir"));
+
+    //load the condig, if missing throw an error
+    try{
+      ConfigLoader.load();
+    } catch (MissingConfigException e){
+      p.println("Unable to locate Config file");
+      p.println("Press any button to exit:");
+      SCAN.nextLine();
+    }
+    
     World.build();
+    
     Player player = new Player();
     p.println("Welcome to text adventure!");
     GameController.displayMinimap(player);
 
 
+    //test configloader
+    //ConfigLoader.readConfig();
     //game loop
     while(playing){
       

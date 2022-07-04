@@ -1,11 +1,19 @@
 package com.sesj.StaticData;
 
+import java.util.Arrays;
+
 import com.sesj.GameObjects.Enemies.*;
 import com.sesj.GameObjects.Items.*;
 import com.sesj.GameObjects.Weapons.*;
 import com.sesj.Scenes.*;
 
 public class GameParameters{
+
+  //init
+  public static void load(){
+
+  }
+
   //player stats
     public static final Weapon playerWeapon = newSword();
     
@@ -16,28 +24,35 @@ public class GameParameters{
 
 
   
-  //World Map
-    public static final Scene[] row4 = 
-  
-      {new Forest(), new Mountains(), new Mountains(), new Mountains(), new Forest()};
-  
-    public static final Scene[] row3 = 
-  
-      {new Forest(), new Mountains(), new Mountains(), new Desert()   , new Forest()};
-  
-    public static final Scene[] row2 = 
-  
-      {new Forest(), new Forest()   , new Desert()   , new Desert()   , new Desert()};
-  
-    public static final Scene[] row1 = 
-  
-      {new Forest(), new Lake()     , new Lake()     , new Desert()   , new Desert()};
-  
-    public static final Scene[] row0 = 
-  
-      {new Forest(), new Lake()     , new Lake()     , new Desert()   , new Mountains()};
+  //load world from config
 
-  public static final Scene[][] world = {row0, row1, row2, row3, row4};
+  public static Scene[][] getWorld(){
+    String[][] worldStr = ConfigLoader.loadWorld();
+    Scene[][] world = new Scene[worldStr.length][worldStr[0].length];
+    for(int i=0; i<5; i++){
+      for(int j=0; j<5;j++){
+        Scene scene;
+        switch(worldStr[i][j]){
+          case("desert"): 
+            scene = new Desert();
+            break;
+          case("forest"): 
+            scene = new Forest();
+            break;
+          case("lake"): 
+            scene = new Lake();
+            break;
+          case("mountains"): 
+            scene = new Mountains();
+            break;
+          default:
+            scene = new Scene("empty");
+        }
+        world[i][j] = scene;
+      }
+    }
+    return world;
+  }
 
   //procedural generation
 

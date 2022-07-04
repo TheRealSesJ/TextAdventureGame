@@ -1,0 +1,13 @@
+{
+    "world":{
+        "row1":["forest","mountains","mountains","mountains","forest"],
+        "row2":["forest","mountains","mountains","desert","forest"],
+        "row3":["forest","forest","desert","desert","desert"],
+        "row4":["forest","lake","lake","desert","desert"],
+        "row5":["forest","lake","lake","desert","mountains"]
+    },
+    
+    "enemies":[]
+
+    
+}  

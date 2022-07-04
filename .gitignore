@@ -31,3 +31,8 @@ hs_err_pid*
 
 # Ignore Gradle build output directory
 build
+
+# ignore vscode files
+.vscode
+.vs
+

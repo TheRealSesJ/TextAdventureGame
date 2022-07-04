@@ -9,9 +9,9 @@ import java.util.Arrays;
 import com.sesj.StaticData.*;
 
 public class World {
-  private static final int ySize = GameParameters.world.length; 
-  private static final int xSize = GameParameters.world[0].length;
-  private static final Scene[][] worldMap = GameParameters.world;
+  private static final Scene[][] worldMap = GameParameters.getWorld();
+  private static final int ySize = worldMap.length; 
+  private static final int xSize = worldMap[0].length;
   private static ArrayList<Enemy> enemies =   
   new ArrayList<Enemy>(Arrays.asList(GameParameters.enemies));
   private static ArrayList<Item> items =   
