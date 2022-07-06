@@ -1,7 +1,7 @@
 package com.sesj.Exceptions;
 
-public class MissingConfigException extends Exception{
+public class MissingConfigException extends ConfigException{
     public MissingConfigException(){
-        super("a parameter for the intended command is unspecified");
+        super("Config.json not found");
     }
 }
