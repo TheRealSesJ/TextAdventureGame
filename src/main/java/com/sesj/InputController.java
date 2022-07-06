@@ -16,80 +16,81 @@ public class InputController{
 
 //the game!!!
   
-  public static void main(String[] args) {
+  public static void main(String[] args){
 
     //playing boolean
     boolean playing = true;
-    
-    p.println(System.getProperty("user.dir"));
 
-    //load the condig, if missing throw an error
+    //load the config, if missing throw an error, game inside try-catch
     try{
+
       ConfigLoader.load();
-    } catch (MissingConfigException e){
-      p.println("Unable to locate Config file");
-      p.println("Press any button to exit:");
-      SCAN.nextLine();
-    }
-    
-    World.build();
-    
-    Player player = new Player();
-    p.println("Welcome to text adventure!");
-    GameController.displayMinimap(player);
+      World.build();
 
-
-    //test configloader
-    //ConfigLoader.readConfig();
-    //game loop
-    while(playing){
       
-//----------------------------take turn
-      try{
-        while(!scanInput(SCAN.nextLine(), player, "world")){
-          p.println("\nplease enter an action\n");
-        }
-        p.println("\nNext turn:\n");
+      Player player = new Player();
+      p.println("Welcome to text adventure!");
+      GameController.displayMinimap(player);
 
-//----------------------check for combat, if yes convert to *combat turns*
-        while(World.getLocation(player).getEnemy()!=null){
-          p.println("\nAn enemy approaches...\n");
-          p.println(World.getLocation(player).getEnemy().getStats());
 
-          while(!scanInput(SCAN.nextLine(), player, "combat")){
-          p.println("\nplease enter an action\n");
+      //test configloader
+      //ConfigLoader.readConfig();
+      //game loop
+      while(playing){
+        
+  //----------------------------take turn
+        try{
+          while(!scanInput(SCAN.nextLine(), player, "world")){
+            p.println("\nplease enter an action\n");
           }
-  
-//------check for game over condition
-          if(player.getHp()<=0){
-            playing = false;
-            break;
-          }
-          
           p.println("\nNext turn:\n");
+
+  //----------------------check for combat, if yes convert to *combat turns*
+          while(World.getLocation(player).getEnemy()!=null){
+            p.println("\nAn enemy approaches...\n");
+            p.println(World.getLocation(player).getEnemy().getStats());
+
+            while(!scanInput(SCAN.nextLine(), player, "combat")){
+            p.println("\nplease enter an action\n");
+            }
+    
+  //------check for game over condition
+            if(player.getHp()<=0){
+              playing = false;
+              break;
+            }
+            
+            p.println("\nNext turn:\n");
+          }
         }
-      }
-//----------------handles game end with exception from end_game input
-      catch(InterruptedIOException e){
-        playing = false;
-        break;
-      }
+  //----------------handles game end with exception from end_game input
+        catch(InterruptedIOException e){
+          playing = false;
+          break;
+        }
 
-//-----check for game over condition again
-      if(player.getHp()<=0){
-        playing = false;
-        break;
-      }
+  //-----check for game over condition again
+        if(player.getHp()<=0){
+          playing = false;
+          break;
+        }
 
-    }
+      }
+    } catch (ConfigException e){
+      p.println(e.getMessage());
+    } finally{
+
+
+
 
 
 
 //----end of the game----
-    p.println("\nGAME OVER\n");
+      p.println("\nGAME OVER\n");
 
-    p.println("Press any button to exit:");
-    SCAN.nextLine();
+      p.println("Press any button to exit:");
+      SCAN.nextLine();
+    }
   }
 
   //input mappings for normal inputs, uses up one turn if a correct input is executed

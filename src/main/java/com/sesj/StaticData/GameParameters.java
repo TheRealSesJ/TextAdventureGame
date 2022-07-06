@@ -1,7 +1,8 @@
 package com.sesj.StaticData;
 
-import java.util.Arrays;
 
+import com.sesj.Exceptions.ConfigException;
+import com.sesj.Exceptions.ConfigNullValueException;
 import com.sesj.GameObjects.Enemies.*;
 import com.sesj.GameObjects.Items.*;
 import com.sesj.GameObjects.Weapons.*;
@@ -15,7 +16,7 @@ public class GameParameters{
   }
 
   //player stats
-    public static final Weapon playerWeapon = newSword();
+    public static final Weapon playerWeapon = getWeapon("sword");
     
     public static final int playerMovement = 1;
     public static final int playerHp = 30;
@@ -26,11 +27,13 @@ public class GameParameters{
   
   //load world from config
 
-  public static Scene[][] getWorld(){
+  public static Scene[][] getWorld() throws ConfigException{
     String[][] worldStr = ConfigLoader.loadWorld();
-    Scene[][] world = new Scene[worldStr.length][worldStr[0].length];
-    for(int i=0; i<5; i++){
-      for(int j=0; j<5;j++){
+    int size = worldStr.length;
+    Scene[][] world = new Scene[size][size];
+
+    for(int i=0; i<size; i++){
+      for(int j=0; j<size;j++){
         Scene scene;
         switch(worldStr[i][j]){
           case("desert"): 
@@ -46,7 +49,7 @@ public class GameParameters{
             scene = new Mountains();
             break;
           default:
-            scene = new Scene("empty");
+            throw new ConfigNullValueException();
         }
         world[i][j] = scene;
       }
@@ -55,80 +58,68 @@ public class GameParameters{
   }
 
   //procedural generation
+  public static Enemy[] getEnemies(){
+    String[] enemiesStr = ConfigLoader.loadEnemies();
+    int size = enemiesStr.length;
+    Enemy[] enemies = new Enemy[size];
+    for(int i=0; i<size;i++){
+      String[] args = ConfigLoader.loadEnemyStats(enemiesStr[i]);
+      enemies[i] = new Enemy(
+        Integer.parseInt(args[0]), //hp
+        getWeapon(args[1]), //weapon
+        Integer.parseInt(args[2]), //armor
+        args[3]); //name
+    }
+    try{
+      return enemies;
+    } catch(NumberFormatException e){
+      e.printStackTrace();
+      return null;
+    }
+  }
 
 
-  //all enemies array
-  public static final Enemy[] enemies = {newWitch(), newWitch(), newWitch(), newWildBeast(), newWildBeast(), newWildBeast(), newWildBeast()};
+  public static Item[] getItems(){
+    String[] itemsStr = ConfigLoader.loadItems();
+    int size = itemsStr.length;
+    Item[] items = new Item[size];
+    for(int i=0; i<size;i++){
+      String[] args = ConfigLoader.loadItemStats(itemsStr[i]);
+      items[i] = new Item(
+        Integer.parseInt(args[0]), //attack boost
+        Integer.parseInt(args[1]), //speed boost
+        Integer.parseInt(args[2]), //accuracy boost
+        Boolean.parseBoolean(args[3]), //range boost TODO FIX
+        Integer.parseInt(args[4]), //movement boost
+        Boolean.parseBoolean(args[5]), //traversal boost
+        Integer.parseInt(args[6]), //hp boost
+        Integer.parseInt(args[7]), //armor boost
+        args[8]); //name
+    }
+    try{
+      return items;
+    } catch(NumberFormatException e){
+      e.printStackTrace();
+      return null;
+    }
+  }
 
-  //all items array
-    public static final Item[] items = {newHolySandals(), newHolySandals(), newPowerAmulet(), newPowerAmulet(), newChainmail()};
 
-  
-
-
-
-  //GameObjects
-    //enemy constructors
-        //hp //weapon //armor //name
-  
-      //wild beast
-      public static Enemy newWildBeast(){
-        return new Enemy(25, newClaws(), 5, "Wild Beast");
-      }
+  public static Weapon getWeapon(String name){
+    String[] args = ConfigLoader.loadWeaponStats(name);
+    try{
+      return new Weapon(
+      Integer.parseInt(args[0]), //attack 
+      Integer.parseInt(args[1]), //speed 
+      Integer.parseInt(args[2]), //accuracy 
+      Boolean.parseBoolean(args[3]), //range
+      args[4]); //name;
+    } catch(NumberFormatException e){
+      e.printStackTrace();
+      return null;
+    }
     
-      //witch
-      public static Enemy newWitch(){
-        return new Enemy(15, newStick(), 1, "Witch");
-      }
-    
-
-    //item attributes
-      //item constructors
-        //attack boost //speed boost //accuracy boost //ranged boost //---weapon
-        //move boost //traverse boost //hp boost //armor boost //---player
-        //name //---data
-      //PowerAmulet
-      public static Item newPowerAmulet(){
-        return new Item(4, 0, 0, true, 0, false, 0, 0, "Power Amulet");
-      }
-
-      //HolySandals
-      public static Item newHolySandals(){
-        return new Item(0, 1, 0, false, 2, true, 0, 0, "Holy Sandals");
-      }
-
-      //Chainmail
-      public static Item newChainmail(){
-        return new Item(0, -2, 0, false, 0, false, 0, 5, "Chainmail");
-      }
-
-  
-    //weapon attributes
-      //weapon constructors
-        //attack //speed (0-10) //accuracy (0-100) //ranged (bool)
-  
-      //bow
-      public static Weapon newBow(){
-        return new Weapon(5, 3, 70, true, "Bow");
-      }
-  
-      //stick
-      public static Weapon newStick(){
-        return new Weapon(3, 10, 65, false, "Stick");
-      }
-    
-      //sword
-      public static Weapon newSword(){
-        return new Weapon(10, 5, 70, false, "Sword");
-      }
-  
-      //claws
-      public static Weapon newClaws(){
-        return new Weapon(7, 6, 80, false, "Claws");
-      }
-
-
-
+  }
 
 
   //scenes

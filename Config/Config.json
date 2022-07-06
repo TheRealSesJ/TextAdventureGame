@@ -6,8 +6,95 @@
         "row4":["forest","lake","lake","desert","desert"],
         "row5":["forest","lake","lake","desert","mountains"]
     },
-    
-    "enemies":[]
+
+    "enemies":["witch", "witch", "witch", "wild_beast", "wild_beast", "wild_beast", "wild_beast"],
+
+    "items":["holy_sandals", "holy_sandals", "power_amulet", "power_amulet", "chainmail"],
+
+    "enemy_stats":{
+        "wild_beast":{
+            "hp":"25",
+            "weapon":"claws",
+            "armor":"5",
+            "name":"Wild Beast"
+        },
+        "witch":{
+            "hp":"15",
+            "weapon":"stick",
+            "armor":"1",
+            "name":"Witch"
+        }
+    },
+
+    "item_stats":{
+        "chainmail":{
+            "attack":"0",
+            "speed":"-2",
+            "accuracy":"0",
+            "range":"false",
+            "movement":"0",
+            "traversal":"false",
+            "hp":"0",
+            "armor":"5",
+            "name":"Chainmail"
+        },
+        
+        "holy_sandals":{
+            "attack":"0",
+            "speed":"1",
+            "accuracy":"0",
+            "range":"false",
+            "movement":"2",
+            "traversal":"true",
+            "hp":"0",
+            "armor":"0",
+            "name":"Holy Sandals"
+        },
+        "power_amulet":{
+            "attack":"4",
+            "speed":"2",
+            "accuracy":"-10",
+            "range":"true",
+            "movement":"0",
+            "traversal":"false",
+            "hp":"0",
+            "armor":"0",
+            "name":"Power Amulet"
+        }
+    },
+
+    "weapon_stats":{
+        "bow":{
+            "attack":"5",
+            "speed":"3",
+            "accuracy":"70",
+            "range":"true",
+            "name":"Bow"
+        },
+        "claws":{
+            "attack":"7",
+            "speed":"6",
+            "accuracy":"80",
+            "range":"false",
+            "name":"Claws"
+        },
+        "stick":{
+            "attack":"3",
+            "speed":"10",
+            "accuracy":"65",
+            "range":"false",
+            "name":"Stick"
+        },
+        "sword":{
+            "attack":"10",
+            "speed":"5",
+            "accuracy":"70",
+            "range":"false",
+            "name":"Sword"
+        }
+    }
+
+
 
     
 }  
