@@ -1,4 +1,4 @@
-package com.sesj.Scenes;
+package com.sesj.GameObjects;
 import com.sesj.GameObjects.Enemy;
 import com.sesj.GameObjects.Item;
 //import GameObjects.Weapons.*;

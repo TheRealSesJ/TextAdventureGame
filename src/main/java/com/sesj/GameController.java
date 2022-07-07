@@ -10,7 +10,7 @@ import com.sesj.GameObjects.Enemy;
 import com.sesj.GameObjects.Item;
 import com.sesj.GameObjects.Player;
 import com.sesj.Interfaces.Entity;
-import com.sesj.Scenes.Scene;
+import com.sesj.GameObjects.Scene;
 
 //prints to console, only object allowed to do so
 public class GameController{

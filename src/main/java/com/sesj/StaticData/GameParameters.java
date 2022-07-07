@@ -1,11 +1,7 @@
 package com.sesj.StaticData;
 
 
-import com.sesj.GameObjects.Enemy;
-import com.sesj.GameObjects.Item;
-import com.sesj.GameObjects.Player;
-import com.sesj.GameObjects.Weapon;
-import com.sesj.Scenes.*;
+import com.sesj.GameObjects.*;
 
 public class GameParameters{
 

@@ -1,7 +1,7 @@
 //main method
 package com.sesj;
 
-//import com.sesj.Scenes.*;
+//import com.sesj.GameObjects.Scenes.*;
 import java.util.*;
 
 import com.sesj.Exceptions.*;

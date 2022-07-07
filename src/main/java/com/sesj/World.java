@@ -3,7 +3,7 @@ package com.sesj;
 import com.sesj.GameObjects.Enemy;
 import com.sesj.GameObjects.Item;
 import com.sesj.GameObjects.Player;
-import com.sesj.Scenes.*;
+import com.sesj.GameObjects.Scene;
 import com.sesj.Exceptions.ConfigException;
 
 import java.util.ArrayList;
