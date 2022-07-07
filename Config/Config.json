@@ -92,6 +92,37 @@
             "range":"false",
             "name":"Sword"
         }
+    },
+
+    "scene_stats":{
+        "desert":{
+            "scannable":"true",
+            "escapable": "true",
+            "traversable": "true",
+            "icon": ".",
+            "name": "Desert"
+        },
+        "forest":{
+            "scannable":"false",
+            "escapable": "true",
+            "traversable": "true",
+            "icon": "t",
+            "name": "Forest"
+        },
+        "lake":{
+            "scannable":"true",
+            "escapable": "true",
+            "traversable": "false",
+            "icon": "~",
+            "name": "Lake"
+        },
+        "mountains":{
+            "scannable":"true",
+            "escapable": "false",
+            "traversable": "false",
+            "icon": "^",
+            "name": "Mountains"
+        }
     }
 
 

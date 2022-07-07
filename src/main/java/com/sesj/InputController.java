@@ -33,8 +33,6 @@ public class InputController{
       GameController.displayMinimap(player);
 
 
-      //test configloader
-      //ConfigLoader.readConfig();
       //game loop
       while(playing){
         
@@ -79,10 +77,6 @@ public class InputController{
     } catch (ConfigException e){
       p.println(e.getMessage());
     } finally{
-
-
-
-
 
 
 //----end of the game----

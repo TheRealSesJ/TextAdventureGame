@@ -2,18 +2,12 @@ package com.sesj.StaticData;
 
 
 import com.sesj.Exceptions.ConfigException;
-import com.sesj.Exceptions.ConfigNullValueException;
 import com.sesj.GameObjects.Enemies.*;
 import com.sesj.GameObjects.Items.*;
 import com.sesj.GameObjects.Weapons.*;
 import com.sesj.Scenes.*;
 
 public class GameParameters{
-
-  //init
-  public static void load(){
-
-  }
 
   //player stats
     public static final Weapon playerWeapon = getWeapon("sword");
@@ -27,34 +21,27 @@ public class GameParameters{
   
   //load world from config
 
-  public static Scene[][] getWorld() throws ConfigException{
+  public static Scene[][] getWorld(){
     String[][] worldStr = ConfigLoader.loadWorld();
     int size = worldStr.length;
     Scene[][] world = new Scene[size][size];
-
     for(int i=0; i<size; i++){
       for(int j=0; j<size;j++){
-        Scene scene;
-        switch(worldStr[i][j]){
-          case("desert"): 
-            scene = new Desert();
-            break;
-          case("forest"): 
-            scene = new Forest();
-            break;
-          case("lake"): 
-            scene = new Lake();
-            break;
-          case("mountains"): 
-            scene = new Mountains();
-            break;
-          default:
-            throw new ConfigNullValueException();
-        }
-        world[i][j] = scene;
+        String[] args = ConfigLoader.loadSceneStats(worldStr[i][j]);
+        world[i][j] = new Scene(
+                Boolean.parseBoolean(args[0]),
+                Boolean.parseBoolean(args[1]),
+                Boolean.parseBoolean(args[2]),
+                args[3],
+                args[4]);
       }
     }
-    return world;
+    try{
+      return world;
+    } catch(NumberFormatException e){
+      e.printStackTrace();
+      return null;
+    }
   }
 
   //procedural generation

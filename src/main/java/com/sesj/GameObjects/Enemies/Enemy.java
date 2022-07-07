@@ -8,10 +8,10 @@ import com.sesj.Interfaces.*;
 public class Enemy implements Entity{
 
   private int hp; 
-  private Weapon weapon;
-  private int armor;
+  private final Weapon weapon;
+  private final int armor;
   
-  private String name;
+  private final String name;
   
   public Enemy(int hp, Weapon weapon, int armor, String name){
     this.hp = hp;
@@ -40,7 +40,7 @@ public class Enemy implements Entity{
 
   //returns the enemy's stats as a string, intended to give the user information
   public String getStats(){
-    return toString()
+    return this
     +"\nWeapon: "+this.weapon.toString()
     +"\nattack: "+ this.weapon.getAttack()
     +"\nspeed: "+ this.weapon.getSpeed()

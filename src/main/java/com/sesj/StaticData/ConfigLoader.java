@@ -96,6 +96,17 @@ public class ConfigLoader {
       (String) weapon.get("name")};
     return weaponArgs;
   }
+
+  public static String[] loadSceneStats(String name){
+    JSONObject scene = (JSONObject) ((JSONObject) file.get("scene_stats")).get(name);
+    String[] sceneArgs = {
+            (String) scene.get("scannable"),
+            (String) scene.get("escapable"),
+            (String) scene.get("traversable"),
+            (String) scene.get("icon"),
+            (String) scene.get("name")};
+    return sceneArgs;
+  }
   
 
   

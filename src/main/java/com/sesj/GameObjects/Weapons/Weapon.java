@@ -9,7 +9,7 @@ public class Weapon {
   private int accuracy;
   private boolean ranged;
   
-  private String name;
+  private final String name;
   
   public Weapon(int attack, int speed, int accuracy, boolean ranged, String name){
     this.attack = attack;

@@ -5,27 +5,32 @@ import com.sesj.GameObjects.Items.*;
 
 public class Scene {
 
-  private String biome; 
+  private final String icon;
+  private final String name;
 
   private Enemy enemy;
   private Item item;
 
   //properties of scenes;
-  protected boolean scannable = true;
-  protected boolean escapable = true;
-  protected boolean traversible = true;
+  private final boolean scannable;
+  private final boolean escapable;
+  private final boolean traversable;
   
-  public Scene(String biome){
-    this.biome=biome;
+  public Scene(boolean scannable, boolean escapable, boolean traversable, String icon, String name){
+    this.scannable=scannable;
+    this.escapable=escapable;
+    this.traversable =traversable;
+    this.icon = icon;
+    this.name=name;
   }
   
-  public String getBiome(){ return biome; }
+  public String getName(){ return name; }
 
-  public String toString(){ return this.biome; }
+  public String toString(){ return this.name; }
 
-  public String getIcon(){ return "!"; }
+  public String getIcon(){ return icon; }
 
-  public Enemy getEnemy(){ 
+  public Enemy getEnemy(){
     Enemy e = this.enemy;
     if(e==null){
       return null;
@@ -64,14 +69,18 @@ public class Scene {
     catch(NullPointerException e){ data += "\nno enemy\n";}
     try{ data += this.item.getStats()+""; } 
     catch(NullPointerException e){ data += "\nno item\n";}
-    return this.biome+":\n"+data;
+    return this.name+":\n"+data;
   }
 
   public boolean isEscapable(){
     return this.escapable;
   }
 
-  public boolean isTraversible(){
-    return this.traversible;
+  public boolean isScannable(){
+    return this.scannable;
+  }
+
+  public boolean isTraversable(){
+    return this.traversable;
   }
 }

@@ -14,9 +14,9 @@ public class Player implements Entity{
   private Weapon weapon = GameParameters.playerWeapon;
   private Item item; //starts empty
 
-  private int move = GameParameters.playerMovement;
+  private final int move = GameParameters.playerMovement;
   private int hp = GameParameters.playerHp;
-  private int armor=GameParameters.playerArmor;
+  private final int armor=GameParameters.playerArmor;
   
   public Player(){ 
   }
@@ -25,7 +25,7 @@ public class Player implements Entity{
   //illegal acess exception used for case where tile is not traversible
   public boolean translate(int xTiles, int yTiles) throws NotTraversibleException, MovementOutOfRangeException, MovementOutOfBoundsException {
     try{
-      if(!World.getLocation(this, xTiles, yTiles).isTraversible()){
+      if(!World.getLocation(this, xTiles, yTiles).isTraversable()){
         if(this.item==null || !this.item.getTraverseBoost()){
           throw new NotTraversibleException();
         }

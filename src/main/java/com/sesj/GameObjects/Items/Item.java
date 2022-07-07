@@ -4,18 +4,18 @@ package com.sesj.GameObjects.Items;
 
 public class Item{
   //weapon related
-  private int attackBoost;
-  private int speedBoost;
-  private int accuracyBoost;
-  private boolean rangeBoost;
+  private final int attackBoost;
+  private final int speedBoost;
+  private final int accuracyBoost;
+  private final boolean rangeBoost;
 
   //player related
-  private int moveBoost;
-  private boolean traverseBoost;
-  private int hpBoost;
-  private int armorBoost; 
+  private final int moveBoost;
+  private final boolean traverseBoost;
+  private final int hpBoost;
+  private final int armorBoost;
 
-  private String name;
+  private final String name;
 
   public Item(int attack, int speed, int accuracy, boolean range, int movement, boolean traversal, int hp, int armor, String name){
     this.attackBoost=attack;
@@ -67,7 +67,7 @@ public class Item{
   }
 
   public String getStats(){
-    return toString()
+    return this
     +"\nWeapon Related:"
     +"\nattack boost: "+ this.attackBoost
     +"\nspeed: "+ this.speedBoost

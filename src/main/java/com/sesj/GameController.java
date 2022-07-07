@@ -14,7 +14,7 @@ import com.sesj.Scenes.Scene;
 public class GameController{
   //ease of use for printing
   private static final PrintStream p = new PrintStream(System.out);
-  private static final Random rand = new Random();
+  private static final Random RAND = new Random();
 
   
 //maps from scanInput()
@@ -182,18 +182,18 @@ public class GameController{
   public static void playerTurn(Player player, Enemy enemy){
     p.println("\nPlayer Move!\n");
         //weapons have 1 to 100 attack chance, finds wether or not attack landed 
-        int attackRoll = rand.nextInt(90)+1; //<-----------higher chance of landing attack for player
+        int attackRoll = RAND.nextInt(90)+1; //<-----------higher chance of landing attack for player
         if(enemy.getWeapon().isRanged()){ //if enemy is ranged they are harder to hit, same goes for player, lowers roll
           attackRoll-=20;
         }
         if(attackRoll<=player.getWeapon().getAccuracy()){
-          p.println("\nAttack landed with "+player.getWeapon().toString()+" on "+enemy.toString()+"!");
+          p.println("\nAttack landed with "+player.getWeapon().toString()+" on "+ enemy +"!");
 //---------------------->armor will reduce damage taken<---------------------------
           int dmg = -1*player.getWeapon().getAttack()+enemy.getArmor();
           enemy.updateHp(dmg>0? 0: dmg);
           p.println("\nEnemy hp remaining: "+enemy.getHp()+"\n");
         } else {
-          p.println("\nAttack failed on "+enemy.toString()+"!\n");
+          p.println("\nAttack failed on "+ enemy +"!\n");
         }
   }
 
@@ -201,7 +201,7 @@ public class GameController{
   //enemy turn, mostly same as player except inverted who is playing
   public static void enemyTurn(Player player, Enemy enemy){
     p.println("\nEnemy Move!\n");
-        int attackRoll = rand.nextInt(100)+1;
+        int attackRoll = RAND.nextInt(100)+1;
         if(player.getWeapon().isRanged()){
           attackRoll-=20;
         }
@@ -258,7 +258,7 @@ public class GameController{
       for(int j=-1;j<2;j++){
         try{
           Scene loc = World.getLocation(player, i, j);
-          if(!(i==0 && j==0) && loc.isTraversible()){
+          if(!(i==0 && j==0) && loc.isTraversable()){
             int[] coords = {i,j};
             locations.add(coords);
           }
@@ -266,7 +266,7 @@ public class GameController{
         catch(IndexOutOfBoundsException e){}
       }
     }
-    return locations.get(rand.nextInt(locations.size()-1));
+    return locations.get(RAND.nextInt(locations.size()-1));
   }
 
 
