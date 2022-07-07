@@ -1,25 +1,20 @@
 package com.sesj.StaticData;
 
 
-import com.sesj.Exceptions.ConfigException;
-import com.sesj.GameObjects.Enemies.*;
-import com.sesj.GameObjects.Items.*;
-import com.sesj.GameObjects.Weapons.*;
+import com.sesj.GameObjects.Enemy;
+import com.sesj.GameObjects.Item;
+import com.sesj.GameObjects.Player;
+import com.sesj.GameObjects.Weapon;
 import com.sesj.Scenes.*;
 
 public class GameParameters{
 
   //player stats
     public static final Weapon playerWeapon = getWeapon("sword");
-    
     public static final int playerMovement = 1;
     public static final int playerHp = 30;
     public static final int playerArmor = 1;
-  
 
-
-  
-  //load world from config
 
   public static Scene[][] getWorld(){
     String[][] worldStr = ConfigLoader.loadWorld();
@@ -46,7 +41,7 @@ public class GameParameters{
 
   //procedural generation
   public static Enemy[] getEnemies(){
-    String[] enemiesStr = ConfigLoader.loadEnemies();
+    String[] enemiesStr = ConfigLoader.loadSpawnables("enemies");
     int size = enemiesStr.length;
     Enemy[] enemies = new Enemy[size];
     for(int i=0; i<size;i++){
@@ -67,7 +62,7 @@ public class GameParameters{
 
 
   public static Item[] getItems(){
-    String[] itemsStr = ConfigLoader.loadItems();
+    String[] itemsStr = ConfigLoader.loadSpawnables("items");
     int size = itemsStr.length;
     Item[] items = new Item[size];
     for(int i=0; i<size;i++){
@@ -91,7 +86,6 @@ public class GameParameters{
     }
   }
 
-
   public static Weapon getWeapon(String name){
     String[] args = ConfigLoader.loadWeaponStats(name);
     try{
@@ -101,24 +95,24 @@ public class GameParameters{
       Integer.parseInt(args[2]), //accuracy 
       Boolean.parseBoolean(args[3]), //range
       args[4]); //name;
-    } catch(NumberFormatException e){
+    } catch(NumberFormatException e) {
       e.printStackTrace();
       return null;
     }
-    
   }
 
+  public static Player getPlayer(){
+    String[] args = ConfigLoader.loadPlayerStats();
+    try{
+      return new Player(
+              Integer.parseInt(args[0]), //hp
+              getWeapon(args[1]), //weapon
+              Integer.parseInt(args[2]), //armor
+              Integer.parseInt(args[3])); //movement
+    } catch(NumberFormatException e) {
+      e.printStackTrace();
+      return null;
+    }
 
-  //scenes
-    //scene
-      //escapable (true)
-      //remote scannable
-      //traversible? (needs implementation)
-      //lvl requirements (tbd)
-
-    //mountains
-      public static final boolean mountainsEscapable = false;
-
-    //lake
-      public static final boolean lakeTraversible = false;
+  }
 } 

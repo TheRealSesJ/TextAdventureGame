@@ -5,7 +5,9 @@ package com.sesj;
 import java.util.*;
 
 import com.sesj.Exceptions.*;
+import com.sesj.GameObjects.Player;
 import com.sesj.StaticData.ConfigLoader;
+import com.sesj.StaticData.GameParameters;
 
 import java.io.*;
 
@@ -28,7 +30,7 @@ public class InputController{
       World.build();
 
       
-      Player player = new Player();
+      Player player = GameParameters.getPlayer();
       p.println("Welcome to text adventure!");
       GameController.displayMinimap(player);
 

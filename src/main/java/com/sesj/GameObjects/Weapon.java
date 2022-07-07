@@ -1,6 +1,4 @@
-package com.sesj.GameObjects.Weapons;
-
-import com.sesj.GameObjects.Items.Item;
+package com.sesj.GameObjects;
 
 public class Weapon {
 

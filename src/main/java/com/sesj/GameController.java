@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.sesj.Exceptions.*;
-import com.sesj.GameObjects.Enemies.Enemy;
-import com.sesj.GameObjects.Items.Item;
+import com.sesj.GameObjects.Enemy;
+import com.sesj.GameObjects.Item;
+import com.sesj.GameObjects.Player;
+import com.sesj.Interfaces.Entity;
 import com.sesj.Scenes.Scene;
 
 //prints to console, only object allowed to do so
@@ -133,19 +135,19 @@ public class GameController{
 
       //player turn
       if(player.getWeapon().getSpeed()>=enemy.getWeapon().getSpeed()){
-      playerTurn(player, enemy);
+      combatTurn(player, enemy);
       if(enemy.getHp()<=0) {
         p.println("\nEnemy Vanquished!\n");
         scene.setEnemy(null);
         return true;
       } //end sequence if enemy is dead
-      enemyTurn(player, enemy);
+      combatTurn(enemy, player);
     }
       //enemy turn
     else {
-      enemyTurn(player, enemy);
+      combatTurn(enemy, player);
       if(player.getHp()<=0) return true; //end sequence if player is dead
-      playerTurn(player, enemy);
+      combatTurn(player, enemy);
     }
 
     //check to remove enemy after sequence if dead
@@ -175,50 +177,24 @@ public class GameController{
 
 
 
-//combat turns
-
-
-  //player turn
-  public static void playerTurn(Player player, Enemy enemy){
-    p.println("\nPlayer Move!\n");
-        //weapons have 1 to 100 attack chance, finds wether or not attack landed 
-        int attackRoll = RAND.nextInt(90)+1; //<-----------higher chance of landing attack for player
-        if(enemy.getWeapon().isRanged()){ //if enemy is ranged they are harder to hit, same goes for player, lowers roll
-          attackRoll-=20;
-        }
-        if(attackRoll<=player.getWeapon().getAccuracy()){
-          p.println("\nAttack landed with "+player.getWeapon().toString()+" on "+ enemy +"!");
+//combat turn
+  public static void combatTurn(Entity attacker, Entity defender){
+    p.println("\n"+attacker+" Move!\n");
+    //weapons have 1 to 100 attack chance, regardless of whether attack landed
+    int attackRoll = RAND.nextInt(100)+1; //<-----------higher chance of landing attack for player
+    if(defender.getWeapon().isRanged()){ //if enemy is ranged they are harder to hit, same goes for player, lowers roll
+      attackRoll-=20;
+    }
+    if(attackRoll<=attacker.getWeapon().getAccuracy()){
+      p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
 //---------------------->armor will reduce damage taken<---------------------------
-          int dmg = -1*player.getWeapon().getAttack()+enemy.getArmor();
-          enemy.updateHp(dmg>0? 0: dmg);
-          p.println("\nEnemy hp remaining: "+enemy.getHp()+"\n");
-        } else {
-          p.println("\nAttack failed on "+ enemy +"!\n");
-        }
+      int dmg = -1*attacker.getWeapon().getAttack()+defender.getArmor();
+      defender.updateHp(Math.min(dmg, 0));
+      p.println("\nEnemy hp remaining: "+attacker.getHp()+"\n");
+    } else {
+      p.println("\nAttack failed on "+ defender +"!\n");
+    }
   }
-
-
-  //enemy turn, mostly same as player except inverted who is playing
-  public static void enemyTurn(Player player, Enemy enemy){
-    p.println("\nEnemy Move!\n");
-        int attackRoll = RAND.nextInt(100)+1;
-        if(player.getWeapon().isRanged()){
-          attackRoll-=20;
-        }
-        if(attackRoll<=enemy.getWeapon().getAccuracy()){
-          p.println("\nYou were attacked with "+enemy.getWeapon().toString()+"!");
-
-//----------------------armor will reduce damage taken----------------------------
-        int dmg = -1*enemy.getWeapon().getAttack()+player.getArmor();
-        player.updateHp(dmg>0? 0: dmg);
-          p.println("\nYour hp remaining: "+player.getHp()+"\n");
-        } else {
-          p.println("\nYou dodged the attack!\n");
-        }
-  }
-  
-
-
 
 //minimap commands
   public static boolean displayMinimap(Player player){

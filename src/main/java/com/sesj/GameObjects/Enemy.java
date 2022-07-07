@@ -1,7 +1,7 @@
 //uses the character interface
 
-package com.sesj.GameObjects.Enemies;
-import com.sesj.GameObjects.Weapons.*;
+package com.sesj.GameObjects;
+import com.sesj.GameObjects.Weapon;
 import com.sesj.Interfaces.*;
 
 

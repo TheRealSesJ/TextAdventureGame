@@ -123,6 +123,13 @@
             "icon": "^",
             "name": "Mountains"
         }
+    },
+
+    "player_stats": {
+        "hp": "30",
+        "weapon": "sword",
+        "armor": "1",
+        "movement": "1"
     }
 
 

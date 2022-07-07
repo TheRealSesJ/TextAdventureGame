@@ -1,6 +1,6 @@
 package com.sesj.Scenes;
-import com.sesj.GameObjects.Enemies.*;
-import com.sesj.GameObjects.Items.*;
+import com.sesj.GameObjects.Enemy;
+import com.sesj.GameObjects.Item;
 //import GameObjects.Weapons.*;
 
 public class Scene {

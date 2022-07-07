@@ -1,24 +1,28 @@
-package com.sesj;
+package com.sesj.GameObjects;
 
-import com.sesj.GameObjects.Weapons.*;
-import com.sesj.GameObjects.Items.*;
+import com.sesj.GameObjects.Item;
+import com.sesj.GameObjects.Weapon;
 import com.sesj.StaticData.*;
 import com.sesj.Interfaces.*;
 import com.sesj.Exceptions.*;
+import com.sesj.World;
 
 public class Player implements Entity{
   //world position
   private int xPos = 0;
   private int yPos = 0;
 
-  private Weapon weapon = GameParameters.playerWeapon;
+  private Weapon weapon;
   private Item item; //starts empty
-
-  private final int move = GameParameters.playerMovement;
-  private int hp = GameParameters.playerHp;
-  private final int armor=GameParameters.playerArmor;
+  private int movement;
+  private int hp;
+  private int armor;
   
-  public Player(){ 
+  public Player(int hp, Weapon weapon, int armor, int movement){
+    this.hp = hp;
+    this.weapon = weapon;
+    this.armor = armor;
+    this.movement = movement;
   }
 
   //takes into account the ammount of tiles the player is allowed to move, as well as whether or not the area being entered is traversible. *also takes item buffs into consideration*
@@ -34,8 +38,8 @@ public class Player implements Entity{
     }catch(IndexOutOfBoundsException e){
       throw new MovementOutOfBoundsException();
     }
-    if(move<Math.abs(xTiles) || move<Math.abs(yTiles)){
-      if(this.item==null || (move+this.item.getMoveBoost()<Math.abs(xTiles) || move+this.item.getMoveBoost()<Math.abs(yTiles))){
+    if(movement<Math.abs(xTiles) || movement<Math.abs(yTiles)){
+      if(this.item==null || (movement+this.item.getMoveBoost()<Math.abs(xTiles) || movement+this.item.getMoveBoost()<Math.abs(yTiles))){
         throw new MovementOutOfRangeException();
       }
     }
@@ -60,6 +64,8 @@ public class Player implements Entity{
   public Item getItem(){
     return this.item;
   }
+
+  public String toString() { return "Player"; }
 
   //adds item effects, returns old weapon and removes effects from it
   public Weapon equip(Weapon weapon){
@@ -107,7 +113,7 @@ public class Player implements Entity{
   }
 
   public int getMovement(){
-    return this.move;
+    return this.movement;
   }
 
   //returns the players stats as a string, intended to give the user information

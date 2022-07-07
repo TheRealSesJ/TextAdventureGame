@@ -1,6 +1,6 @@
 //planning on interface that includes the item
 
-package com.sesj.GameObjects.Items;
+package com.sesj.GameObjects;
 
 public class Item{
   //weapon related

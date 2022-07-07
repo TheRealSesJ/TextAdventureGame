@@ -1,6 +1,6 @@
 package com.sesj.Interfaces;
 
-import com.sesj.GameObjects.Weapons.*;
+import com.sesj.GameObjects.Weapon;
 
 public interface Entity{
   int getHp();

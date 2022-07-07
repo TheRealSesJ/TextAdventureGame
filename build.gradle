@@ -30,6 +30,13 @@ task fatJar(type: Jar){
     with jar
 }
 
+task runWithExecJarExecutable(type: Exec) {
+    dependsOn jar
+    group = "Execution"
+    description = "Run the output executable jar with ExecTask"
+    commandLine "java", "-jar", jar.archiveFile.get()
+}
+
 repositories {
     mavenCentral()
 }
