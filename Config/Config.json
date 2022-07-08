@@ -119,7 +119,7 @@
         "mountains":{
             "scannable":"true",
             "escapable": "false",
-            "traversable": "false",
+            "traversable": "true",
             "icon": "^",
             "name": "Mountains"
         }

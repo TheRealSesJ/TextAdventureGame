@@ -26,14 +26,12 @@ public class GameController{
       if(input.length==1){
         p.println(World.getLocation(player).getInfo());
       } else {
+//look for missing input parameters throw exception
+        try{input[2]=input[2];}
+        catch (IndexOutOfBoundsException e){throw new MissingParameterException();}
 //make sure scan is less than player move capabilities
           if(Math.abs(Integer.parseInt(input[1]))>player.getMovement() || Math.abs(Integer.parseInt(input[2]))>player.getMovement()){
             throw new MovementOutOfRangeException();
-          }
-//look for missing input parameters throw exception 
-          try{input[2].equals("");}
-          catch (IndexOutOfBoundsException e){
-            throw new MissingParameterException();
           }
 //look for missing index in world array throw exception
           try{
@@ -177,7 +175,7 @@ public class GameController{
 
 
 
-//combat turn
+//combat turn //TODO FIX
   public static void combatTurn(Entity attacker, Entity defender){
     p.println("\n"+attacker+" Move!\n");
     //weapons have 1 to 100 attack chance, regardless of whether attack landed
@@ -190,7 +188,7 @@ public class GameController{
 //---------------------->armor will reduce damage taken<---------------------------
       int dmg = -1*attacker.getWeapon().getAttack()+defender.getArmor();
       defender.updateHp(Math.min(dmg, 0));
-      p.println("\nEnemy hp remaining: "+attacker.getHp()+"\n");
+      p.println("\n"+defender+" hp remaining: "+defender.getHp()+"\n");
     } else {
       p.println("\nAttack failed on "+ defender +"!\n");
     }
