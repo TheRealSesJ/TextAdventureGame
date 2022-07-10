@@ -70,9 +70,10 @@ public class GameParameters{
         Boolean.parseBoolean(args[3]), //range boost TODO FIX
         Integer.parseInt(args[4]), //movement boost
         Boolean.parseBoolean(args[5]), //traversal boost
-        Integer.parseInt(args[6]), //hp boost
-        Integer.parseInt(args[7]), //armor boost
-        args[8]); //name
+        Boolean.parseBoolean(args[6]), //scan boost
+        Integer.parseInt(args[7]), //hp boost
+        Integer.parseInt(args[8]), //armor boost
+        args[9]); //name
     }
     try{
       return items;

@@ -12,18 +12,20 @@ public class Item{
   //player related
   private final int moveBoost;
   private final boolean traverseBoost;
+  private final boolean scanBoost;
   private final int hpBoost;
   private final int armorBoost;
 
   private final String name;
 
-  public Item(int attack, int speed, int accuracy, boolean range, int movement, boolean traversal, int hp, int armor, String name){
+  public Item(int attack, int speed, int accuracy, boolean range, int movement, boolean traversal, boolean scan, int hp, int armor, String name){
     this.attackBoost=attack;
     this.speedBoost=speed;
     this.accuracyBoost=accuracy;
     this.rangeBoost=range;
     this.moveBoost=movement;
     this.traverseBoost=traversal;
+    this.scanBoost = scan;
     this.hpBoost=hp;
     this.armorBoost=armor;
     this.name=name;
@@ -58,6 +60,10 @@ public class Item{
     return this.traverseBoost;
   }
 
+  public boolean getScanBoost(){
+    return this.scanBoost;
+  }
+
   public int getHpBoost(){
     return this.hpBoost;
   }
@@ -67,18 +73,19 @@ public class Item{
   }
 
   public String getStats(){
-    return this
+    return "\n"+this+"\n"
     +"\nWeapon Related:"
-    +"\nattack boost: "+ this.attackBoost
-    +"\nspeed: "+ this.speedBoost
-    +"\naccuracy: "+ this.accuracyBoost
-    +"\nranged: "+ this.rangeBoost
+    +"\n\tattack boost: "+ this.attackBoost
+    +"\n\tspeed: "+ this.speedBoost
+    +"\n\taccuracy: "+ this.accuracyBoost
+    +"\n\tranged: "+ this.rangeBoost
     +"\n"
     +"\nPlayer Related: "
-    +"\nmove boost: "+ this.moveBoost
-    +"\ntraversal boost: "+ this.traverseBoost
-    +"\nhp boost:" + this.hpBoost
-    +"\narmor boost: " + this.armorBoost
+    +"\n\tmove boost: "+ this.moveBoost
+    +"\n\ttraversal boost: "+ this.traverseBoost
+    +"\n\tscan boost: "+ this.scanBoost
+    +"\n\thp boost:" + this.hpBoost
+    +"\n\tarmor boost: " + this.armorBoost
     +"\n";
   }
 }

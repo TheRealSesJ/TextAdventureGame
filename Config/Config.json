@@ -34,6 +34,7 @@
             "range":"false",
             "movement":"0",
             "traversal":"false",
+            "scan":"false",
             "hp":"0",
             "armor":"5",
             "name":"Chainmail"
@@ -46,6 +47,7 @@
             "range":"false",
             "movement":"2",
             "traversal":"true",
+            "scan":"false",
             "hp":"0",
             "armor":"0",
             "name":"Holy Sandals"
@@ -57,6 +59,7 @@
             "range":"true",
             "movement":"0",
             "traversal":"false",
+            "scan":"true",
             "hp":"0",
             "armor":"0",
             "name":"Power Amulet"

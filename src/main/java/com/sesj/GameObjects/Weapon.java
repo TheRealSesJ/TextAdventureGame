@@ -48,7 +48,7 @@ public class Weapon {
     this.attack-= item.getAttackBoost();
     this.speed -= item.getSpeedBoost();
     this.accuracy-= item.getAccuracyBoost();
-    //this part is slightly broken, needs work
+    //this part is slightly broken, needs work TODO
     this.ranged = !item.getRangeBoost();
     return this;
   }

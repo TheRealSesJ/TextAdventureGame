@@ -1,7 +1,13 @@
 //main method
+
+//java -jar build\libs\tag.jar
+//run command
+
 package com.sesj;
 
 //import com.sesj.GameObjects.Scenes.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import com.sesj.Exceptions.*;
@@ -32,7 +38,7 @@ public class InputController{
       
       Player player = GameParameters.getPlayer();
       p.println("Welcome to text adventure!");
-      GameController.displayMinimap(player);
+      GameController.minimap(new String[]{""}, player);
 
 
       //game loop
@@ -94,65 +100,38 @@ public class InputController{
   public static boolean scanInput(String input, Player player, String type) throws InterruptedIOException{
     String[] inputArr = input.split(" ");
     //check if world input
-    try{
-      if(type.equals("world")){
-        switch(inputArr[0].toLowerCase()){
-          case "move":
-            return GameController.translate(inputArr, player);
-          case "grab_item":
-            return GameController.grabItem(player);
-          default:
-        }
-      //check if combat input
-      } else if (type.equals("combat")){
-        switch(inputArr[0].toLowerCase()){
-          case "fight":
-            return GameController.combat(player);
-          case "run":
-            return GameController.run(player);
-          default:
-        }
+    Method inputAction;
+    try {
+      inputAction = GameController.class.getDeclaredMethod((inputArr[0]), String[].class, Player.class);
+      return (boolean) inputAction.invoke(null, inputArr, player);
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+      return false;
+    } catch(InvocationTargetException e){ //exception from invoked method
+      p.println(e.getCause().getMessage());
+      return false;
+    } catch(NoSuchMethodException e) { //for commands which are not in game parameters
+      if(inputArr[0].equals("end_game")){
+        throw new InterruptedIOException();
       }
-      //readoff normal inputs
-      switch(inputArr[0].toLowerCase()){
-        case "scan":
-          return GameController.scan(inputArr, player);
-        case "interact":
-          return GameController.interact(inputArr, player);
-        case "minimap": //always false
-          return GameController.displayMinimap(player);
-        case "stats": //always false
-          return GameController.displayStats(player);
-        case "help": //always false
-          return GameController.getHelp();
-        case "end_game":
-          throw new InterruptedIOException();
-        default:
-          return false;
+      try {
+        if(type.equals("combat")){
+          inputAction = GameController.CombatController.class.getDeclaredMethod((inputArr[0]), Player.class);
+          return (boolean) inputAction.invoke(null, player);
+        } else if (type.equals("world")){
+          inputAction = GameController.WorldController.class.getDeclaredMethod((inputArr[0]), String[].class, Player.class);
+          return (boolean) inputAction.invoke(null, inputArr, player);
+        }
+      } catch (NoSuchMethodException ex) {
+        return false;
+      } catch (InvocationTargetException invocationTargetException) {
+        p.println(e.getMessage());
+        return false;
+      } catch (IllegalAccessException illegalAccessException) {
+        illegalAccessException.printStackTrace();
       }
-    } catch(IndexOutOfBoundsException e){
-      p.println(e.getMessage());
-      return false;
-    } catch(NumberFormatException e){
-      p.println("Coordinate undefined "+e.getMessage());
-      return false;
-    } catch(MovementOutOfBoundsException e){
-      p.println(e.getMessage());
-      return false;
-    } catch(MovementOutOfRangeException e){
-      p.println(e.getMessage());
-      return false;
-    } catch(NotTraversibleException e){
-      p.println(e.getMessage());
-      return false;
-    } catch(MissingParameterException e){
-      p.println(e.getMessage());
-      return false;
-    } catch(NullGameObjectException e){
-      p.println(e.getMessage());
-      return false;
     }
-    
+    return false;
   }
 
   

@@ -23,8 +23,6 @@ public class Scene {
     this.icon = icon;
     this.name=name;
   }
-  
-  public String getName(){ return name; }
 
   public String toString(){ return this.name; }
 
@@ -65,11 +63,11 @@ public class Scene {
 
   public String getInfo(){
     String data = "";
-    try{ data += this.enemy.getStats()+""; } 
+    try{ data += "\n"+this.enemy.getStats()+"\n"; }
     catch(NullPointerException e){ data += "\nno enemy\n";}
-    try{ data += this.item.getStats()+""; } 
+    try{ data += "\n"+this.item.getStats()+"\n"; }
     catch(NullPointerException e){ data += "\nno item\n";}
-    return this.name+":\n"+data;
+    return "\n"+this.name.toUpperCase()+":\n"+data;
   }
 
   public boolean isEscapable(){

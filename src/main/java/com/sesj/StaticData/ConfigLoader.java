@@ -64,6 +64,7 @@ public class ConfigLoader {
       (String) item.get("range"),
       (String) item.get("movement"),
       (String) item.get("traversal"),
+      (String) item.get("scan"),
       (String) item.get("hp"),
       (String) item.get("armor"),
       (String) item.get("name")};

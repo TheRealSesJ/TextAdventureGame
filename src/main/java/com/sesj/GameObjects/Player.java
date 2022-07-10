@@ -1,8 +1,5 @@
 package com.sesj.GameObjects;
 
-import com.sesj.GameObjects.Item;
-import com.sesj.GameObjects.Weapon;
-import com.sesj.StaticData.*;
 import com.sesj.Interfaces.*;
 import com.sesj.Exceptions.*;
 import com.sesj.World;
@@ -27,11 +24,11 @@ public class Player implements Entity{
 
   //takes into account the ammount of tiles the player is allowed to move, as well as whether or not the area being entered is traversible. *also takes item buffs into consideration*
   //illegal acess exception used for case where tile is not traversible
-  public boolean translate(int xTiles, int yTiles) throws NotTraversibleException, MovementOutOfRangeException, MovementOutOfBoundsException {
+  public boolean translate(int xTiles, int yTiles) throws NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException {
     try{
       if(!World.getLocation(this, xTiles, yTiles).isTraversable()){
         if(this.item==null || !this.item.getTraverseBoost()){
-          throw new NotTraversibleException();
+          throw new NotTraversableException();
         }
       }
     //convert index out of bounds into movement out of bounds for specificity
@@ -122,30 +119,31 @@ public class Player implements Entity{
     if(item!=null){
       display += 
     "Weapon: "+this.weapon.toString() +" (affected by "+this.item.toString()+")"
-    +"\nattack: "+ this.weapon.getAttack() + "+("+this.item.getAttackBoost()+")"
-    +"\nspeed: "+ this.weapon.getSpeed() + "+("+this.item.getSpeedBoost()+")"
-    +"\naccuracy: "+ this.weapon.getAccuracy() + "+("+this.item.getAccuracyBoost()+")"
-    +"\nranged: "+ this.weapon.isRanged() + "+("+this.item.getRangeBoost()+")"
+    +"\n\tattack: "+ this.weapon.getAttack() + "+("+this.item.getAttackBoost()+")"
+    +"\n\tspeed: "+ this.weapon.getSpeed() + "+("+this.item.getSpeedBoost()+")"
+    +"\n\taccuracy: "+ this.weapon.getAccuracy() + "+("+this.item.getAccuracyBoost()+")"
+    +"\n\tranged: "+ this.weapon.isRanged() + "+("+this.item.getRangeBoost()+")"
     +"\n"
     +"\nItem: "+this.item.toString() 
-    +"\nmove boost: "+ this.item.getMoveBoost()
-    +"\ntraversal boost: "+ this.item.getTraverseBoost()
+    +"\n\tmove boost: "+ this.item.getMoveBoost()
+    +"\n\ttraversal boost: "+ this.item.getTraverseBoost()
+    +"\n\tscan boost: " +this.item.getScanBoost()
     +"\n"
     +"\nPlayer: (effected by "+this.item.toString()+")"
-    +"\nHp: "+this.hp+ "+("+this.item.getHpBoost()+")"
-    +"\nArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
+    +"\n\tHp: "+this.hp+ "+("+this.item.getHpBoost()+")"
+    +"\n\tArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
     +"\n";
     } else{
       display += 
     "Weapon: "+this.weapon.toString()
-    +"\nattack: "+ this.weapon.getAttack()
-    +"\nspeed: "+ this.weapon.getSpeed()
-    +"\naccuracy: "+ this.weapon.getAccuracy()
-    +"\nranged: "+ this.weapon.isRanged()
+    +"\n\tattack: "+ this.weapon.getAttack()
+    +"\n\tspeed: "+ this.weapon.getSpeed()
+    +"\n\taccuracy: "+ this.weapon.getAccuracy()
+    +"\n\tranged: "+ this.weapon.isRanged()
     +"\n"
     +"\nPlayer:"
-    +"\nHp: "+this.hp
-    +"\nArmor: "+this.armor
+    +"\n\tHp: "+this.hp
+    +"\n\tArmor: "+this.armor
     +"\n";
     }
 
