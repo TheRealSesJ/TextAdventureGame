@@ -124,11 +124,11 @@ public class InputController{
         }
       } catch (NoSuchMethodException ex) {
         return false;
-      } catch (InvocationTargetException invocationTargetException) {
-        p.println(e.getMessage());
+      } catch (InvocationTargetException ex) {
+          p.println("Input undefined: " + ex.getCause().getMessage());
         return false;
-      } catch (IllegalAccessException illegalAccessException) {
-        illegalAccessException.printStackTrace();
+      } catch (IllegalAccessException ex) {
+        ex.printStackTrace();
       }
     }
     return false;
