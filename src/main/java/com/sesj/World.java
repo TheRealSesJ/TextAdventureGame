@@ -1,9 +1,6 @@
 package com.sesj;
 
-import com.sesj.GameObjects.Enemy;
-import com.sesj.GameObjects.Item;
-import com.sesj.GameObjects.Player;
-import com.sesj.GameObjects.Scene;
+import com.sesj.GameObjects.*;
 import com.sesj.Exceptions.ConfigException;
 
 import java.util.ArrayList;
@@ -16,6 +13,7 @@ public class World {
   private static int size;
   private static ArrayList<Enemy> enemies;
   private static ArrayList<Item> items;
+  private static ArrayList<Weapon> weapons;
 
 
 
@@ -24,8 +22,10 @@ public class World {
     size = worldMap.length;
     enemies = new ArrayList<Enemy>(Arrays.asList(GameParameters.getEnemies()));
     items = new ArrayList<Item>(Arrays.asList(GameParameters.getItems()));
+    weapons = new ArrayList<Weapon>(Arrays.asList(GameParameters.getWeapons()));
     populateEnemies();
     populateItems();
+    populateWeapons();
   }
 
   public static Scene getLocation(Player p){
@@ -60,6 +60,16 @@ public class World {
       int last = items.size()-1;
       if(worldMap[rand.nextInt(size)][rand.nextInt(size)].setItem(items.get(last))){
         items.remove(last);
+      }
+    }
+  }
+
+  private static void populateWeapons(){
+    Random rand = new Random();
+    while(weapons.size()>0){
+      int last = weapons.size()-1;
+      if(worldMap[rand.nextInt(size)][rand.nextInt(size)].setWeapon(weapons.get(last))){
+        weapons.remove(last);
       }
     }
   }

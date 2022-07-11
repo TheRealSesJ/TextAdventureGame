@@ -16,23 +16,12 @@ public class GameParameters{
     String[][] worldStr = ConfigLoader.loadWorld();
     int size = worldStr.length;
     Scene[][] world = new Scene[size][size];
-    for(int i=0; i<size; i++){
-      for(int j=0; j<size;j++){
-        String[] args = ConfigLoader.loadSceneStats(worldStr[i][j]);
-        world[i][j] = new Scene(
-                Boolean.parseBoolean(args[0]),
-                Boolean.parseBoolean(args[1]),
-                Boolean.parseBoolean(args[2]),
-                args[3],
-                args[4]);
+    for(int i=0; i<size; i++) {
+      for (int j = 0; j < size; j++) {
+        world[i][j] = getScene(worldStr[i][j]);
       }
     }
-    try{
-      return world;
-    } catch(NumberFormatException e){
-      e.printStackTrace();
-      return null;
-    }
+    return world;
   }
 
   //procedural generation
@@ -41,19 +30,9 @@ public class GameParameters{
     int size = enemiesStr.length;
     Enemy[] enemies = new Enemy[size];
     for(int i=0; i<size;i++){
-      String[] args = ConfigLoader.loadEnemyStats(enemiesStr[i]);
-      enemies[i] = new Enemy(
-        Integer.parseInt(args[0]), //hp
-        getWeapon(args[1]), //weapon
-        Integer.parseInt(args[2]), //armor
-        args[3]); //name
+      enemies[i] = getEnemy(enemiesStr[i]);
     }
-    try{
-      return enemies;
-    } catch(NumberFormatException e){
-      e.printStackTrace();
-      return null;
-    }
+    return enemies;
   }
 
 
@@ -62,22 +41,65 @@ public class GameParameters{
     int size = itemsStr.length;
     Item[] items = new Item[size];
     for(int i=0; i<size;i++){
-      String[] args = ConfigLoader.loadItemStats(itemsStr[i]);
-      items[i] = new Item(
-        Integer.parseInt(args[0]), //attack boost
-        Integer.parseInt(args[1]), //speed boost
-        Integer.parseInt(args[2]), //accuracy boost
-        Boolean.parseBoolean(args[3]), //range boost TODO FIX
-        Integer.parseInt(args[4]), //movement boost
-        Boolean.parseBoolean(args[5]), //traversal boost
-        Boolean.parseBoolean(args[6]), //scan boost
-        Integer.parseInt(args[7]), //hp boost
-        Integer.parseInt(args[8]), //armor boost
-        args[9]); //name
+      items[i] = getItem(itemsStr[i]);
     }
+    return items;
+  }
+
+  public static Weapon[] getWeapons(){
+    String[] itemsStr = ConfigLoader.loadSpawnables("weapons");
+    int size = itemsStr.length;
+    Weapon[] weapons = new Weapon[size];
+    for(int i=0; i<size;i++){
+      weapons[i] = getWeapon(itemsStr[i]);
+    }
+    return weapons;
+  }
+
+  public static Scene getScene(String name){
+    String[] args = ConfigLoader.loadSceneStats(name);
     try{
-      return items;
-    } catch(NumberFormatException e){
+      return new Scene(
+              Boolean.parseBoolean(args[0]),
+              Boolean.parseBoolean(args[1]),
+              Boolean.parseBoolean(args[2]),
+              args[3],
+              args[4]);
+    } catch(NumberFormatException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public static Enemy getEnemy(String name){
+    String[] args = ConfigLoader.loadEnemyStats(name);
+    try{
+      return new Enemy(
+              Integer.parseInt(args[0]), //hp
+              getWeapon(args[1]), //weapon
+              Integer.parseInt(args[2]), //armor
+              args[3]); //name
+    } catch(NumberFormatException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public static Item getItem(String name){
+    String[] args = ConfigLoader.loadItemStats(name);
+    try{
+      return new Item(
+              Integer.parseInt(args[0]), //attack boost
+              Integer.parseInt(args[1]), //speed boost
+              Integer.parseInt(args[2]), //accuracy boost
+              Boolean.parseBoolean(args[3]), //range boost TODO FIX
+              Integer.parseInt(args[4]), //movement boost
+              Boolean.parseBoolean(args[5]), //traversal boost
+              Boolean.parseBoolean(args[6]), //scan boost
+              Integer.parseInt(args[7]), //hp boost
+              Integer.parseInt(args[8]), //armor boost
+              args[9]); //name
+    } catch(NumberFormatException e) {
       e.printStackTrace();
       return null;
     }

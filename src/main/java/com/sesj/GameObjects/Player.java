@@ -93,6 +93,21 @@ public class Player implements Entity{
     }
   }
 
+  public Weapon equipWeapon(Weapon weapon){
+    if(this.item!=null){
+      this.weapon.unEffect(this.item);
+      Weapon old=this.weapon;
+      this.weapon= weapon;
+      this.weapon.effect(this.item);
+      return old;
+    } else {
+//return old and skip uneffect step if item never existed in the first place
+      Weapon old = this.weapon;
+      this.weapon= weapon;
+      return old;
+    }
+  }
+
 //health related methods
   public int getHp(){
     return hp;

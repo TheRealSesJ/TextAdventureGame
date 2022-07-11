@@ -10,11 +10,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.sesj.Exceptions.*;
-import com.sesj.GameObjects.Enemy;
-import com.sesj.GameObjects.Item;
-import com.sesj.GameObjects.Player;
+import com.sesj.GameObjects.*;
 import com.sesj.Interfaces.Entity;
-import com.sesj.GameObjects.Scene;
 
 //prints to console, only object allowed to do so
 public class GameController{
@@ -175,6 +172,20 @@ public class GameController{
         e.printStackTrace();
         return false;
       }
+    }
+
+    public static boolean grab_weapon(String[] input, Player player) throws NullGameObjectException{
+      Scene scene = World.getLocation(player);
+      try{
+        scene.getWeapon();
+      } catch (NullPointerException e){
+        throw new NullGameObjectException();
+      }
+        Weapon old = player.equipWeapon(scene.getWeapon());
+        scene.setWeapon(old);
+        p.println("you grabbed "+player.getWeapon().toString());
+        p.println(""+old.toString()+" was dropped");
+        return true;
     }
   }
   

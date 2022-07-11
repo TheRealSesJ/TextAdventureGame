@@ -41,12 +41,7 @@ public class Enemy implements Entity{
   //returns the enemy's stats as a string, intended to give the user information
   public String getStats(){
     return "\n"+this+"\n"
-    +"\nWeapon: "+this.weapon.toString()
-    +"\n\tattack: "+ this.weapon.getAttack()
-    +"\n\tspeed: "+ this.weapon.getSpeed()
-    +"\n\taccuracy: "+ this.weapon.getAccuracy()
-    +"\n\tranged: "+ this.weapon.isRanged()
-    +"\n"
+    +this.weapon.getStats()
     +"\n\tHp: "+this.hp
     +"\n\tArmor: "+this.armor
     +"\n";

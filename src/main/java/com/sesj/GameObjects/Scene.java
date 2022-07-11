@@ -10,6 +10,7 @@ public class Scene {
 
   private Enemy enemy;
   private Item item;
+  private Weapon weapon;
 
   //properties of scenes;
   private final boolean scannable;
@@ -61,12 +62,30 @@ public class Scene {
     return false;
   }
 
+  public Weapon getWeapon(){
+    Weapon e = this.weapon;
+    if(e==null){
+      return null;
+    }
+    return this.weapon;
+  }
+
+  public boolean setWeapon(Weapon weapon){
+    if(this.weapon==null || weapon==null){
+      this.weapon = weapon;
+      return true;
+    }
+    return false;
+  }
+
   public String getInfo(){
     String data = "";
     try{ data += "\n"+this.enemy.getStats()+"\n"; }
     catch(NullPointerException e){ data += "\nno enemy\n";}
     try{ data += "\n"+this.item.getStats()+"\n"; }
     catch(NullPointerException e){ data += "\nno item\n";}
+    try{ data += "\n"+this.weapon.getStats()+"\n"; }
+    catch(NullPointerException e){ data += "\nno weapon\n";}
     return "\n"+this.name.toUpperCase()+":\n"+data;
   }
 

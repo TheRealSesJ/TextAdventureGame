@@ -53,5 +53,14 @@ public class Weapon {
     return this;
   }
 
+  public String getStats(){
+    return "\nWeapon: "+toString()
+            +"\n\tattack: "+ getAttack()
+            +"\n\tspeed: "+ getSpeed()
+            +"\n\taccuracy: "+ getAccuracy()
+            +"\n\tranged: "+ isRanged()
+            +"\n";
+  }
+
   
 }

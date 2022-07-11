@@ -11,6 +11,9 @@
 
     "items":["holy_sandals", "holy_sandals", "power_amulet", "power_amulet", "chainmail"],
 
+    "weapons":["bow", "bow", "bow", "bow", "bow", "bow", "bow"],
+
+
     "enemy_stats":{
         "wild_beast":{
             "hp":"25",
