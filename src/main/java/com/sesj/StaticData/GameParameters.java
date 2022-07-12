@@ -123,7 +123,9 @@ public class GameParameters{
               Integer.parseInt(args[0]), //hp
               getWeapon(args[1]), //weapon
               Integer.parseInt(args[2]), //armor
-              Integer.parseInt(args[3])); //movement
+              Integer.parseInt(args[3]),
+              Integer.parseInt(args[4]),
+              Integer.parseInt(args[5])); //movement
     } catch(NumberFormatException e) {
       throw new ConfigNullValueException("in player stats");
     }
@@ -242,7 +244,9 @@ public class GameParameters{
                 (String) player.get("hp"),
                 (String) player.get("weapon"),
                 (String) player.get("armor"),
-                (String) player.get("movement")};
+                (String) player.get("movement"),
+                (String) player.get("initialX"),
+                (String) player.get("initialY")};
       } catch (NullPointerException e){
         throw new ConfigNullValueException("at player stats declaration");
       }

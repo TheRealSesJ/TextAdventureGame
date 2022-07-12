@@ -6,8 +6,8 @@ import com.sesj.World;
 
 public class Player implements Entity{
   //world position
-  private int xPos = 0;
-  private int yPos = 0;
+  private int xPos;
+  private int yPos;
 
   private Weapon weapon;
   private Item item; //starts empty
@@ -15,11 +15,13 @@ public class Player implements Entity{
   private int hp;
   private int armor;
   
-  public Player(int hp, Weapon weapon, int armor, int movement){
+  public Player(int hp, Weapon weapon, int armor, int movement, int initialX, int initialY){
     this.hp = hp;
     this.weapon = weapon;
     this.armor = armor;
     this.movement = movement;
+    this.xPos = initialX;
+    this.yPos = initialY;
   }
 
   //takes into account the ammount of tiles the player is allowed to move, as well as whether or not the area being entered is traversible. *also takes item buffs into consideration*

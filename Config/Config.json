@@ -135,7 +135,9 @@
         "hp": "30",
         "weapon": "sword",
         "armor": "1",
-        "movement": "1"
+        "movement": "1",
+        "initialX": "2",
+        "initialY": "2"
     }
 
 

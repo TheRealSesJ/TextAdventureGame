@@ -6,6 +6,8 @@ import com.sesj.Exceptions.ConfigException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Arrays;
+
+import com.sesj.Interfaces.Entity;
 import com.sesj.StaticData.*;
 
 public class World {
@@ -28,27 +30,26 @@ public class World {
     populateWeapons();
   }
 
-  public static Scene getLocation(Player p){
-    return worldMap[worldY(p)][worldX(p)];
+  public static Scene getLocation(Entity e){
+    return worldMap[e.getYPos()][e.getXPos()];
   }
 
-  public static Scene getLocation(Player p, int xOffset, int yOffset){
-    return worldMap[worldY(p) + yOffset][worldX(p) + xOffset];
+  public static Scene getLocation(Entity e, int xOffset, int yOffset){
+    return worldMap[e.getYPos() + yOffset][e.getXPos() + xOffset];
   }
 
-  private static int worldX(Player p){
-    return p.getXPos()+size/2;
-  }
 
-  private static int worldY(Player p){
-    return p.getYPos()+size/2;
-  }
+
+
 
   private static void populateEnemies(){
     Random rand = new Random();
     while(enemies.size()>0){
       int last = enemies.size()-1;
-      if(worldMap[rand.nextInt(size)][rand.nextInt(size)].setEnemy(enemies.get(last))){
+      int x = rand.nextInt(size);
+      int y = rand.nextInt(size);
+      if(worldMap[y][x].setEnemy(enemies.get(last))){
+        enemies.get(last).initPos(x, y);
         enemies.remove(last);
       }
     }

@@ -8,4 +8,6 @@ public interface Entity{
   void updateHp(int update);
   int getArmor();
   String getStats();
+  int getXPos();
+  int getYPos();
 }
