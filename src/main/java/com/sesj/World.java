@@ -20,9 +20,9 @@ public class World {
   public static void build() throws ConfigException{
     worldMap = GameParameters.getWorld();
     size = worldMap.length;
-    enemies = new ArrayList<Enemy>(Arrays.asList(GameParameters.getEnemies()));
-    items = new ArrayList<Item>(Arrays.asList(GameParameters.getItems()));
-    weapons = new ArrayList<Weapon>(Arrays.asList(GameParameters.getWeapons()));
+    enemies = new ArrayList<Enemy>(Arrays.asList(GameParameters.getEnemyArray()));
+    items = new ArrayList<Item>(Arrays.asList(GameParameters.getItemArray()));
+    weapons = new ArrayList<Weapon>(Arrays.asList(GameParameters.getWeaponArray()));
     populateEnemies();
     populateItems();
     populateWeapons();

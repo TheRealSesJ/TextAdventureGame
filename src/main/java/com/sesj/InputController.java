@@ -31,7 +31,7 @@ public class InputController{
     //load the config, if missing throw an error, game inside try-catch
     try{
 
-      GameParameters.ConfigLoader.load();
+      GameParameters.ConfigLoader.configLoad();
       World.build();
 
       
@@ -85,15 +85,14 @@ public class InputController{
       }
     } catch (ConfigException e){
       p.println(e.getMessage());
-    } finally{
-
+    }
 
 //----end of the game----
       p.println("\nGAME OVER\n");
 
       p.println("Press any button to exit:");
       SCAN.nextLine();
-    }
+
   }
 
   //input mappings for normal inputs, uses up one turn if a correct input is executed

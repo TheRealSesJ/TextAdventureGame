@@ -1,6 +1,7 @@
 package com.sesj.StaticData;
 
 
+import com.sesj.Exceptions.ConfigNullValueException;
 import com.sesj.Exceptions.MissingConfigException;
 import com.sesj.GameObjects.*;
 import org.json.simple.JSONArray;
@@ -11,7 +12,7 @@ import java.io.FileReader;
 
 public class GameParameters{
 
-  public static Scene[][] getWorld(){
+  public static Scene[][] getWorld() throws ConfigNullValueException {
     String[][] worldStr = ConfigLoader.loadWorld();
     int size = worldStr.length;
     Scene[][] world = new Scene[size][size];
@@ -24,7 +25,7 @@ public class GameParameters{
   }
 
   //procedural generation
-  public static Enemy[] getEnemies(){
+  public static Enemy[] getEnemyArray() throws ConfigNullValueException {
     String[] enemiesStr = ConfigLoader.loadSpawnables("enemies");
     int size = enemiesStr.length;
     Enemy[] enemies = new Enemy[size];
@@ -35,7 +36,7 @@ public class GameParameters{
   }
 
 
-  public static Item[] getItems(){
+  public static Item[] getItemArray() throws ConfigNullValueException {
     String[] itemsStr = ConfigLoader.loadSpawnables("items");
     int size = itemsStr.length;
     Item[] items = new Item[size];
@@ -45,7 +46,7 @@ public class GameParameters{
     return items;
   }
 
-  public static Weapon[] getWeapons(){
+  public static Weapon[] getWeaponArray() throws ConfigNullValueException {
     String[] itemsStr = ConfigLoader.loadSpawnables("weapons");
     int size = itemsStr.length;
     Weapon[] weapons = new Weapon[size];
@@ -55,7 +56,7 @@ public class GameParameters{
     return weapons;
   }
 
-  public static Scene getScene(String name){
+  public static Scene getScene(String name) throws ConfigNullValueException {
     String[] args = ConfigLoader.loadSceneStats(name);
     try{
       return new Scene(
@@ -65,12 +66,11 @@ public class GameParameters{
               args[3],
               args[4]);
     } catch(NumberFormatException e) {
-      e.printStackTrace();
-      return null;
+      throw new ConfigNullValueException("in scene stats");
     }
   }
 
-  public static Enemy getEnemy(String name){
+  public static Enemy getEnemy(String name) throws ConfigNullValueException {
     String[] args = ConfigLoader.loadEnemyStats(name);
     try{
       return new Enemy(
@@ -79,12 +79,11 @@ public class GameParameters{
               Integer.parseInt(args[2]), //armor
               args[3]); //name
     } catch(NumberFormatException e) {
-      e.printStackTrace();
-      return null;
+      throw new ConfigNullValueException("in enemy stats");
     }
   }
 
-  public static Item getItem(String name){
+  public static Item getItem(String name) throws ConfigNullValueException {
     String[] args = ConfigLoader.loadItemStats(name);
     try{
       return new Item(
@@ -99,12 +98,11 @@ public class GameParameters{
               Integer.parseInt(args[8]), //armor boost
               args[9]); //name
     } catch(NumberFormatException e) {
-      e.printStackTrace();
-      return null;
+      throw new ConfigNullValueException("in item stats");
     }
   }
 
-  public static Weapon getWeapon(String name){
+  public static Weapon getWeapon(String name) throws ConfigNullValueException {
     String[] args = ConfigLoader.loadWeaponStats(name);
     try{
       return new Weapon(
@@ -114,12 +112,11 @@ public class GameParameters{
       Boolean.parseBoolean(args[3]), //range
       args[4]); //name;
     } catch(NumberFormatException e) {
-      e.printStackTrace();
-      return null;
+      throw new ConfigNullValueException("in weapon stats");
     }
   }
 
-  public static Player getPlayer(){
+  public static Player getPlayer() throws ConfigNullValueException {
     String[] args = ConfigLoader.loadPlayerStats();
     try{
       return new Player(
@@ -128,8 +125,7 @@ public class GameParameters{
               Integer.parseInt(args[2]), //armor
               Integer.parseInt(args[3])); //movement
     } catch(NumberFormatException e) {
-      e.printStackTrace();
-      return null;
+      throw new ConfigNullValueException("in player stats");
     }
 
   }
@@ -140,7 +136,7 @@ public class GameParameters{
     private static JSONObject file;
 
 
-    public static void load() throws MissingConfigException {
+    public static void configLoad() throws MissingConfigException {
       try{
         JSONParser parser = new JSONParser();
         file = (JSONObject)parser.parse(new FileReader("Config\\Config.json"));
@@ -149,7 +145,8 @@ public class GameParameters{
       }
     }
 
-    public static String[][] loadWorld(){
+    public static String[][] loadWorld() throws ConfigNullValueException {
+      try{
         JSONObject world = (JSONObject) file.get("world");
         int size = ((JSONArray) world.get("row1")).size();
         String[][] worldArr = new String[size][size];
@@ -159,68 +156,96 @@ public class GameParameters{
           }
         }
         return worldArr;
-    }
-
-    public static String[] loadSpawnables(String name){
-      JSONArray list = (JSONArray) file.get(name);
-      String[] arr = new String[list.size()];
-      for(int i=0; i<list.size(); i++){
-        arr[i] = (String) list.get(i);
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at the world array declaration");
       }
-      return arr;
+
     }
 
-    public static String[] loadEnemyStats(String name){
-      JSONObject enemy = (JSONObject) ((JSONObject) file.get("enemy_stats")).get(name);
-      return new String[]{
-        (String) enemy.get("hp"),
-        (String) enemy.get("weapon"),
-        (String) enemy.get("armor"),
-        (String) enemy.get("name")};
+    public static String[] loadSpawnables(String name) throws ConfigNullValueException {
+      try{
+        JSONArray list = (JSONArray) file.get(name);
+        String[] arr = new String[list.size()];
+        for(int i=0; i<list.size(); i++){
+          arr[i] = (String) list.get(i);
+        }
+        return arr;
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at the "+name+" array declaration");
+      }
     }
 
-    public static String[] loadItemStats(String name){
-      JSONObject item = (JSONObject) ((JSONObject) file.get("item_stats")).get(name);
-      return new String[]{
-        (String) item.get("attack"),
-        (String) item.get("speed"),
-        (String) item.get("accuracy"),
-        (String) item.get("range"),
-        (String) item.get("movement"),
-        (String) item.get("traversal"),
-        (String) item.get("scan"),
-        (String) item.get("hp"),
-        (String) item.get("armor"),
-        (String) item.get("name")};
+    public static String[] loadEnemyStats(String name) throws ConfigNullValueException {
+      try{
+        JSONObject enemy = (JSONObject) ((JSONObject) file.get("enemy_stats")).get(name);
+        return new String[]{
+                (String) enemy.get("hp"),
+                (String) enemy.get("weapon"),
+                (String) enemy.get("armor"),
+                (String) enemy.get("name")};
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at enemy stats or reference");
+      }
     }
 
-    public static String[] loadWeaponStats(String name){
-      JSONObject weapon = (JSONObject) ((JSONObject) file.get("weapon_stats")).get(name);
-      return new String[]{
-        (String) weapon.get("attack"),
-        (String) weapon.get("speed"),
-        (String) weapon.get("accuracy"),
-        (String) weapon.get("range"),
-        (String) weapon.get("name")};
+    public static String[] loadItemStats(String name) throws ConfigNullValueException {
+      try{
+        JSONObject item = (JSONObject) ((JSONObject) file.get("item_stats")).get(name);
+        return new String[]{
+                (String) item.get("attack"),
+                (String) item.get("speed"),
+                (String) item.get("accuracy"),
+                (String) item.get("range"),
+                (String) item.get("movement"),
+                (String) item.get("traversal"),
+                (String) item.get("scan"),
+                (String) item.get("hp"),
+                (String) item.get("armor"),
+                (String) item.get("name")};
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at item stats declaration or reference");
+      }
     }
 
-    public static String[] loadSceneStats(String name) {
-      JSONObject scene = (JSONObject) ((JSONObject) file.get("scene_stats")).get(name);
-      return new String[]{
-              (String) scene.get("scannable"),
-              (String) scene.get("escapable"),
-              (String) scene.get("traversable"),
-              (String) scene.get("icon"),
-              (String) scene.get("name")};
+    public static String[] loadWeaponStats(String name) throws ConfigNullValueException {
+      try{
+        JSONObject weapon = (JSONObject) ((JSONObject) file.get("weapon_stats")).get(name);
+        return new String[]{
+                (String) weapon.get("attack"),
+                (String) weapon.get("speed"),
+                (String) weapon.get("accuracy"),
+                (String) weapon.get("range"),
+                (String) weapon.get("name")};
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at weapon stats declaration or reference");
+      }
     }
 
-    public static String[] loadPlayerStats(){
-      JSONObject player = (JSONObject) file.get("player_stats");
-      return new String[]{
-              (String) player.get("hp"),
-              (String) player.get("weapon"),
-              (String) player.get("armor"),
-              (String) player.get("movement")};
+    public static String[] loadSceneStats(String name) throws ConfigNullValueException {
+      try{
+        JSONObject scene = (JSONObject) ((JSONObject) file.get("scene_stats")).get(name);
+        return new String[]{
+                (String) scene.get("scannable"),
+                (String) scene.get("escapable"),
+                (String) scene.get("traversable"),
+                (String) scene.get("icon"),
+                (String) scene.get("name")};
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at scene stats declaration or reference");
+      }
+    }
+
+    public static String[] loadPlayerStats() throws ConfigNullValueException {
+      try{
+        JSONObject player = (JSONObject) file.get("player_stats");
+        return new String[]{
+                (String) player.get("hp"),
+                (String) player.get("weapon"),
+                (String) player.get("armor"),
+                (String) player.get("movement")};
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at player stats declaration");
+      }
     }
 
 
