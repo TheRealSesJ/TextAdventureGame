@@ -12,7 +12,6 @@ import java.util.*;
 
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.Player;
-import com.sesj.StaticData.ConfigLoader;
 import com.sesj.StaticData.GameParameters;
 
 import java.io.*;
@@ -32,7 +31,7 @@ public class InputController{
     //load the config, if missing throw an error, game inside try-catch
     try{
 
-      ConfigLoader.load();
+      GameParameters.ConfigLoader.load();
       World.build();
 
       
@@ -49,7 +48,8 @@ public class InputController{
           while(!scanInput(SCAN.nextLine(), player, "world")){
             p.println("\nplease enter an action\n");
           }
-          p.println("\nNext turn:\n");
+          p.println("\nNext turn:");
+          p.println("<------------------------------------->\n");
 
   //----------------------check for combat, if yes convert to *combat turns*
           while(World.getLocation(player).getEnemy()!=null){
@@ -66,7 +66,8 @@ public class InputController{
               break;
             }
             
-            p.println("\nNext turn:\n");
+            p.println("\nNext turn:");
+            p.println("-------------------------------------\n");
           }
         }
   //----------------handles game end with exception from end_game input

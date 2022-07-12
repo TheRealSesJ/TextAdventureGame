@@ -29,18 +29,18 @@ public class World {
   }
 
   public static Scene getLocation(Player p){
-    return worldMap[pY(p)][pX(p)];
+    return worldMap[worldY(p)][worldX(p)];
   }
 
   public static Scene getLocation(Player p, int xOffset, int yOffset){
-    return worldMap[pY(p) + yOffset][pX(p) + xOffset];
+    return worldMap[worldY(p) + yOffset][worldX(p) + xOffset];
   }
 
-  private static int pX(Player p){
+  private static int worldX(Player p){
     return p.getXPos()+size/2;
   }
 
-  private static int pY(Player p){
+  private static int worldY(Player p){
     return p.getYPos()+size/2;
   }
 
