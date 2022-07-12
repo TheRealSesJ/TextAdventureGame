@@ -98,7 +98,7 @@ public class InputController{
   //input mappings for normal inputs, uses up one turn if a correct input is executed
   //methods here can return false in order to not advance the player turn, namely the help function
   public static boolean scanInput(String input, Player player, String type) throws InterruptedIOException{
-    String[] inputArr = input.split(" ");
+    String[] inputArr = input.split("\s+");
     //check if world input
     Method inputAction;
     try {
