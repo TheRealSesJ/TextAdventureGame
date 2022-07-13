@@ -161,6 +161,7 @@ public class Player implements Entity{
     +"\nPlayer:"
     +"\n\tHp: "+this.hp
     +"\n\tArmor: "+this.armor
+            +"\n\tPosition: "+this.xPos +" "+this.yPos
     +"\n";
     }
 

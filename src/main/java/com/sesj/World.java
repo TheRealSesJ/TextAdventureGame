@@ -39,9 +39,6 @@ public class World {
   }
 
 
-
-
-
   private static void populateEnemies(){
     Random rand = new Random();
     while(enemies.size()>0){
