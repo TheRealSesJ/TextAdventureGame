@@ -20,6 +20,8 @@ public class InputController{
   
   public static final PrintStream p = new PrintStream(System.out);
   public static final Scanner SCAN = new Scanner(System.in);
+  public static Method previousCommand;
+  public static String[] previousArgs;
 
 //the game!!!
   
@@ -45,7 +47,7 @@ public class InputController{
         
   //----------------------------take turn
         try{
-          while(!scanInput(SCAN.nextLine(), player, "world")){
+          while(!scanInput(SCAN.nextLine(), player, GameController.WorldController.class)){
             p.println("\nplease enter an action\n");
           }
           //----------------------do enemy turns
@@ -59,7 +61,7 @@ public class InputController{
             p.println("\nAn enemy approaches...\n");
             p.println(World.getLocation(player).getEnemy().getStats());
 
-            while(!scanInput(SCAN.nextLine(), player, "combat")){
+            while(!scanInput(SCAN.nextLine(), player, GameController.CombatController.class)){
             p.println("\nplease enter an action\n");
             }
     
@@ -100,12 +102,22 @@ public class InputController{
 
   //input mappings for normal inputs, uses up one turn if a correct input is executed
   //methods here can return false in order to not advance the player turn, namely the help function
-  public static boolean scanInput(String input, Player player, String type) throws InterruptedIOException{
+  public static boolean scanInput(String input, Player player, Class<?> type) throws InterruptedIOException{
     String[] inputArr = input.split("\s+");
     //check if world input
     Method inputAction;
     try {
+      if(inputArr[0].equals("end_game")){
+        throw new InterruptedIOException();
+      }
+      if(inputArr[0].equals("r") && previousCommand!=null && previousArgs!=null && previousCommand.getDeclaringClass().equals(type)){
+        return (boolean) previousCommand.invoke(null, previousArgs, player);
+      }
       inputAction = GameController.class.getDeclaredMethod((inputArr[0]), String[].class, Player.class);
+      p.println("I am method");
+      //set previous
+      previousCommand = inputAction;
+      previousArgs = inputArr;
       return (boolean) inputAction.invoke(null, inputArr, player);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
@@ -113,16 +125,19 @@ public class InputController{
     } catch(InvocationTargetException e){ //exception from invoked method
       p.println(e.getCause().getMessage());
       return false;
-    } catch(NoSuchMethodException e) { //for commands which are not in game parameters
-      if(inputArr[0].equals("end_game")){
-        throw new InterruptedIOException();
-      }
+    } catch(NoSuchMethodException e) { //for commands which are not in game parameters but in inner classes
       try {
-        if(type.equals("combat")){
-          inputAction = GameController.CombatController.class.getDeclaredMethod((inputArr[0]), Player.class);
+        if(type.equals(GameController.CombatController.class)){
+          inputAction = type.getDeclaredMethod((inputArr[0]), Player.class);
+          //set previous
+          previousCommand = inputAction;
+          previousArgs = inputArr;
           return (boolean) inputAction.invoke(null, player);
-        } else if (type.equals("world")){
-          inputAction = GameController.WorldController.class.getDeclaredMethod((inputArr[0]), String[].class, Player.class);
+        } else if (type.equals(GameController.WorldController.class)){
+          inputAction = type.getDeclaredMethod((inputArr[0]), String[].class, Player.class);
+          //set previous
+          previousCommand = inputAction;
+          previousArgs = inputArr;
           return (boolean) inputAction.invoke(null, inputArr, player);
         }
       } catch (NoSuchMethodException ex) {
