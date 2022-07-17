@@ -10,4 +10,5 @@ public interface Entity{
   String getStats();
   int getXPos();
   int getYPos();
+  boolean canTraverse();
 }

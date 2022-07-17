@@ -30,6 +30,8 @@ public class World {
     populateWeapons();
   }
 
+  public static Scene[][] getWorldMap(){ return worldMap; }
+
   public static Scene getLocation(Entity e){
     return worldMap[e.getYPos()][e.getXPos()];
   }

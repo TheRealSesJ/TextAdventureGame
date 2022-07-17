@@ -48,6 +48,9 @@ public class InputController{
           while(!scanInput(SCAN.nextLine(), player, "world")){
             p.println("\nplease enter an action\n");
           }
+          //----------------------do enemy turns
+          GameController.Utils.enemyTurn();
+          GameController.minimap(new String[]{""}, player);
           p.println("\nNext turn:");
           p.println("<------------------------------------->\n");
 

@@ -39,8 +39,9 @@ public class Scene {
 
   public boolean setEnemy(Enemy enemy){
   //these two null checks make sure a new real enemy is not replacing another
-    if(this.enemy==null || enemy==null){
+    if((this.enemy==null || enemy==null)){
       this.enemy = enemy;
+      if(enemy!=null) return enemy.canTraverse() || isTraversable();
       return true;
     }
     return false;

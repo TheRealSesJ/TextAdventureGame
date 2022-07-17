@@ -1,7 +1,6 @@
 //uses the character interface
 
 package com.sesj.GameObjects;
-import com.sesj.GameObjects.Weapon;
 import com.sesj.Interfaces.*;
 
 
@@ -50,6 +49,13 @@ public class Enemy implements Entity{
     this.yPos = yPos;
   }
 
+  public boolean canTraverse(){ return false; }
+
+  public void updateCoords(int x, int y){
+    this.xPos+=x;
+    this.yPos+=y;
+  }
+
   //returns the enemy's stats as a string, intended to give the user information
   public String getStats(){
     return "\n"+this+"\n"
@@ -59,4 +65,6 @@ public class Enemy implements Entity{
             +"\nPosition: "+xPos+" "+yPos
     +"\n";
   }
+
+
 }

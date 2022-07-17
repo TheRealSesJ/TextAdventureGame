@@ -71,7 +71,7 @@ public class GameController{
   }
   
 
-  public class CombatController{
+  public static class CombatController{
     //fight
     public static boolean fight(Player player){
       Scene scene = World.getLocation(player);
@@ -107,7 +107,7 @@ public class GameController{
             NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException, MissingParameterException{
       Scene scene = World.getLocation(player);
       //get a random moveable location and pass into translate
-      int[] locs = getRandomMove(player);
+      int[] locs = Utils.getRandomMove(player);
       String[] input = {"",""+locs[0],""+locs[1]};
       //check for escapable location
       if(!scene.isEscapable()){
@@ -139,7 +139,7 @@ public class GameController{
     }
   }
 
-  public class WorldController{
+  public static class WorldController{
 
     public static boolean move(String[] input, Player player) throws NumberFormatException,
             NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException, MissingParameterException{
@@ -149,8 +149,6 @@ public class GameController{
       } catch(IndexOutOfBoundsException e){
         throw new MissingParameterException();
       }
-
-      minimap(input, player);
       p.println("player moved "+input[1]+" units right and "+input[2]+" units up");
       return true;
     }
@@ -188,57 +186,71 @@ public class GameController{
         return true;
     }
   }
-  
 
-
-//minimap commands
+  //minimap
   public static boolean minimap(String[] input, Player player){
-    String[][] minimap = getMinimap(player);
+    String[][] minimap = new String[9][9];
     for(int i=8; i>=0; i--){
-      for(int j=0; j<3; j++){
-        p.print(minimap[i/3][j]+" ");
-        if(i!=4 || j!=1) p.print(minimap[i/3][j]+" ");
-          else p.print("@ ");
-        p.print(minimap[i/3][j]+" ");
+      for(int j=0; j<9; j++){
+        try{
+          Scene loc = World.getLocation(player, j/3-1, i/3-1);
+          if(i==4 && j==4){
+            p.print("@ ");
+          } else if(((double) (j-1)/3) == (j-1)/3 && ((double) (i-1)/3) == (i-1)/3 && loc.getEnemy()!=null && loc.isScannable()){
+            p.print("E ");
+          } else {
+            p.print(World.getLocation(player, j/3-1, i/3-1).getIcon()+" ");
+          }
+        } catch (IndexOutOfBoundsException e){
+          p.print("! ");
+        }
+
       }
       p.println();
     }
     return false;
-    
   }
 
-  public static String[][] getMinimap(Player player){
-    String[][] minimap = new String[3][3];
-    for(int i=0; i<3; i++){
-      for(int j=0; j<3; j++){
-          try{ minimap[i][j] = World.getLocation(player, j-1, i-1).getIcon(); } 
-          catch (IndexOutOfBoundsException e){ minimap[i][j] = "!"; }
+  //not referencable through reflection
+  public static class Utils {
+    //sends a movable coordinate location of the entity as an array of ints
+    public static int[] getRandomMove(Entity entity){
+      ArrayList<int[]> locations = new ArrayList<int[]>();
+      for(int i=-1;i<2;i++){
+        for(int j=-1;j<2;j++){
+          try{
+            Scene loc = World.getLocation(entity, i, j);
+            if(!(i==0 && j==0) && (loc.isTraversable() || entity.canTraverse())){
+              locations.add(new int[]{i, j});
+            }
+          }
+          catch(IndexOutOfBoundsException e){}
+        }
       }
+      return locations.get(locations.size()==1? 0 : RAND.nextInt(locations.size()-1));
     }
-    return minimap;
-  }
 
-
-  
-  
-  
-//sends a moveable coordinate location of the player as an array of ints
-  public static int[] getRandomMove(Player player){
-    ArrayList<int[]> locations = new ArrayList<int[]>();
-    for(int i=-1;i<2;i++){
-      for(int j=-1;j<2;j++){
-        try{
-          Scene loc = World.getLocation(player, i, j);
-          if(!(i==0 && j==0) && loc.isTraversable()){
-            int[] coords = {i,j};
-            locations.add(coords);
+    public static void enemyTurn(){
+      Scene[][] world = World.getWorldMap();
+      for(Scene[] row : world){
+        for(Scene scene : row){
+          if(scene.getEnemy()!=null){
+            Enemy enemy = scene.getEnemy();
+            int[] move = getRandomMove(enemy);
+            Scene newScene = World.getLocation(enemy, move[0], move[1]);
+              if(RAND.nextInt(5)>2 && newScene.getEnemy()==null){
+                enemy.updateCoords(move[0], move[1]);
+                newScene.setEnemy(enemy);
+                scene.setEnemy(null);
+              }
           }
         }
-        catch(IndexOutOfBoundsException e){}
       }
     }
-    return locations.get(RAND.nextInt(locations.size()-1));
   }
+  
+  
+
 
 
 //help function

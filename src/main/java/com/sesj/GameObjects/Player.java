@@ -29,7 +29,7 @@ public class Player implements Entity{
   public boolean translate(int xTiles, int yTiles) throws NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException {
     try{
       if(!World.getLocation(this, xTiles, yTiles).isTraversable()){
-        if(this.item==null || !this.item.getTraverseBoost()){
+        if(this.item==null || !canTraverse()){
           throw new NotTraversableException();
         }
       }
@@ -53,6 +53,11 @@ public class Player implements Entity{
 
   public int getYPos(){
     return yPos;
+  }
+
+  public boolean canTraverse(){
+    if(this.item==null) return false;
+    return this.item.getTraverseBoost();
   }
 
   //gets weapon
