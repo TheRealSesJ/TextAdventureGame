@@ -18,7 +18,7 @@
         "wild_beast":{
             "hp":"25",
             "weapon":"claws",
-            "armor":"5",
+            "armor":"3",
             "name":"Wild Beast"
         },
         "witch":{

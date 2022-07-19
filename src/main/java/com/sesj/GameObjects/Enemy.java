@@ -9,7 +9,8 @@ public class Enemy implements Entity{
   private int xPos;
   private int yPos;
 
-  private int hp; 
+  private int hp;
+  private int maxHp;
   private final Weapon weapon;
   private final int armor;
   
@@ -17,6 +18,7 @@ public class Enemy implements Entity{
   
   public Enemy(int hp, Weapon weapon, int armor, String name){
     this.hp = hp;
+    this.maxHp = hp;
     this.weapon = weapon; 
     this.armor=armor;
     this.name = name; 
@@ -28,6 +30,10 @@ public class Enemy implements Entity{
 
   public int getHp(){
     return hp;
+  }
+
+  public int getMaxHp(){
+    return maxHp;
   }
 
   public void updateHp(int update){

@@ -13,10 +13,12 @@ public class Player implements Entity{
   private Item item; //starts empty
   private int movement;
   private int hp;
+  private int maxHp;
   private int armor;
   
   public Player(int hp, Weapon weapon, int armor, int movement, int initialX, int initialY){
     this.hp = hp;
+    this.maxHp = hp;
     this.weapon = weapon;
     this.armor = armor;
     this.movement = movement;
@@ -118,6 +120,13 @@ public class Player implements Entity{
 //health related methods
   public int getHp(){
     return hp;
+  }
+
+  public int getMaxHp(){
+    if(item!=null){
+      return this.maxHp+this.item.getHpBoost();
+    }
+    return this.maxHp;
   }
   
   public void updateHp(int update){

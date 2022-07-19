@@ -73,7 +73,7 @@ public class GameController{
 
   public static class CombatController{
     //fight
-    public static boolean fight(Player player){
+    public static boolean fight(String[] input, Player player){
       Scene scene = World.getLocation(player);
       Enemy enemy = scene.getEnemy();
       //calculate who goes first
@@ -103,12 +103,12 @@ public class GameController{
       return true;
     }
     //attempt flee combat sequence
-    public static boolean run(Player player) throws NumberFormatException,
+    public static boolean run(String[] input, Player player) throws NumberFormatException,
             NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException, MissingParameterException{
       Scene scene = World.getLocation(player);
       //get a random moveable location and pass into translate
       int[] locs = Utils.getRandomMove(player);
-      String[] input = {"",""+locs[0],""+locs[1]};
+      input = new String[]{"",""+locs[0],""+locs[1]};
       //check for escapable location
       if(!scene.isEscapable()){
         p.println("there is nowhere to run...");
@@ -121,21 +121,32 @@ public class GameController{
     }
     //combat turn
     public static void combatTurn(Entity attacker, Entity defender){
+      p.println("\n-----------COMBAT----------\n");
       p.println("\n"+attacker+" Move!\n");
-      //weapons have 1 to 100 attack chance, regardless of whether attack landed
-      int attackRoll = RAND.nextInt(100)+1;
+
       if(defender.getWeapon().isRanged()){ //if enemy is ranged they are harder to hit, lowers roll
-        attackRoll+=20;
+
       }
+
+      //weapons have 1 to 100 crit chance
+      int attackRoll = RAND.nextInt(100)+1;
+      p.println("Minimum roll to crit: "+(100-attacker.getWeapon().getAccuracy()));
+      p.println("Attack roll: "+attackRoll);
+
+      //check if attack has crit based on roll
       if(attackRoll<=attacker.getWeapon().getAccuracy()){
         p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
-//---------------------->armor will reduce damage taken<---------------------------
         int dmg = -1*attacker.getWeapon().getAttack()+defender.getArmor();
         defender.updateHp(Math.min(dmg, 0));
-        p.println("\n"+defender+" hp remaining: "+defender.getHp()+"\n");
+        p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
       } else {
-        p.println("\nAttack failed on "+ defender +"!\n");
+        p.println("\n>>CRITICAL<< Attack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
+        int dmg = (int) -1.5*attacker.getWeapon().getAttack()+defender.getArmor();
+        defender.updateHp(Math.min(dmg, 0));
+        p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
       }
+
+      p.println("\n-----------COMBAT----------\n");
     }
   }
 
