@@ -2,7 +2,9 @@
 
 package com.sesj.GameObjects;
 
-public class Item{
+import com.sesj.Interfaces.GameObject;
+
+public class Item implements GameObject {
   //weapon related
   private final int attackBoost;
   private final int speedBoost;
@@ -73,7 +75,7 @@ public class Item{
   }
 
   public String getStats(){
-    return "\n"+this+"\n"
+    return "\nItem: "+this+"\n"
     +"\nWeapon Related:"
     +"\n\tattack boost: "+ this.attackBoost
     +"\n\tspeed: "+ this.speedBoost

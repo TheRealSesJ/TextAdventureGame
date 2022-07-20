@@ -3,24 +3,27 @@
 package com.sesj.GameObjects;
 import com.sesj.Interfaces.*;
 
+import java.awt.*;
 
-public class Enemy implements Entity{
 
-  private int xPos;
-  private int yPos;
+public class Enemy implements Entity, GameObject {
+
+  private Point position;
 
   private int hp;
   private int maxHp;
   private final Weapon weapon;
   private final int armor;
+  private final boolean canMove;
   
   private final String name;
   
-  public Enemy(int hp, Weapon weapon, int armor, String name){
+  public Enemy(int hp, Weapon weapon, int armor, boolean canMove, String name){
     this.hp = hp;
     this.maxHp = hp;
     this.weapon = weapon; 
     this.armor=armor;
+    this.canMove = canMove;
     this.name = name; 
   }
 
@@ -46,29 +49,28 @@ public class Enemy implements Entity{
 
   public String toString() { return name; }
 
-  public int getXPos(){ return xPos; }
+  public Point getPosition(){ return this.position; }
 
-  public int getYPos(){ return yPos; }
-
-  public void initPos(int xPos, int yPos){
-    this.xPos = xPos;
-    this.yPos = yPos;
+  public void initPos(Point position){
+    this.position = position;
   }
 
   public boolean canTraverse(){ return false; }
 
   public void updateCoords(int x, int y){
-    this.xPos+=x;
-    this.yPos+=y;
+    this.position.translate(x, y);
   }
+
+  public void tick(){}
 
   //returns the enemy's stats as a string, intended to give the user information
   public String getStats(){
-    return "\n"+this+"\n"
+    return "\n Enemy: "+this+"\n"
     +this.weapon.getStats()
     +"\n\tHp: "+this.hp
     +"\n\tArmor: "+this.armor
-            +"\nPosition: "+xPos+" "+yPos
+            +"\n\tCan Move: "+this.canMove
+            +"\nPosition: "+this.position
     +"\n";
   }
 

@@ -1,6 +1,8 @@
 package com.sesj.GameObjects;
 
-public class Weapon {
+import com.sesj.Interfaces.GameObject;
+
+public class Weapon implements GameObject {
 
   private int attack;
   private int speed;

@@ -2,12 +2,14 @@ package com.sesj.GameObjects;
 
 import com.sesj.Interfaces.*;
 import com.sesj.Exceptions.*;
+import com.sesj.StaticData.GameParameters;
 import com.sesj.World;
 
-public class Player implements Entity{
+import java.awt.*;
+
+public class Player implements Entity, GameObject{
   //world position
-  private int xPos;
-  private int yPos;
+  private Point position;
 
   private Weapon weapon;
   private Item item; //starts empty
@@ -22,15 +24,14 @@ public class Player implements Entity{
     this.weapon = weapon;
     this.armor = armor;
     this.movement = movement;
-    this.xPos = initialX;
-    this.yPos = initialY;
+    this.position = new Point(initialX, initialY);
   }
 
   //takes into account the ammount of tiles the player is allowed to move, as well as whether or not the area being entered is traversible. *also takes item buffs into consideration*
   //illegal acess exception used for case where tile is not traversible
   public boolean translate(int xTiles, int yTiles) throws NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException {
     try{
-      if(!World.getLocation(this, xTiles, yTiles).isTraversable()){
+      if(!World.getLocation(this.position, xTiles, yTiles).isTraversable()){
         if(this.item==null || !canTraverse()){
           throw new NotTraversableException();
         }
@@ -44,18 +45,11 @@ public class Player implements Entity{
         throw new MovementOutOfRangeException();
       }
     }
-    yPos+=yTiles;
-    xPos+=xTiles;
+    this.position.translate(xTiles, yTiles);
     return true;
   }
 
-  public int getXPos(){
-    return xPos;
-  }
-
-  public int getYPos(){
-    return yPos;
-  }
+  public Point getPosition(){ return this.position; }
 
   public boolean canTraverse(){
     if(this.item==null) return false;
@@ -144,21 +138,16 @@ public class Player implements Entity{
     return this.movement;
   }
 
+  public void tick(){}
+
   //returns the players stats as a string, intended to give the user information
   public String getStats(){
     String display ="";
     if(item!=null){
-      display += 
-    "Weapon: "+this.weapon.toString() +" (affected by "+this.item.toString()+")"
-    +"\n\tattack: "+ this.weapon.getAttack() + "+("+this.item.getAttackBoost()+")"
-    +"\n\tspeed: "+ this.weapon.getSpeed() + "+("+this.item.getSpeedBoost()+")"
-    +"\n\taccuracy: "+ this.weapon.getAccuracy() + "+("+this.item.getAccuracyBoost()+")"
-    +"\n\tranged: "+ this.weapon.isRanged() + "+("+this.item.getRangeBoost()+")"
+      display +=
+              this.weapon.getStats()
     +"\n"
-    +"\nItem: "+this.item.toString() 
-    +"\n\tmove boost: "+ this.item.getMoveBoost()
-    +"\n\ttraversal boost: "+ this.item.getTraverseBoost()
-    +"\n\tscan boost: " +this.item.getScanBoost()
+    +this.item.getStats()
     +"\n"
     +"\nPlayer: (effected by "+this.item.toString()+")"
     +"\n\tHp: "+this.hp+ "+("+this.item.getHpBoost()+")"
@@ -166,16 +155,12 @@ public class Player implements Entity{
     +"\n";
     } else{
       display += 
-    "Weapon: "+this.weapon.toString()
-    +"\n\tattack: "+ this.weapon.getAttack()
-    +"\n\tspeed: "+ this.weapon.getSpeed()
-    +"\n\taccuracy: "+ this.weapon.getAccuracy()
-    +"\n\tranged: "+ this.weapon.isRanged()
+    this.weapon.getStats()
     +"\n"
     +"\nPlayer:"
     +"\n\tHp: "+this.hp
     +"\n\tArmor: "+this.armor
-            +"\n\tPosition: "+this.xPos +" "+this.yPos
+            +"\n\tPosition: "+this.position
     +"\n";
     }
 

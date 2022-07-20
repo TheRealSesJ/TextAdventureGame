@@ -3,6 +3,7 @@ package com.sesj;
 import com.sesj.GameObjects.*;
 import com.sesj.Exceptions.ConfigException;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Arrays;
@@ -32,12 +33,14 @@ public class World {
 
   public static Scene[][] getWorldMap(){ return worldMap; }
 
-  public static Scene getLocation(Entity e){
-    return worldMap[e.getYPos()][e.getXPos()];
+  public static Scene getLocation(Point pos){
+    return worldMap[(int) pos.getY()][(int) pos.getX()];
   }
 
-  public static Scene getLocation(Entity e, int xOffset, int yOffset){
-    return worldMap[e.getYPos() + yOffset][e.getXPos() + xOffset];
+  public static Scene getLocation(Point pos, int x, int y){
+    int xPos = (int) pos.getX();
+    int yPos = (int) pos.getY();
+    return worldMap[yPos+y][xPos+x];
   }
 
 
@@ -48,7 +51,7 @@ public class World {
       int x = rand.nextInt(size);
       int y = rand.nextInt(size);
       if(worldMap[y][x].setEnemy(enemies.get(last))){
-        enemies.get(last).initPos(x, y);
+        enemies.get(last).initPos(new Point(x, y));
         enemies.remove(last);
       }
     }

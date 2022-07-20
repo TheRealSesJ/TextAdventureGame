@@ -1,9 +1,10 @@
 package com.sesj.GameObjects;
 import com.sesj.GameObjects.Enemy;
 import com.sesj.GameObjects.Item;
+import com.sesj.Interfaces.GameObject;
 //import GameObjects.Weapons.*;
 
-public class Scene {
+public class Scene implements GameObject {
 
   private final String icon;
   private final String name;
@@ -79,7 +80,7 @@ public class Scene {
     return false;
   }
 
-  public String getInfo(){
+  public String getStats(){
     String data = "";
     try{ data += "\n"+this.enemy.getStats()+"\n"; }
     catch(NullPointerException e){ data += "\nno enemy\n";}

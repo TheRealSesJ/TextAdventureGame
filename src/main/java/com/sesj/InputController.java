@@ -57,10 +57,10 @@ public class InputController{
           p.println("<------------------------------------->\n");
 
   //----------------------check for combat, if yes convert to *combat turns*
-          while(World.getLocation(player).getEnemy()!=null){
+          while(World.getLocation(player.getPosition()).getEnemy()!=null){
             p.println("\nAn enemy approaches...\n");
             p.println("\nPlayer Hp: "+player.getHp()+"\n");
-            p.println(World.getLocation(player).getEnemy().getStats());
+            p.println(World.getLocation(player.getPosition()).getEnemy().getStats());
 
             while(!scanInput(SCAN.nextLine(), player, GameController.CombatController.class)){
             p.println("\nplease enter an action\n");
@@ -114,6 +114,7 @@ public class InputController{
         throw new InterruptedIOException();
       }
       if(inputArr[0].equals("r") && previousCommand!=null && previousArgs!=null && previousCommand.getDeclaringClass().equals(type)){
+        p.println("invoking: " + previousCommand.getName());
         return (boolean) previousCommand.invoke(null, previousArgs, player);
       }
 
