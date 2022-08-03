@@ -13,18 +13,22 @@
 
     "weapons":["bow", "bow", "bow", "bow", "bow", "bow", "bow"],
 
+    "consumables":["apple", "apple", "apple", "apple", "apple", "apple", "apple", "apple", "silver_apple"],
+
 
     "enemy_stats":{
         "wild_beast":{
             "hp":"25",
             "weapon":"claws",
             "armor":"3",
+            "canMove": "true",
             "name":"Wild Beast"
         },
         "witch":{
             "hp":"15",
             "weapon":"stick",
             "armor":"1",
+            "canMove": "true",
             "name":"Witch"
         }
     },
@@ -62,10 +66,22 @@
             "range":"true",
             "movement":"0",
             "traversal":"false",
-            "scan":"true",
+            "scan":"false",
             "hp":"0",
             "armor":"0",
             "name":"Power Amulet"
+        },
+        "rag":{
+            "attack":"0",
+            "speed":"0",
+            "accuracy":"0",
+            "range":"false",
+            "movement":"0",
+            "traversal":"false",
+            "scan":"false",
+            "hp":"0",
+            "armor":"0",
+            "name":"Useless Rag"
         }
     },
 
@@ -87,7 +103,7 @@
         "stick":{
             "attack":"3",
             "speed":"10",
-            "accuracy":"65",
+            "accuracy":"45",
             "range":"false",
             "name":"Stick"
         },
@@ -131,9 +147,25 @@
         }
     },
 
+    "consumable_stats":{
+        "apple":{
+            "hp":"5",
+            "armor":"0",
+            "duration": "-1",
+            "name":"Apple"
+        },
+        "silver_apple":{
+            "hp":"3",
+            "armor":"5",
+            "duration": "-1",
+            "name":"Silver Apple"
+        }
+    },
+
     "player_stats": {
-        "hp": "30",
+        "hp": "400",
         "weapon": "sword",
+        "item": "rag",
         "armor": "1",
         "movement": "1",
         "initialX": "2",

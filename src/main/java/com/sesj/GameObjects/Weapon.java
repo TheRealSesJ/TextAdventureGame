@@ -8,6 +8,11 @@ public class Weapon implements GameObject {
   private int speed;
   private int accuracy;
   private boolean ranged;
+
+  private int boostedAttack =0;
+  private int boostedSpeed = 0;
+  private int boostedAccuracy = 0;
+  private boolean boostedRange = false;
   
   private final String name;
   
@@ -20,38 +25,37 @@ public class Weapon implements GameObject {
   }
 
   public int getAttack(){
-    return attack;
+    return attack+boostedAttack;
   }
 
   public int getSpeed(){
-    return speed;
+    return speed+boostedSpeed;
   }
   
   public int getAccuracy(){
-    return accuracy;
+    return accuracy+boostedAccuracy;
   }
   
   public boolean isRanged(){
-    return ranged;
+    return ranged||boostedRange;
   }
 
   public String toString(){ return this.name; }
 
   public Weapon effect(Item item){
-    this.attack+= item.getAttackBoost();
-    this.speed += item.getSpeedBoost();
-    this.accuracy+= item.getAccuracyBoost();
-    this.ranged |= item.getRangeBoost();
+    this.boostedAttack = item.getAttackBoost();
+    this.boostedSpeed = item.getSpeedBoost();
+    this.boostedAccuracy = item.getAccuracyBoost();
+    this.boostedRange = item.getRangeBoost();
     return this;
   }
 
-  //needs a new name----------------------
-  public Weapon unEffect(Item item){
-    this.attack-= item.getAttackBoost();
-    this.speed -= item.getSpeedBoost();
-    this.accuracy-= item.getAccuracyBoost();
-    //this part is slightly broken, needs work TODO
-    this.ranged = !item.getRangeBoost();
+
+  public Weapon reset(){
+    this.boostedAttack = 0;
+    this.boostedSpeed = 0;
+    this.boostedAccuracy = 0;
+    this.boostedRange = false;
     return this;
   }
 

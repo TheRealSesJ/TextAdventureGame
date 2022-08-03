@@ -17,6 +17,7 @@ public class World {
   private static ArrayList<Enemy> enemies;
   private static ArrayList<Item> items;
   private static ArrayList<Weapon> weapons;
+  private static ArrayList<Consumable> consumables;
 
 
 
@@ -26,9 +27,11 @@ public class World {
     enemies = new ArrayList<Enemy>(Arrays.asList(GameParameters.getEnemyArray()));
     items = new ArrayList<Item>(Arrays.asList(GameParameters.getItemArray()));
     weapons = new ArrayList<Weapon>(Arrays.asList(GameParameters.getWeaponArray()));
+    consumables = new ArrayList<Consumable>(Arrays.asList(GameParameters.getConsumableArray()));
     populateEnemies();
     populateItems();
     populateWeapons();
+    populateConsumables();
   }
 
   public static Scene[][] getWorldMap(){ return worldMap; }
@@ -50,9 +53,9 @@ public class World {
       int last = enemies.size()-1;
       int x = rand.nextInt(size);
       int y = rand.nextInt(size);
-      if(worldMap[y][x].setEnemy(enemies.get(last))){
-        enemies.get(last).initPos(new Point(x, y));
-        enemies.remove(last);
+      if((worldMap[y][x].isTraversable() || enemies.get(last).canTraverse()) && worldMap[y][x].setEnemy(enemies.get(last))){
+          enemies.get(last).initPos(new Point(x, y));
+          enemies.remove(last);
       }
     }
   }
@@ -73,6 +76,24 @@ public class World {
       int last = weapons.size()-1;
       if(worldMap[rand.nextInt(size)][rand.nextInt(size)].setWeapon(weapons.get(last))){
         weapons.remove(last);
+      }
+    }
+  }
+
+  private static void populateConsumables(){
+    Random rand = new Random();
+    while(consumables.size()>0){
+      int last = consumables.size()-1;
+      if(worldMap[rand.nextInt(size)][rand.nextInt(size)].setConsumable(consumables.get(last))){
+        consumables.remove(last);
+      }
+    }
+  }
+
+  public static void tick(){
+    for(Scene[] row : worldMap){
+      for(Scene scene : row){
+        if(scene.getEnemy()!=null) scene.getEnemy().tick();
       }
     }
   }

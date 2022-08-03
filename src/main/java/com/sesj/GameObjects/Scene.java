@@ -12,6 +12,7 @@ public class Scene implements GameObject {
   private Enemy enemy;
   private Item item;
   private Weapon weapon;
+  private Consumable consumable;
 
   //properties of scenes;
   private final boolean scannable;
@@ -56,9 +57,13 @@ public class Scene implements GameObject {
     return this.item;
   }
 
-  public boolean setItem(Item item){ 
-    if(this.item==null || item==null){
+  public boolean setItem(Item item){
+    if(this.item==null){
       this.item = item;
+      return true;
+    }
+    if(item==null){
+      this.item = null;
       return true;
     }
     return false;
@@ -73,8 +78,32 @@ public class Scene implements GameObject {
   }
 
   public boolean setWeapon(Weapon weapon){
-    if(this.weapon==null || weapon==null){
+    if(this.weapon==null){
       this.weapon = weapon;
+      return true;
+    }
+    if(weapon==null){
+      this.weapon = null;
+      return true;
+    }
+    return false;
+  }
+
+  public Consumable getConsumable(){
+    Consumable e = this.consumable;
+    if(e==null){
+      return null;
+    }
+    return this.consumable;
+  }
+
+  public boolean setConsumable(Consumable item){
+    if(this.consumable==null){
+      this.consumable = item;
+      return true;
+    }
+    if(item==null){
+      this.item = null;
       return true;
     }
     return false;
@@ -88,6 +117,8 @@ public class Scene implements GameObject {
     catch(NullPointerException e){ data += "\nno item\n";}
     try{ data += "\n"+this.weapon.getStats()+"\n"; }
     catch(NullPointerException e){ data += "\nno weapon\n";}
+    try{ data += "\n"+this.consumable.getStats()+"\n"; }
+    catch(NullPointerException e){ data += "\nno consumable\n";}
     return "\n"+this.name.toUpperCase()+":\n"+data;
   }
 

@@ -6,7 +6,7 @@ public class ConfigNullValueException extends ConfigException{
     }
 
     public ConfigNullValueException(String location){
-        super("Config.json contains a null or unreadable value at "+location);
+        super("Config.json contains a null or unreadable value "+location);
     }
 }
 

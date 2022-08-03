@@ -13,15 +13,17 @@ public class Player implements Entity, GameObject{
 
   private Weapon weapon;
   private Item item; //starts empty
+  private Consumable consumable; //starts empty
   private int movement;
   private int hp;
   private int maxHp;
   private int armor;
   
-  public Player(int hp, Weapon weapon, int armor, int movement, int initialX, int initialY){
+  public Player(int hp, Weapon weapon, Item item, int armor, int movement, int initialX, int initialY){
     this.hp = hp;
     this.maxHp = hp;
     this.weapon = weapon;
+    this.item = item;
     this.armor = armor;
     this.movement = movement;
     this.position = new Point(initialX, initialY);
@@ -41,7 +43,7 @@ public class Player implements Entity, GameObject{
       throw new MovementOutOfBoundsException();
     }
     if(movement<Math.abs(xTiles) || movement<Math.abs(yTiles)){
-      if(this.item==null || (movement+this.item.getMoveBoost()<Math.abs(xTiles) || movement+this.item.getMoveBoost()<Math.abs(yTiles))){
+      if(movement+this.item.getMoveBoost()<Math.abs(xTiles) || movement+this.item.getMoveBoost()<Math.abs(yTiles)){
         throw new MovementOutOfRangeException();
       }
     }
@@ -52,63 +54,43 @@ public class Player implements Entity, GameObject{
   public Point getPosition(){ return this.position; }
 
   public boolean canTraverse(){
-    if(this.item==null) return false;
     return this.item.getTraverseBoost();
   }
 
   //gets weapon
   public Weapon getWeapon(){
-    return this.weapon;
+    return this.weapon.effect(this.item);
   }
 
   public Item getItem(){
     return this.item;
   }
 
+  public Consumable getConsumable(){
+    return this.consumable;
+  }
+
   public String toString() { return "Player"; }
 
-  //adds item effects, returns old weapon and removes effects from it
+
   public Weapon equip(Weapon weapon){
     Weapon old = this.weapon;
     this.weapon = weapon;
-    if(this.item!=null){
-      this.weapon.effect(this.item);
-       return old.unEffect(item);
-    }
     return old;
   }
 
   
-  //removes old item effects, adds new item effects, returns old item
+  //returns old item
   public Item equip(Item item){
-    
-    if(this.item!=null){
-      this.weapon.unEffect(this.item);
       Item old=this.item;
       this.item= item;
-      this.weapon.effect(this.item);
       return old;
-    } else {
-//return null if item never existed in the first place
-      this.item = item;
-      this.weapon.effect(this.item);
-      return null;
-    }
   }
 
-  public Weapon equipWeapon(Weapon weapon){
-    if(this.item!=null){
-      this.weapon.unEffect(this.item);
-      Weapon old=this.weapon;
-      this.weapon= weapon;
-      this.weapon.effect(this.item);
-      return old;
-    } else {
-//return old and skip uneffect step if item never existed in the first place
-      Weapon old = this.weapon;
-      this.weapon= weapon;
-      return old;
-    }
+  public Consumable equip(Consumable consumable){
+    Consumable old = this.consumable;
+    this.consumable = consumable;
+    return old;
   }
 
 //health related methods
@@ -116,55 +98,50 @@ public class Player implements Entity, GameObject{
     return hp;
   }
 
-  public int getMaxHp(){
-    if(item!=null){
-      return this.maxHp+this.item.getHpBoost();
-    }
-    return this.maxHp;
-  }
+  public int getMaxHp(){ return this.maxHp+this.item.getHpBoost(); }
   
   public void updateHp(int update){
     this.hp+=update;
   }
 
   public int getArmor(){
-    if(item!=null){
       return this.armor+this.item.getArmorBoost();
-    }
-    return this.armor;
   }
 
   public int getMovement(){
     return this.movement;
   }
 
-  public void tick(){}
+  public void consume(){
+    if(this.consumable.getDuration()==-1){
+      this.hp+=this.consumable.getHp();
+      if(this.hp>this.maxHp) hp = maxHp;
+      this.consumable=null;
+    } else {
+        System.out.println("consoom"); // TODO implement the buff factory
+    }
+
+  }
+
+  public void tick(){
+    System.out.println("I tick");
+      this.weapon.reset();
+  }
 
   //returns the players stats as a string, intended to give the user information
   public String getStats(){
-    String display ="";
-    if(item!=null){
-      display +=
-              this.weapon.getStats()
+    String returnStr = this.weapon.getStats()
     +"\n"
     +this.item.getStats()
     +"\n"
     +"\nPlayer: (effected by "+this.item.toString()+")"
-    +"\n\tHp: "+this.hp+ "+("+this.item.getHpBoost()+")"
+    +"\n\tHp: "+this.hp+"/"+this.getMaxHp()+ "+("+this.item.getHpBoost()+")"
     +"\n\tArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
     +"\n";
-    } else{
-      display += 
-    this.weapon.getStats()
-    +"\n"
-    +"\nPlayer:"
-    +"\n\tHp: "+this.hp
-    +"\n\tArmor: "+this.armor
-            +"\n\tPosition: "+this.position
-    +"\n";
+    if(this.consumable!=null){
+      returnStr+=this.consumable.getStats()+"\n";
     }
-
-    return display;
+    return returnStr;
   }
   
 }

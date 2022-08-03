@@ -41,7 +41,17 @@ public class GameParameters{
     int size = itemsStr.length;
     Item[] items = new Item[size];
     for(int i=0; i<size;i++){
-      items[i] = getItem(itemsStr[i]);
+        items[i] = getItem(itemsStr[i]);
+    }
+    return items;
+  }
+
+  public static Consumable[] getConsumableArray() throws ConfigNullValueException {
+    String[] itemsStr = ConfigLoader.loadSpawnables("consumables");
+    int size = itemsStr.length;
+    Consumable[] items = new Consumable[size];
+    for(int i=0; i<size;i++){
+      items[i] = getConsumable(itemsStr[i]);
     }
     return items;
   }
@@ -77,28 +87,29 @@ public class GameParameters{
               Integer.parseInt(args[0]), //hp
               getWeapon(args[1]), //weapon
               Integer.parseInt(args[2]), //armor
-              args[3]); //name
+              Boolean.parseBoolean(args[3]),
+              args[4]); //name
     } catch(NumberFormatException e) {
       throw new ConfigNullValueException("in enemy stats");
     }
   }
 
   public static Item getItem(String name) throws ConfigNullValueException {
-    String[] args = ConfigLoader.loadItemStats(name);
+      String[] args = ConfigLoader.loadItemStats(name);
     try{
       return new Item(
               Integer.parseInt(args[0]), //attack boost
               Integer.parseInt(args[1]), //speed boost
               Integer.parseInt(args[2]), //accuracy boost
-              Boolean.parseBoolean(args[3]), //range boost TODO FIX
+              Boolean.parseBoolean(args[3]), //range boost
               Integer.parseInt(args[4]), //movement boost
               Boolean.parseBoolean(args[5]), //traversal boost
               Boolean.parseBoolean(args[6]), //scan boost
               Integer.parseInt(args[7]), //hp boost
               Integer.parseInt(args[8]), //armor boost
               args[9]); //name
-    } catch(NumberFormatException e) {
-      throw new ConfigNullValueException("in item stats");
+    } catch(Exception e) {
+        throw new ConfigNullValueException("in item stats");
     }
   }
 
@@ -122,14 +133,27 @@ public class GameParameters{
       return new Player(
               Integer.parseInt(args[0]), //hp
               getWeapon(args[1]), //weapon
-              Integer.parseInt(args[2]), //armor
+              getItem(args[2]), //item
               Integer.parseInt(args[3]),
               Integer.parseInt(args[4]),
-              Integer.parseInt(args[5])); //movement
+              Integer.parseInt(args[5]),
+              Integer.parseInt(args[6])); //movement
     } catch(NumberFormatException e) {
       throw new ConfigNullValueException("in player stats");
     }
+  }
 
+  public static Consumable getConsumable(String name) throws ConfigNullValueException {
+    String[] args = ConfigLoader.loadConsumableStats(name);
+    try{
+      return new Consumable(
+              Integer.parseInt(args[0]), //hp boost
+              Integer.parseInt(args[1]), //armor boost
+              Integer.parseInt(args[2]), //duration
+              args[3]); //name
+    } catch(NumberFormatException e) {
+      throw new ConfigNullValueException("in consumable stats");
+    }
   }
 
   public static class ConfigLoader {
@@ -184,9 +208,10 @@ public class GameParameters{
                 (String) enemy.get("hp"),
                 (String) enemy.get("weapon"),
                 (String) enemy.get("armor"),
+                (String) enemy.get("canMove"),
                 (String) enemy.get("name")};
       } catch (NullPointerException e){
-        throw new ConfigNullValueException("at enemy stats or reference");
+        throw new ConfigNullValueException("at enemy stats declaration or reference");
       }
     }
 
@@ -243,12 +268,27 @@ public class GameParameters{
         return new String[]{
                 (String) player.get("hp"),
                 (String) player.get("weapon"),
+                (String) player.get("item"),
                 (String) player.get("armor"),
                 (String) player.get("movement"),
                 (String) player.get("initialX"),
-                (String) player.get("initialY")};
+                (String) player.get("initialY"),
+                (String) player.get("item")};
       } catch (NullPointerException e){
         throw new ConfigNullValueException("at player stats declaration");
+      }
+    }
+
+    public static String[] loadConsumableStats(String name) throws ConfigNullValueException {
+      try{
+        JSONObject item = (JSONObject) ((JSONObject) file.get("consumable_stats")).get(name);
+        return new String[]{
+                (String) item.get("hp"),
+                (String) item.get("armor"),
+                (String) item.get("duration"),
+                (String) item.get("name")};
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at consumable stats declaration or reference");
       }
     }
 

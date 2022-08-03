@@ -124,17 +124,15 @@ public class GameController{
       p.println("\n-----------COMBAT----------\n");
       p.println("\n"+attacker+" Move!\n");
 
-      if(defender.getWeapon().isRanged()){ //if enemy is ranged they are harder to hit, lowers roll
-
-      }
-
       //weapons have 1 to 100 crit chance
       int attackRoll = RAND.nextInt(100)+1;
-      p.println("Minimum roll to crit: "+attacker.getWeapon().getAccuracy());
+      int minCrit = 100-attacker.getWeapon().getAccuracy();
+      if(defender.getWeapon().isRanged()) minCrit+=20; //if enemy is ranged they are harder to hit, raises required roll
+      p.println("Minimum roll to crit: "+minCrit);
       p.println("Attack roll: "+attackRoll);
 
       //check if attack has crit based on roll
-      if(attackRoll<attacker.getWeapon().getAccuracy()){
+      if(attackRoll<minCrit){
         p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
         int dmg = -1*attacker.getWeapon().getAttack()+defender.getArmor();
         defender.updateHp(Math.min(dmg, 0));
@@ -167,35 +165,65 @@ public class GameController{
     public static boolean grab_item(String[] input, Player player) throws NullGameObjectException{
       Scene scene = World.getLocation(player.getPosition());
       try{
-        scene.getItem();
+        scene.getItem().getStats();
+      } catch (NullPointerException e){
+        throw new NullGameObjectException();
+      }
+        Item old = player.equip(scene.getItem());
+        scene.setItem(null);
+        scene.setItem(old);
+        p.println("you grabbed "+player.getItem().toString());
+        p.println(""+old+" was dropped");
+        return true;
+    }
+
+    public static boolean grab_cons(String[] input, Player player) throws NullGameObjectException{
+      Scene scene = World.getLocation(player.getPosition());
+      try{
+        scene.getConsumable().getStats();
       } catch (NullPointerException e){
         throw new NullGameObjectException();
       }
       try{
-        Item old = player.equip(scene.getItem());
-        scene.setItem(old);
-        p.println("you grabbed "+player.getItem().toString());
+        Consumable old = player.equip(scene.getConsumable());
+        scene.setConsumable(null);
+        scene.setConsumable(old);
+        p.println("you grabbed "+player.getConsumable().toString());
         if(old!=null) p.println(""+old.toString()+" was dropped");
         return true;
       } catch(NullPointerException e){
-        e.printStackTrace();
-        return false;
+        throw new NullGameObjectException();
       }
     }
 
     public static boolean grab_weapon(String[] input, Player player) throws NullGameObjectException{
       Scene scene = World.getLocation(player.getPosition());
       try{
-        scene.getWeapon();
+        scene.getWeapon().getStats();
       } catch (NullPointerException e){
         throw new NullGameObjectException();
       }
-        Weapon old = player.equipWeapon(scene.getWeapon());
+        Weapon old = player.equip(scene.getWeapon());
+        scene.setConsumable(null);
         scene.setWeapon(old);
         p.println("you grabbed "+player.getWeapon().toString());
         p.println(""+old.toString()+" was dropped");
         return true;
     }
+
+    public static boolean use(String[] input, Player player) throws NullGameObjectException {
+      Scene scene = World.getLocation(player.getPosition());
+      try{
+        player.getConsumable().getStats();
+      } catch (NullPointerException e){
+        throw new NullGameObjectException();
+      }
+      String name = player.getConsumable().toString();
+      player.consume();
+      p.println("Consumable "+name+" used!");
+      return true;
+    }
+
   }
 
   //minimap
@@ -247,6 +275,7 @@ public class GameController{
         for(Scene scene : row){
           if(scene.getEnemy()!=null){
             Enemy enemy = scene.getEnemy();
+            //movement
             int[] move = getRandomMove(enemy);
             Scene newScene = World.getLocation(enemy.getPosition(), move[0], move[1]);
               if(RAND.nextInt(5)>2 && newScene.getEnemy()==null){

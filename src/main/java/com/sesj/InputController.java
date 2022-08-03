@@ -47,31 +47,30 @@ public class InputController{
   //----------------------------take turn
         try{
           GameController.minimap(new String[]{""}, player);
-          while(!scanInput(SCAN.nextLine(), player, GameController.WorldController.class)){
-            p.println("\nplease enter an action\n");
-          }
-          //----------------------do enemy turns
-          GameController.Utils.enemyTurn();
-          p.println("\nNext turn: (Press ENTER)");
-          SCAN.nextLine();
-          p.println("<------------------------------------->\n");
-
-  //----------------------check for combat, if yes convert to *combat turns*
-          while(World.getLocation(player.getPosition()).getEnemy()!=null){
-            p.println("\nAn enemy approaches...\n");
+          if(World.getLocation(player.getPosition()).getEnemy()==null){
+            while(!scanInput(SCAN.nextLine(), player, GameController.WorldController.class)){
+              p.println("\nplease enter an action\n");
+            }
+            //----------------------do enemy turns
+            GameController.Utils.enemyTurn();
+            p.println("\nNext turn: (Press ENTER)");
+            SCAN.nextLine();
+            p.println("<------------------------------------->\n");
+          } else { //if enemy is not null do a combat turn
+            p.println("\n<<AN ENEMY HAS APPEARED>>\n");
             p.println("\nPlayer Hp: "+player.getHp()+"\n");
             p.println(World.getLocation(player.getPosition()).getEnemy().getStats());
 
             while(!scanInput(SCAN.nextLine(), player, GameController.CombatController.class)){
-            p.println("\nplease enter an action\n");
+              p.println("\nplease enter an action\n");
             }
-    
-  //------check for game over condition
+
+            //------check for game over condition
             if(player.getHp()<=0){
               playing = false;
               break;
             }
-            
+
             p.println("\nNext turn: (Press ENTER)");
             SCAN.nextLine();
             p.println("-------------------------------------\n");
@@ -84,10 +83,15 @@ public class InputController{
         }
 
   //-----check for game over condition again
-        if(player.getHp()<=0){
+        if(player.getHp()<=0) {
           playing = false;
           break;
         }
+
+//--------------tick the entities
+        player.tick();
+        World.tick();
+
 
       }
     } catch (ConfigException e){

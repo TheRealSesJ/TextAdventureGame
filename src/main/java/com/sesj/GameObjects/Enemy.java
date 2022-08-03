@@ -61,11 +61,13 @@ public class Enemy implements Entity, GameObject {
     this.position.translate(x, y);
   }
 
-  public void tick(){}
+  public void tick(){
+    System.out.println(name + " @" + position + " has ticked!");
+  }
 
   //returns the enemy's stats as a string, intended to give the user information
   public String getStats(){
-    return "\n Enemy: "+this+"\n"
+    return "\nEnemy: "+this+"\n"
     +this.weapon.getStats()
     +"\n\tHp: "+this.hp
     +"\n\tArmor: "+this.armor
