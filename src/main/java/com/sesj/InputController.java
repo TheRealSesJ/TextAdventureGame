@@ -117,7 +117,7 @@ public class InputController{
       if(inputArr[0].equals("end_game")){
         throw new InterruptedIOException();
       }
-      if(inputArr[0].equals("r") && previousCommand!=null && previousArgs!=null && previousCommand.getDeclaringClass().equals(type)){
+      if(inputArr[0].equals("r") && previousCommand!=null && previousArgs!=null && (previousCommand.getDeclaringClass().equals(type) || previousCommand.getDeclaringClass().equals(GameController.class))){
         p.println("invoking: " + previousCommand.getName());
         return (boolean) previousCommand.invoke(null, previousArgs, player);
       }

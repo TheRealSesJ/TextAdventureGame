@@ -97,13 +97,13 @@ public class Scene implements GameObject {
     return this.consumable;
   }
 
-  public boolean setConsumable(Consumable item){
+  public boolean setConsumable(Consumable cons){
     if(this.consumable==null){
-      this.consumable = item;
+      this.consumable = cons;
       return true;
     }
-    if(item==null){
-      this.item = null;
+    if(cons==null){
+      this.consumable = null;
       return true;
     }
     return false;

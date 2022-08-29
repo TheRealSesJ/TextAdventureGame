@@ -1,6 +1,8 @@
 package com.sesj.GameObjects;
 
-public class Consumable{
+import com.sesj.Interfaces.GameObject;
+
+public class Consumable implements GameObject {
     final int hp;
     final int armor;
     final int duration; //when buffs are added
@@ -17,10 +19,9 @@ public class Consumable{
     }
 
     public String getStats(){
-        return "\nConsumable: duration: " + (duration==-1? "single use" : String.valueOf(duration))
+        return "\nConsumable: "+this.name+" Duration: " + (duration==-1? "single use" : String.valueOf(duration))
                 +"\n\n\tHp: "+this.hp
-                +"\n\tArmor: "+this.armor
-                +"\n\tName: "+this.name;
+                +"\n\tArmor: "+this.armor;
     }
 
     public int getDuration(){ return duration; }

@@ -2,10 +2,10 @@ package com.sesj.GameObjects;
 
 import com.sesj.Interfaces.*;
 import com.sesj.Exceptions.*;
-import com.sesj.StaticData.GameParameters;
 import com.sesj.World;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Player implements Entity, GameObject{
   //world position
@@ -14,17 +14,20 @@ public class Player implements Entity, GameObject{
   private Weapon weapon;
   private Item item; //starts empty
   private Consumable consumable; //starts empty
+  private ArrayList<Buff> buffs = new ArrayList<>();
   private int movement;
   private int hp;
-  private int maxHp;
+  private final int MAX_HP;
   private int armor;
+  private int baseArmor;
   
   public Player(int hp, Weapon weapon, Item item, int armor, int movement, int initialX, int initialY){
     this.hp = hp;
-    this.maxHp = hp;
+    this.MAX_HP = hp;
     this.weapon = weapon;
     this.item = item;
     this.armor = armor;
+    this.baseArmor = armor;
     this.movement = movement;
     this.position = new Point(initialX, initialY);
   }
@@ -98,7 +101,7 @@ public class Player implements Entity, GameObject{
     return hp;
   }
 
-  public int getMaxHp(){ return this.maxHp+this.item.getHpBoost(); }
+  public int getMaxHp(){ return this.MAX_HP+this.item.getHpBoost(); }
   
   public void updateHp(int update){
     this.hp+=update;
@@ -108,6 +111,8 @@ public class Player implements Entity, GameObject{
       return this.armor+this.item.getArmorBoost();
   }
 
+  public void setArmor(int armor){ this.armor = armor; }
+
   public int getMovement(){
     return this.movement;
   }
@@ -115,17 +120,29 @@ public class Player implements Entity, GameObject{
   public void consume(){
     if(this.consumable.getDuration()==-1){
       this.hp+=this.consumable.getHp();
-      if(this.hp>this.maxHp) hp = maxHp;
-      this.consumable=null;
+      this.armor+=this.consumable.getArmor();
+      this.baseArmor+=this.consumable.getArmor();
+      if(this.hp>this.MAX_HP) hp = MAX_HP;
     } else {
-        System.out.println("consoom"); // TODO implement the buff factory
+        this.buffs.add(new Buff(this.consumable));
     }
-
+    this.consumable=null;
   }
 
   public void tick(){
     System.out.println("I tick");
-      this.weapon.reset();
+    this.weapon.reset();
+    if(this.buffs.size()==0) return;
+    for(int i = 0; i<this.buffs.size(); i++){
+      if(this.buffs.get(i).getDuration()>0){
+        if((this.hp<this.MAX_HP)) this.hp+=this.buffs.get(i).getHp();
+        if(this.buffs.get(i).getArmor()!=0) this.armor = this.buffs.get(i).getArmor();
+        this.buffs.get(i).tick(this);
+      } else {
+        this.armor= baseArmor;
+        this.buffs.remove(i); //TODO make sure this does not break
+      }
+    }
   }
 
   //returns the players stats as a string, intended to give the user information
@@ -135,12 +152,18 @@ public class Player implements Entity, GameObject{
     +this.item.getStats()
     +"\n"
     +"\nPlayer: (effected by "+this.item.toString()+")"
-    +"\n\tHp: "+this.hp+"/"+this.getMaxHp()+ "+("+this.item.getHpBoost()+")"
+    +"\n\n\tHp: "+this.hp+"/"+this.getMaxHp()+ "+("+this.item.getHpBoost()+")"
     +"\n\tArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
     +"\n";
     if(this.consumable!=null){
       returnStr+=this.consumable.getStats()+"\n";
     }
+    if(this.buffs.size()!=0){
+      for(int i = 0; i<this.buffs.size(); i++){
+        returnStr+=this.buffs.get(i).getStats()+"\n";
+      }
+    }
+
     return returnStr;
   }
   

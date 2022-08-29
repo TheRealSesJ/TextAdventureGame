@@ -76,18 +76,18 @@ public class Item implements GameObject {
 
   public String getStats(){
     return "\nItem: "+this+"\n"
-    +"\nWeapon Related:"
-    +"\n\tattack boost: "+ this.attackBoost
-    +"\n\tspeed: "+ this.speedBoost
-    +"\n\taccuracy: "+ this.accuracyBoost
-    +"\n\tranged: "+ this.rangeBoost
+    +"\n\tWeapon Related:"
+    +"\n\t\tattack boost: "+ this.attackBoost
+    +"\n\t\tspeed: "+ this.speedBoost
+    +"\n\t\taccuracy: "+ this.accuracyBoost
+    +"\n\t\tranged: "+ this.rangeBoost
     +"\n"
-    +"\nPlayer Related: "
-    +"\n\tmove boost: "+ this.moveBoost
-    +"\n\ttraversal boost: "+ this.traverseBoost
-    +"\n\tscan boost: "+ this.scanBoost
-    +"\n\thp boost:" + this.hpBoost
-    +"\n\tarmor boost: " + this.armorBoost
+    +"\n\tPlayer Related: "
+    +"\n\t\tmove boost: "+ this.moveBoost
+    +"\n\t\ttraversal boost: "+ this.traverseBoost
+    +"\n\t\tscan boost: "+ this.scanBoost
+    +"\n\t\thp boost:" + this.hpBoost
+    +"\n\t\tarmor boost: " + this.armorBoost
     +"\n";
   }
 }

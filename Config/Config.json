@@ -13,7 +13,7 @@
 
     "weapons":["bow", "bow", "bow", "bow", "bow", "bow", "bow"],
 
-    "consumables":["apple", "apple", "apple", "apple", "apple", "apple", "apple", "apple", "silver_apple"],
+    "consumables":["apple", "silver_apple", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry"],
 
 
     "enemy_stats":{
@@ -159,6 +159,18 @@
             "armor":"5",
             "duration": "-1",
             "name":"Silver Apple"
+        },
+        "chitinous_brew":{
+            "hp":"0",
+            "armor":"5",
+            "duration": "8",
+            "name":"Chitinous Brew"
+        },
+        "golden_berry":{
+            "hp":"4",
+            "armor":"0",
+            "duration": "10",
+            "name":"Golden Berry"
         }
     },
 

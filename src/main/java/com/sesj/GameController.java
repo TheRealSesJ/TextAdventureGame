@@ -204,7 +204,7 @@ public class GameController{
         throw new NullGameObjectException();
       }
         Weapon old = player.equip(scene.getWeapon());
-        scene.setConsumable(null);
+        scene.setWeapon(null);
         scene.setWeapon(old);
         p.println("you grabbed "+player.getWeapon().toString());
         p.println(""+old.toString()+" was dropped");
