@@ -1,5 +1,6 @@
 package com.sesj.Interfaces;
 
+import com.sesj.GameObjects.Buff;
 import com.sesj.GameObjects.Weapon;
 
 import java.awt.*;
@@ -14,4 +15,5 @@ public interface Entity {
   Point getPosition();
   boolean canTraverse();
   void tick();
+  boolean buff(Buff buff);
 }

@@ -85,34 +85,46 @@
         }
     },
 
-    "weapon_stats":{
-        "bow":{
-            "attack":"5",
-            "speed":"3",
-            "accuracy":"70",
-            "range":"true",
-            "name":"Bow"
+    "weapon_stats": {
+        "bow": {
+            "attack": "5",
+            "speed": "3",
+            "accuracy": "70",
+            "range": "true",
+            "consumable": "none",
+            "name": "Bow"
         },
-        "claws":{
-            "attack":"7",
-            "speed":"6",
-            "accuracy":"80",
-            "range":"false",
-            "name":"Claws"
+        "claws": {
+            "attack": "7",
+            "speed": "6",
+            "accuracy": "80",
+            "range": "false",
+            "consumable": "none",
+            "name": "Claws"
         },
-        "stick":{
-            "attack":"3",
-            "speed":"10",
-            "accuracy":"45",
-            "range":"false",
-            "name":"Stick"
+        "stick": {
+            "attack": "3",
+            "speed": "10",
+            "accuracy": "45",
+            "range": "false",
+            "consumable": "none",
+            "name": "Stick"
         },
-        "sword":{
-            "attack":"10",
-            "speed":"5",
-            "accuracy":"70",
-            "range":"false",
-            "name":"Sword"
+        "sword": {
+            "attack": "10",
+            "speed": "5",
+            "accuracy": "70",
+            "range": "false",
+            "consumable": "none",
+            "name": "Sword"
+        },
+        "flaming_sword": {
+            "attack": "8",
+            "speed": "7",
+            "accuracy": "40",
+            "range": "false",
+            "consumable": "fire",
+            "name": "Flaming Sword"
         }
     },
 
@@ -171,12 +183,24 @@
             "armor":"0",
             "duration": "10",
             "name":"Golden Berry"
+        },
+        "none":{
+            "hp":"0",
+            "armor":"0",
+            "duration": "0",
+            "name":"none"
+        },
+        "fire":{
+            "hp":"-2",
+            "armor":"0",
+            "duration": "3",
+            "name":"Fire"
         }
     },
 
     "player_stats": {
         "hp": "400",
-        "weapon": "sword",
+        "weapon": "flaming_sword",
         "item": "rag",
         "armor": "1",
         "movement": "1",

@@ -117,16 +117,25 @@ public class Player implements Entity, GameObject{
     return this.movement;
   }
 
-  public void consume(){
+  public boolean buff(Buff buff){
+    for(Buff e: this.buffs){
+      if(e.equals(buff)) return false;
+    }
+    this.buffs.add(buff);
+    this.consumable=null;
+    return true;
+  }
+
+  public boolean consume(){
     if(this.consumable.getDuration()==-1){
       this.hp+=this.consumable.getHp();
       this.armor+=this.consumable.getArmor();
       this.baseArmor+=this.consumable.getArmor();
       if(this.hp>this.MAX_HP) hp = MAX_HP;
+      return true;
     } else {
-        this.buffs.add(new Buff(this.consumable));
+      return buff(new Buff(this.consumable));
     }
-    this.consumable=null;
   }
 
   public void tick(){
@@ -135,7 +144,7 @@ public class Player implements Entity, GameObject{
     if(this.buffs.size()==0) return;
     for(int i = 0; i<this.buffs.size(); i++){
       if(this.buffs.get(i).getDuration()>0){
-        if((this.hp<this.MAX_HP)) this.hp+=this.buffs.get(i).getHp();
+        if((this.hp<this.MAX_HP)) this.hp+=this.buffs.get(i).getHp(); //TODO make all stat references methods for items
         if(this.buffs.get(i).getArmor()!=0) this.armor = this.buffs.get(i).getArmor();
         this.buffs.get(i).tick(this);
       } else {

@@ -121,7 +121,8 @@ public class GameParameters{
       Integer.parseInt(args[1]), //speed 
       Integer.parseInt(args[2]), //accuracy 
       Boolean.parseBoolean(args[3]), //range
-      args[4]); //name;
+              getConsumable(args[4]), //status effect
+      args[5]); //name;
     } catch(NumberFormatException e) {
       throw new ConfigNullValueException("in weapon stats");
     }
@@ -242,6 +243,7 @@ public class GameParameters{
                 (String) weapon.get("speed"),
                 (String) weapon.get("accuracy"),
                 (String) weapon.get("range"),
+                (String) weapon.get("consumable"),
                 (String) weapon.get("name")};
       } catch (NullPointerException e){
         throw new ConfigNullValueException("at weapon stats declaration or reference");

@@ -80,19 +80,19 @@ public class GameController{
 
       //player turn
       if(player.getWeapon().getSpeed()>=enemy.getWeapon().getSpeed()){
-        combatTurn(player, enemy);
+        Utils.combatTurn(player, enemy);
         if(enemy.getHp()<=0) {
           p.println("\nEnemy Vanquished!\n");
           scene.setEnemy(null);
           return true;
         } //end sequence if enemy is dead
-        combatTurn(enemy, player);
+        Utils.combatTurn(enemy, player);
       }
       //enemy turn
       else {
-        combatTurn(enemy, player);
+        Utils.combatTurn(enemy, player);
         if(player.getHp()<=0) return true; //end sequence if player is dead
-        combatTurn(player, enemy);
+        Utils.combatTurn(player, enemy);
       }
 
       //check to remove enemy after sequence if dead
@@ -118,33 +118,6 @@ public class GameController{
         p.println("you escaped!");
         return true;
       }
-    }
-    //combat turn
-    public static void combatTurn(Entity attacker, Entity defender){
-      p.println("\n-----------COMBAT----------\n");
-      p.println("\n"+attacker+" Move!\n");
-
-      //weapons have 1 to 100 crit chance
-      int attackRoll = RAND.nextInt(100)+1;
-      int minCrit = 100-attacker.getWeapon().getAccuracy();
-      if(defender.getWeapon().isRanged()) minCrit+=20; //if enemy is ranged they are harder to hit, raises required roll
-      p.println("Minimum roll to crit: "+minCrit);
-      p.println("Attack roll: "+attackRoll);
-
-      //check if attack has crit based on roll
-      if(attackRoll<minCrit){
-        p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
-        int dmg = -1*attacker.getWeapon().getAttack()+defender.getArmor();
-        defender.updateHp(Math.min(dmg, 0));
-        p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
-      } else {
-        p.println("\n>>CRITICAL<< Attack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
-        int dmg = (int) -1.5*attacker.getWeapon().getAttack()+defender.getArmor();
-        defender.updateHp(Math.min(dmg, 0));
-        p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
-      }
-
-      p.println("\n-----------COMBAT----------\n");
     }
   }
 
@@ -219,9 +192,10 @@ public class GameController{
         throw new NullGameObjectException();
       }
       String name = player.getConsumable().toString();
-      player.consume();
-      p.println("Consumable "+name+" used!");
-      return true;
+      boolean used = player.consume();
+      if(used) p.println("Consumable "+name+" used!");
+      else p.println("Consumable "+name+" could not be used, effect is already active");
+      return used;
     }
 
   }
@@ -252,6 +226,45 @@ public class GameController{
 
   //not referencable through reflection
   public static class Utils {
+    //combat turn
+    public static void combatTurn(Entity attacker, Entity defender){
+      p.println("\n-----------COMBAT----------\n");
+      p.println("\n"+attacker+" Move!\n");
+
+      //weapons have 1 to 100 crit chance (accuracy)
+      int attackRoll = RAND.nextInt(100)+1;
+      int minCrit = 100-attacker.getWeapon().getAccuracy();
+      if(defender.getWeapon().isRanged() && RAND.nextBoolean()) { //end with dodge if ranged
+        p.println("\n"+defender+" EVADED!\n");
+        p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
+
+        p.println("\n-----------COMBAT----------\n");
+        return;
+
+      } else {
+        minCrit+=20; //if enemy is ranged and attack is not dodged they are harder to crit
+      }
+      p.println("Minimum roll to crit: "+minCrit);
+      p.println("Attack roll: "+attackRoll);
+
+      //check if attack has crit based on roll
+      if(attackRoll<minCrit){
+        p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
+        int dmg = -1*attacker.getWeapon().getAttack()+defender.getArmor();
+        defender.updateHp(Math.min(dmg, 0));
+      } else {
+        p.println("\n>>CRITICAL<< Attack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
+        int dmg = (int) -1.5*attacker.getWeapon().getAttack()+defender.getArmor();
+        defender.updateHp(Math.min(dmg, 0));
+      }
+      if(attacker.getWeapon().getConsumable()!= null){
+        defender.buff(new Buff(attacker.getWeapon().getConsumable()));
+      }
+      p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
+
+      p.println("\n-----------COMBAT----------\n");
+    }
+
     //sends a movable coordinate location of the entity as an array of ints
     public static int[] getRandomMove(Entity entity){
       ArrayList<int[]> locations = new ArrayList<int[]>();

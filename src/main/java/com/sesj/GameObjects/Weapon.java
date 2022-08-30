@@ -4,6 +4,7 @@ import com.sesj.Interfaces.GameObject;
 
 public class Weapon implements GameObject {
 
+  private Consumable cons;
   private int attack;
   private int speed;
   private int accuracy;
@@ -16,11 +17,13 @@ public class Weapon implements GameObject {
   
   private final String name;
   
-  public Weapon(int attack, int speed, int accuracy, boolean ranged, String name){
+  public Weapon(int attack, int speed, int accuracy, boolean ranged, Consumable cons, String name){
     this.attack = attack;
     this.speed = speed;
     this.accuracy = accuracy;
     this.ranged = ranged;
+    this.cons = cons;
+    if(cons.getArmor()==0 && cons.getHp()==0) this.cons = null;
     this.name=name;
   }
 
@@ -39,6 +42,8 @@ public class Weapon implements GameObject {
   public boolean isRanged(){
     return ranged||boostedRange;
   }
+
+  public Consumable getConsumable(){ return this.cons; }
 
   public String toString(){ return this.name; }
 
@@ -60,12 +65,18 @@ public class Weapon implements GameObject {
   }
 
   public String getStats(){
-    return "\nWeapon: "+toString()
-            +"\n\tattack: "+ getAttack()
-            +"\n\tspeed: "+ getSpeed()
-            +"\n\taccuracy: "+ getAccuracy()
-            +"\n\tranged: "+ isRanged()
-            +"\n";
+    String returnStr = "\nWeapon: "+ this
+            +"\n\tAttack: "+ getAttack()
+            +"\n\tSpeed: "+ getSpeed()
+            +"\n\tAccuracy: "+ getAccuracy()
+            +"\n\tRanged: "+ isRanged()
+            +"\n\tApplied Status Effect: ";
+    if(cons!=null){
+      returnStr += this.cons.getStats()
+              +"\n";
+    } else {
+      returnStr += "none\n";
+    } return returnStr;
   }
 
   

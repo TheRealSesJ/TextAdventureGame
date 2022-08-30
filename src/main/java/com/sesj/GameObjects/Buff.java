@@ -36,8 +36,11 @@ public class Buff implements GameObject { //TODO implement
     public int getArmor(){ return this.armor; }
 
     public String getStats(){
-        return "\nBuff: "+this.name+" Duration: " + this.duration
+        return "\nStatus Effect: "+this.name+" Duration: " + this.duration
                 +"\n\n\tHp: "+this.hp
                 +"\n\tArmor: "+this.armor;
     }
+
+    @Override
+    public boolean equals(Object obj) { return (((Buff) obj).name.equals(this.name)); }
 }
