@@ -25,7 +25,7 @@ public class GameController{
   public static boolean scan(String[] input, Player player) throws MissingParameterException, NumberFormatException,
           MovementOutOfRangeException, MovementOutOfBoundsException, NotScannableException {
       if(input.length==1){
-        p.println(World.getLocation(player.getPosition()).getStats());
+        p.println(WorldManager.getWorld().getLocation(player.getPosition()).getStats());
       } else {
 //look for missing input parameters throw exception
         try{input[2]=input[2];}
@@ -36,7 +36,7 @@ public class GameController{
           }
 //look for missing index in world array throw exception
           try{
-            Scene location = World.getLocation(player.getPosition(), Integer.parseInt(input[1]), Integer.parseInt(input[2]));
+            Scene location = WorldManager.getWorld().getLocation(player.getPosition(), Integer.parseInt(input[1]), Integer.parseInt(input[2]));
             //check for null item or item scan boost
             boolean scan = false;
             try{
@@ -69,12 +69,21 @@ public class GameController{
     p.println(player.getStats());
     return false;
   }
+
+  public static boolean exit(String[] input, Player player) throws MovementOutOfBoundsException {
+    if(!player.isInDungeon()){
+      throw new MovementOutOfBoundsException();
+    }
+    //World.setDungeonMap(null);
+    p.println("<<<<DUNGEON EXITED>>>>");
+    return true;
+  }
   
 
   public static class CombatController{
     //fight
-    public static boolean fight(String[] input, Player player){
-      Scene scene = World.getLocation(player.getPosition());
+    public static boolean fight(String[] input, Player player){ //TODO fix the flipped accuracy
+      Scene scene = WorldManager.getWorld().getLocation(player.getPosition());
       Enemy enemy = scene.getEnemy();
       //calculate who goes first
 
@@ -105,7 +114,7 @@ public class GameController{
     //attempt flee combat sequence
     public static boolean run(String[] input, Player player) throws NumberFormatException,
             NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException, MissingParameterException{
-      Scene scene = World.getLocation(player.getPosition());
+      Scene scene = WorldManager.getWorld().getLocation(player.getPosition());
       //get a random moveable location and pass into translate
       int[] locs = Utils.getRandomMove(player);
       input = new String[]{"",""+locs[0],""+locs[1]};
@@ -136,7 +145,7 @@ public class GameController{
     }
 
     public static boolean grab_item(String[] input, Player player) throws NullGameObjectException{
-      Scene scene = World.getLocation(player.getPosition());
+      Scene scene = WorldManager.getWorld().getLocation(player.getPosition());
       try{
         scene.getItem().getStats();
       } catch (NullPointerException e){
@@ -151,7 +160,7 @@ public class GameController{
     }
 
     public static boolean grab_cons(String[] input, Player player) throws NullGameObjectException{
-      Scene scene = World.getLocation(player.getPosition());
+      Scene scene = WorldManager.getWorld().getLocation(player.getPosition());
       try{
         scene.getConsumable().getStats();
       } catch (NullPointerException e){
@@ -170,7 +179,7 @@ public class GameController{
     }
 
     public static boolean grab_weapon(String[] input, Player player) throws NullGameObjectException{
-      Scene scene = World.getLocation(player.getPosition());
+      Scene scene = WorldManager.getWorld().getLocation(player.getPosition());
       try{
         scene.getWeapon().getStats();
       } catch (NullPointerException e){
@@ -185,7 +194,7 @@ public class GameController{
     }
 
     public static boolean use(String[] input, Player player) throws NullGameObjectException {
-      Scene scene = World.getLocation(player.getPosition());
+      Scene scene = WorldManager.getWorld().getLocation(player.getPosition());
       try{
         player.getConsumable().getStats();
       } catch (NullPointerException e){
@@ -200,19 +209,20 @@ public class GameController{
 
   }
 
+
   //minimap
   public static boolean minimap(String[] input, Player player){
     String[][] minimap = new String[9][9];
     for(int i=8; i>=0; i--){
       for(int j=0; j<9; j++){
         try{
-          Scene loc = World.getLocation(player.getPosition(), j/3-1, i/3-1);
+          Scene loc = WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1);
           if(i==4 && j==4){
             p.print("@ ");
           } else if(((double) (j-1)/3) == (j-1)/3 && ((double) (i-1)/3) == (i-1)/3 && loc.getEnemy()!=null && loc.isScannable()){
             p.print("E ");
           } else {
-            p.print(World.getLocation(player.getPosition(), j/3-1, i/3-1).getIcon()+" ");
+            p.print(WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1).getIcon()+" ");
           }
         } catch (IndexOutOfBoundsException e){
           p.print("! ");
@@ -231,7 +241,7 @@ public class GameController{
       p.println("\n-----------COMBAT----------\n");
       p.println("\n"+attacker+" Move!\n");
 
-      //weapons have 1 to 100 crit chance (accuracy)
+      //weapons have 1 to 100 critical chance (accuracy)
       int attackRoll = RAND.nextInt(100)+1;
       int minCrit = 100-attacker.getWeapon().getAccuracy();
       if(defender.getWeapon().isRanged() && RAND.nextBoolean()) { //end with dodge if ranged
@@ -247,7 +257,7 @@ public class GameController{
       p.println("Minimum roll to crit: "+minCrit);
       p.println("Attack roll: "+attackRoll);
 
-      //check if attack has crit based on roll
+      //check if attack has critical based on roll
       if(attackRoll<minCrit){
         p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
         int dmg = -1*attacker.getWeapon().getAttack()+defender.getArmor();
@@ -271,7 +281,7 @@ public class GameController{
       for(int i=-1;i<2;i++){
         for(int j=-1;j<2;j++){
           try{
-            Scene loc = World.getLocation(entity.getPosition(), i, j);
+            Scene loc = WorldManager.getWorld().getLocation(entity.getPosition(), i, j);
             if(!(i==0 && j==0) && (loc.isTraversable() || entity.canTraverse())){
               locations.add(new int[]{i, j});
             }
@@ -283,14 +293,14 @@ public class GameController{
     }
 
     public static void enemyTurn(){
-      Scene[][] world = World.getWorldMap();
+      Scene[][] world = WorldManager.getWorld().getArray();
       for(Scene[] row : world){
         for(Scene scene : row){
           if(scene.getEnemy()!=null){
             Enemy enemy = scene.getEnemy();
             //movement
             int[] move = getRandomMove(enemy);
-            Scene newScene = World.getLocation(enemy.getPosition(), move[0], move[1]);
+            Scene newScene = WorldManager.getWorld().getLocation(enemy.getPosition(), move[0], move[1]);
               if(RAND.nextInt(5)>2 && newScene.getEnemy()==null){
                 enemy.updateCoords(move[0], move[1]);
                 newScene.setEnemy(enemy);

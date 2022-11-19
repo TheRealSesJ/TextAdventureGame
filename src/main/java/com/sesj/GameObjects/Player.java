@@ -2,7 +2,7 @@ package com.sesj.GameObjects;
 
 import com.sesj.Interfaces.*;
 import com.sesj.Exceptions.*;
-import com.sesj.World;
+import com.sesj.WorldManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ public class Player implements Entity, GameObject{
   private final int MAX_HP;
   private int armor;
   private int baseArmor;
+  private boolean inDungeon = false;
   
   public Player(int hp, Weapon weapon, Item item, int armor, int movement, int initialX, int initialY){
     this.hp = hp;
@@ -36,7 +37,7 @@ public class Player implements Entity, GameObject{
   //illegal acess exception used for case where tile is not traversible
   public boolean translate(int xTiles, int yTiles) throws NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException {
     try{
-      if(!World.getLocation(this.position, xTiles, yTiles).isTraversable()){
+      if(!WorldManager.getWorld().getLocation(this.position, xTiles, yTiles).isTraversable()){
         if(this.item==null || !canTraverse()){
           throw new NotTraversableException();
         }
@@ -53,6 +54,10 @@ public class Player implements Entity, GameObject{
     this.position.translate(xTiles, yTiles);
     return true;
   }
+
+  public boolean isInDungeon(){ return this.inDungeon; }
+
+  public void setDungeon(boolean set){ this.inDungeon = set; }
 
   public Point getPosition(){ return this.position; }
 

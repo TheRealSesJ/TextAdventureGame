@@ -3,7 +3,7 @@ package com.sesj.Interfaces;
 import com.sesj.GameObjects.Buff;
 import com.sesj.GameObjects.Weapon;
 
-import java.awt.*;
+import java.awt.Point;
 
 public interface Entity {
   int getHp();

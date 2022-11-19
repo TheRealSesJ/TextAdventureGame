@@ -33,8 +33,8 @@ public class InputController{
     //load the config, if missing throw an error, game inside try-catch
     try{
 
-      GameParameters.ConfigLoader.configLoad();
-      World.build();
+      GameParameters.configLoad();
+      WorldManager.build();
 
       
       Player player = GameParameters.getPlayer();
@@ -47,9 +47,9 @@ public class InputController{
   //----------------------------take turn
         try{
           GameController.minimap(new String[]{""}, player);
-          if(World.getLocation(player.getPosition()).getEnemy()==null){
+          if(WorldManager.getWorld().getLocation(player.getPosition()).getEnemy()==null){
             while(!scanInput(SCAN.nextLine(), player, GameController.WorldController.class)){
-              p.println("\nplease enter an action\n");
+              p.println("\nplease enter an allowed action\n");
             }
             //----------------------do enemy turns
             GameController.Utils.enemyTurn();
@@ -59,10 +59,10 @@ public class InputController{
           } else { //if enemy is not null do a combat turn
             p.println("\n<<AN ENEMY HAS APPEARED>>\n");
             p.println("\nPlayer Hp: "+player.getHp()+"\n");
-            p.println(World.getLocation(player.getPosition()).getEnemy().getStats());
+            p.println(WorldManager.getWorld().getLocation(player.getPosition()).getEnemy().getStats());
 
             while(!scanInput(SCAN.nextLine(), player, GameController.CombatController.class)){
-              p.println("\nplease enter an action\n");
+              p.println("\nplease enter an allowed action\n");
             }
 
             //------check for game over condition
@@ -90,12 +90,12 @@ public class InputController{
 
 //--------------tick the entities
         player.tick();
-        World.tick();
+        WorldManager.getWorld().tick();
 
 
       }
     } catch (ConfigException e){
-      p.println(e.getMessage());
+      e.printStackTrace();
     }
 
 //----end of the game----
