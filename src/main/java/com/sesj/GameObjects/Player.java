@@ -20,7 +20,6 @@ public class Player implements Entity, GameObject{
   private final int MAX_HP;
   private int armor;
   private int baseArmor;
-  private boolean inDungeon = false;
   
   public Player(int hp, Weapon weapon, Item item, int armor, int movement, int initialX, int initialY){
     this.hp = hp;
@@ -55,11 +54,11 @@ public class Player implements Entity, GameObject{
     return true;
   }
 
-  public boolean isInDungeon(){ return this.inDungeon; }
-
-  public void setDungeon(boolean set){ this.inDungeon = set; }
-
   public Point getPosition(){ return this.position; }
+
+  public void setPosition(Point pos){
+    this.position = pos;
+  }
 
   public boolean canTraverse(){
     return this.item.getTraverseBoost();

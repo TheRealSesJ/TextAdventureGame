@@ -47,20 +47,23 @@ public class InputController{
   //----------------------------take turn
         try{
           GameController.minimap(new String[]{""}, player);
+          if(WorldManager.isDungeon(player.getPosition())){
+            p.println("\n<<DUNGEON LOCATED>>\n");
+          }
           if(WorldManager.getWorld().getLocation(player.getPosition()).getEnemy()==null){
             while(!scanInput(SCAN.nextLine(), player, GameController.WorldController.class)){
               p.println("\nplease enter an allowed action\n");
             }
-            //----------------------do enemy turns
+            //------------------end sequence
             GameController.Utils.enemyTurn();
             p.println("\nNext turn: (Press ENTER)");
             SCAN.nextLine();
             p.println("<------------------------------------->\n");
+
           } else { //if enemy is not null do a combat turn
             p.println("\n<<AN ENEMY HAS APPEARED>>\n");
             p.println("\nPlayer Hp: "+player.getHp()+"\n");
             p.println(WorldManager.getWorld().getLocation(player.getPosition()).getEnemy().getStats());
-
             while(!scanInput(SCAN.nextLine(), player, GameController.CombatController.class)){
               p.println("\nplease enter an allowed action\n");
             }
@@ -70,7 +73,7 @@ public class InputController{
               playing = false;
               break;
             }
-
+            //------------------end sequence
             p.println("\nNext turn: (Press ENTER)");
             SCAN.nextLine();
             p.println("-------------------------------------\n");

@@ -1,19 +1,40 @@
 {
-    "world":{
-        "row1":["forest","mountains","mountains","mountains","forest"],
-        "row2":["forest","mountains","mountains","desert","forest"],
-        "row3":["forest","forest","desert","desert","desert"],
-        "row4":["forest","lake","lake","desert","desert"],
-        "row5":["forest","lake","lake","desert","mountains"]
+    "main_world":{
+        "map":{
+            "row1":["forest","mountains","mountains","mountains","forest"],
+            "row2":["forest","mountains","mountains","desert","forest"],
+            "row3":["forest","forest","desert","desert","desert"],
+            "row4":["forest","lake","lake","desert","desert"],
+            "row5":["forest","lake","lake","desert","mountains"]
+        },
+        "enemies":["witch", "witch", "witch", "wild_beast", "wild_beast", "wild_beast", "wild_beast"],
+        "items":["holy_sandals", "holy_sandals", "power_amulet", "power_amulet", "chainmail"],
+        "weapons":["bow", "bow", "bow", "bow", "bow", "bow", "bow"],
+        "consumables":["apple", "silver_apple", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry"]
     },
 
-    "enemies":["witch", "witch", "witch", "wild_beast", "wild_beast", "wild_beast", "wild_beast"],
+    "dungeon_placement_map":{
+        "row1":["null","null","null","null","null"],
+        "row2":["null","null","dungeon1_world","null","null"],
+        "row3":["null","null","null","null","null"],
+        "row4":["null","null","null","null","null"],
+        "row5":["null","null","null","null","null"]
+    },
 
-    "items":["holy_sandals", "holy_sandals", "power_amulet", "power_amulet", "chainmail"],
+    "dungeon1_world":{
+        "map":{
+            "row1":["forest","forest","forest","forest","forest"],
+            "row2":["forest","lake","lake","lake","forest"],
+            "row3":["forest","lake","mountains","lake","forest"],
+            "row4":["forest","lake","lake","lake","forest"],
+            "row5":["forest","forest","forest","forest","forest"]
+        },
+        "enemies":["wild_beast", "wild_beast"],
+        "items":["power_amulet", "power_amulet", "power_amulet", "chainmail"],
+        "weapons":["flaming_sword"],
+        "consumables":["apple"]
+    },
 
-    "weapons":["bow", "bow", "bow", "bow", "bow", "bow", "bow"],
-
-    "consumables":["apple", "silver_apple", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry"],
 
 
     "enemy_stats":{

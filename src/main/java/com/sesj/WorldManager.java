@@ -5,30 +5,51 @@ import com.sesj.Exceptions.ConfigException;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Arrays;
 
-import com.sesj.Interfaces.Entity;
 import com.sesj.StaticData.*;
 
 public class WorldManager {
-  private static WorldMap worldMap;
-  private static WorldMap[][] dungeonMaps;
-  private static WorldMap dungeonMap;
+  private static World world;
+  private static World[][] dungeonMaps;
+  private static World dungeonMap;
 
 
   public static void build() throws ConfigException{
-    worldMap = new WorldMap(GameParameters.getWorld("worldMap"),
-            new ArrayList<Enemy>(Arrays.asList(GameParameters.getEnemyArray())),
-                    new ArrayList<Item>(Arrays.asList(GameParameters.getItemArray())),
-                            new ArrayList<Weapon>(Arrays.asList(GameParameters.getWeaponArray())),
-                                    new ArrayList<Consumable>(Arrays.asList(GameParameters.getConsumableArray())));
-
+    world = GameParameters.getWorld("main_world");
+    dungeonMaps = GameParameters.getDungeonLocations();
   }
 
-  public static WorldMap getWorld(){
+  public static World getWorld(){
     if(dungeonMap!=null) return dungeonMap;
-    return worldMap;
+    return world;
   }
+
+  public static boolean isDungeon(Point pos){
+    int x = (int) pos.getX();
+    int y = (int) pos.getY();
+    return dungeonMaps[y][x] != null;
+  }
+
+  public static boolean enterDungeon(Point pos){
+    int x = (int) pos.getX();
+    int y = (int) pos.getY();
+    if(isDungeon(pos)){
+      dungeonMap = dungeonMaps[y][x];
+      return true;
+    }
+    return false;
+  }
+
+  public static boolean exitDungeon(){
+    if(dungeonMap!=null){
+      dungeonMap=null;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
   
 }

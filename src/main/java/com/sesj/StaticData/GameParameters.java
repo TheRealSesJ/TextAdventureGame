@@ -4,11 +4,13 @@ package com.sesj.StaticData;
 import com.sesj.Exceptions.ConfigNullValueException;
 import com.sesj.Exceptions.MissingConfigException;
 import com.sesj.GameObjects.*;
+import com.sesj.World;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
+import java.util.ArrayList;
 
 public class GameParameters{
 
@@ -23,59 +25,102 @@ public class GameParameters{
     }
   }
 
-  public static Scene[][] getWorld(String map) throws ConfigNullValueException {
-    String[][] worldStr = loadWorld(map);
-    int size = worldStr.length;
-    Scene[][] world = new Scene[size][size];
-    for(int i=0; i<size; i++) {
-      for (int j = 0; j < size; j++) {
-        world[i][j] = getScene(worldStr[i][j]);
+  public static World[][] getDungeonLocations() throws ConfigNullValueException {
+    try{
+      JSONObject map = (JSONObject) file.get("dungeon_placement_map");
+      try{
+        int size = ((JSONArray) map.get("row1")).size();
+        World[][] dungeonArray = new World[size][size];
+        for(int i=0; i<size; i++){
+          for(int j =0; j<size; j++){
+            if(((String) ((JSONArray) map.get("row"+(size-i))).get(j)).equals("null")){
+              dungeonArray[i][j] = null;
+            }else {
+              dungeonArray[i][j] = getWorld((String) ((JSONArray) map.get("row" + (size - i))).get(j));
+
+            }
+          }
+        }
+        return dungeonArray;
+      }catch (NullPointerException e){
+        throw new ConfigNullValueException("at the dungeon placement map contents");
       }
+
+    }catch (NullPointerException e){
+      throw new ConfigNullValueException("at the dungeon placement map declaration");
     }
-    return world;
+
   }
 
-  //procedural generation
-  public static Enemy[] getEnemyArray() throws ConfigNullValueException {
-    String[] enemiesStr = loadSpawnables("enemies");
-    int size = enemiesStr.length;
-    Enemy[] enemies = new Enemy[size];
-    for(int i=0; i<size;i++){
-      enemies[i] = getEnemy(enemiesStr[i]);
+  public static World getWorld(String worldID) throws ConfigNullValueException{
+    try{
+      JSONObject world = (JSONObject) file.get(worldID);
+
+      //get the WorldMap
+      Scene[][] worldArray;
+      try{
+        JSONObject worldMap = (JSONObject) world.get("map");
+        int size = ((JSONArray) worldMap.get("row1")).size();
+        worldArray = new Scene[size][size];
+        for(int i=0; i<size; i++){
+          for(int j =0; j<size; j++){
+            worldArray[i][j] = getScene((String) ((JSONArray) worldMap.get("row"+(size-i))).get(j));
+          }
+        }
+      } catch (NullPointerException e){
+        throw new ConfigNullValueException("at the world or dungeon array declaration");
+      }
+
+      //get the enemies
+      String[] enemiesStr = loadSpawnables(world, "enemies");
+      ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+      for(int i=0; i<enemiesStr.length;i++){
+        enemies.add(getEnemy(enemiesStr[i]));
+      }
+
+      //get the items
+      String[] itemsStr = loadSpawnables(world, "items");
+      ArrayList<Item> items = new ArrayList<Item>();
+      for(int i=0; i<itemsStr.length;i++){
+        items.add(getItem(itemsStr[i]));
+      }
+
+      //get the weapons
+      String[] weaponsStr = loadSpawnables(world, "weapons");
+      ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+      for(int i=0; i<weaponsStr.length;i++){
+        weapons.add(getWeapon(weaponsStr[i]));
+      }
+
+      //get the consumables
+      String[] consStr = loadSpawnables(world, "consumables");
+      ArrayList<Consumable> consumables = new ArrayList<Consumable>();
+      for(int i=0; i<consStr.length;i++){
+        consumables.add(getConsumable(consStr[i]));
+      }
+
+
+      return new World(worldArray, enemies, items, weapons, consumables);
+    }catch (NullPointerException e){
+      throw new ConfigNullValueException("at world container class");
     }
-    return enemies;
+
+  }
+
+  public static String[] loadSpawnables(JSONObject world, String name) throws ConfigNullValueException {
+    try{
+      JSONArray list = (JSONArray) world.get(name);
+      String[] arr = new String[list.size()];
+      for(int i=0; i<list.size(); i++){
+        arr[i] = (String) list.get(i);
+      }
+      return arr;
+    } catch (NullPointerException e){
+      throw new ConfigNullValueException("at the "+name+" array declaration");
+    }
   }
 
 
-  public static Item[] getItemArray() throws ConfigNullValueException {
-    String[] itemsStr = loadSpawnables("items");
-    int size = itemsStr.length;
-    Item[] items = new Item[size];
-    for(int i=0; i<size;i++){
-        items[i] = getItem(itemsStr[i]);
-    }
-    return items;
-  }
-
-  public static Consumable[] getConsumableArray() throws ConfigNullValueException {
-    String[] itemsStr = loadSpawnables("consumables");
-    int size = itemsStr.length;
-    Consumable[] items = new Consumable[size];
-    for(int i=0; i<size;i++){
-      items[i] = getConsumable(itemsStr[i]);
-    }
-    return items;
-  }
-
-  public static Weapon[] getWeaponArray() throws ConfigNullValueException {
-    String[] itemsStr = loadSpawnables("weapons");
-    int size = itemsStr.length;
-    Weapon[] weapons = new Weapon[size];
-    for(int i=0; i<size;i++){
-      weapons[i] = getWeapon(itemsStr[i]);
-    }
-    return weapons;
-  }
 
   public static Scene getScene(String name) throws ConfigNullValueException {
     try{
@@ -196,35 +241,4 @@ public class GameParameters{
     }
 
   }
-
-
-    public static String[][] loadWorld(String map) throws ConfigNullValueException {
-      try{
-        JSONObject world = (JSONObject) file.get(map);
-        int size = ((JSONArray) world.get("row1")).size();
-        String[][] worldArr = new String[size][size];
-        for(int i=0; i<size; i++){
-          for(int j =0; j<size; j++){
-            worldArr[i][j] = (String) ((JSONArray) world.get("row"+(size-i))).get(j);
-          }
-        }
-        return worldArr;
-      } catch (NullPointerException e){
-        throw new ConfigNullValueException("at the world or dungeon array declaration");
-      }
-
-    }
-
-    public static String[] loadSpawnables(String name) throws ConfigNullValueException {
-      try{
-        JSONArray list = (JSONArray) file.get(name);
-        String[] arr = new String[list.size()];
-        for(int i=0; i<list.size(); i++){
-          arr[i] = (String) list.get(i);
-        }
-        return arr;
-      } catch (NullPointerException e){
-        throw new ConfigNullValueException("at the "+name+" array declaration");
-      }
-    }
 }

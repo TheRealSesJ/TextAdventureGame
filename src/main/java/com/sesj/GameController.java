@@ -5,6 +5,7 @@
 
 package com.sesj;
 
+import java.awt.*;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
@@ -70,10 +71,21 @@ public class GameController{
     return false;
   }
 
-  public static boolean exit(String[] input, Player player) throws MovementOutOfBoundsException {
-    if(!player.isInDungeon()){
+  public static boolean enter(String[] input, Player player) throws MovementOutOfBoundsException {
+    if(!WorldManager.enterDungeon(player.getPosition())){
       throw new MovementOutOfBoundsException();
     }
+    player.setPosition(new Point(2,2));
+    //World.setDungeonMap(null);
+    p.println("<<<<DUNGEON ENTERED>>>>");
+    return true;
+  }
+
+  public static boolean exit(String[] input, Player player) throws MovementOutOfBoundsException {
+    if(!WorldManager.exitDungeon()){
+      throw new MovementOutOfBoundsException();
+    }
+    player.setPosition(new Point(2,2));
     //World.setDungeonMap(null);
     p.println("<<<<DUNGEON EXITED>>>>");
     return true;
@@ -237,7 +249,7 @@ public class GameController{
   //not referencable through reflection
   public static class Utils {
     //combat turn
-    public static void combatTurn(Entity attacker, Entity defender){
+    public static void combatTurn(Entity attacker, Entity defender){ //TODO ADD COMBAT DAMAGE NUMBERS
       p.println("\n-----------COMBAT----------\n");
       p.println("\n"+attacker+" Move!\n");
 
@@ -289,6 +301,7 @@ public class GameController{
           catch(IndexOutOfBoundsException e){}
         }
       }
+      if(locations.size()==0) return new int[]{0,0}; //null movement
       return locations.get(locations.size()==1? 0 : RAND.nextInt(locations.size()-1));
     }
 

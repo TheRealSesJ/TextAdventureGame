@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class WorldMap {
+public class World {
     private final Scene[][] worldMap;
 
-    public WorldMap(Scene[][] map, ArrayList<Enemy> enemies, ArrayList<Item> items,
-                    ArrayList<Weapon> weapons, ArrayList<Consumable> consumables) throws ConfigException {
+    public World(Scene[][] map, ArrayList<Enemy> enemies, ArrayList<Item> items,
+                 ArrayList<Weapon> weapons, ArrayList<Consumable> consumables) {
         worldMap = map;
         int size = worldMap.length;
         Random rand = new Random();
