@@ -1,15 +1,15 @@
 # TextAdventure
 
-the game has a 2d array of scenes that the player exists it
-there are items and enemies scattered around the map
-the player can advenutre to each of the different biomes to find them
-I plan on adding more interfaces for simplicity in the future, the only one that exists is entity
-All objects are organized into packagaes based on their purpose and superclass
-GameParamters is a static class that contains all arbitrary game constants
-this class is where the main method is located
-this is static game code that is not player initiated
-GameController is player caused code that is mapped from inputs gathered in this class (below)
-Only this class and GameController are "allowed" to print to the console
+The game has a 2d array of scenes that the player exists in. There are items and enemies scattered around the map. The player can advenutre to each of the different biomes to find them. 
+
+I plan on adding more interfaces for simplicity in the future, the only one that exists is entity. 
+
+## Info
+ - All objects are organized into packagaes based on their purpose and superclass
+ - `GameParamters` is a static class that contains all arbitrary game constants. This class is where the main method is located
+ - `This` is static game code that is not player initiated
+ - `GameController` is player caused code that is mapped from inputs gathered in this class (below)
+ - Only `this` class and `GameController` are "allowed" to print to the console
 
 ## Command List:
       
