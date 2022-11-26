@@ -1,13 +1,11 @@
-package com.sesj;
+package com.sesj.World;
 
-import com.sesj.GameObjects.*;
 import com.sesj.Exceptions.ConfigException;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.sesj.StaticData.*;
+import com.sesj.World.World;
 
 public class WorldManager {
   private static World world;

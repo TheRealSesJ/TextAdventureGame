@@ -2,7 +2,7 @@ package com.sesj.GameObjects;
 
 import com.sesj.Interfaces.*;
 import com.sesj.Exceptions.*;
-import com.sesj.WorldManager;
+import com.sesj.World.WorldManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -153,7 +153,7 @@ public class Player implements Entity, GameObject{
         this.buffs.get(i).tick(this);
       } else {
         this.armor= baseArmor;
-        this.buffs.remove(i); //TODO make sure this does not break
+        this.buffs.remove(i);
       }
     }
   }

@@ -67,15 +67,17 @@ public class Enemy implements Entity, GameObject {
 
   public void tick(){
     System.out.println(name + " @" + position + " has ticked!");
-    if(this.buffs.size()==0) return;
-    for(int i = 0; i<this.buffs.size(); i++){
-      if(this.buffs.get(i).getDuration()>0){
-        if((this.hp<this.maxHp)) this.hp+=this.buffs.get(i).getHp();
-        if(this.buffs.get(i).getArmor()!=0) this.armor = this.buffs.get(i).getArmor();
-        this.buffs.get(i).tick(this);
-      } else {
-        this.armor= baseArmor;
-        this.buffs.remove(i); //TODO make sure this does not break
+    //iterate over buffs
+    if(this.buffs.size()!=0){
+      for(int i = 0; i<this.buffs.size(); i++){
+        if(this.buffs.get(i).getDuration()>0){
+          if((this.hp<this.maxHp)) this.hp+=this.buffs.get(i).getHp();
+          if(this.buffs.get(i).getArmor()!=0) this.armor = this.buffs.get(i).getArmor();
+          this.buffs.get(i).tick(this);
+        } else {
+          this.armor= baseArmor;
+          this.buffs.remove(i);
+        }
       }
     }
   }
@@ -83,7 +85,11 @@ public class Enemy implements Entity, GameObject {
   @Override
   public boolean buff(Buff buff){
     for(Buff e: this.buffs){
-      if(e.equals(buff)) return false;
+      if(e.equals(buff)){
+        buffs.remove(e);
+        buffs.add(buff);
+        return true;
+      }
     }
     this.buffs.add(buff);
     return true;

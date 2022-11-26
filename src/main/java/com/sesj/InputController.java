@@ -13,11 +13,12 @@ import java.util.*;
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.Player;
 import com.sesj.StaticData.GameParameters;
+import com.sesj.World.WorldManager;
 
 import java.io.*;
 
+
 public class InputController{
-  
   public static final PrintStream p = new PrintStream(System.out);
   public static final Scanner SCAN = new Scanner(System.in);
   public static Method previousCommand;

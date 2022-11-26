@@ -3,7 +3,7 @@ package com.sesj.GameObjects;
 import com.sesj.Interfaces.Entity;
 import com.sesj.Interfaces.GameObject;
 
-public class Buff implements GameObject { //TODO implement
+public class Buff implements GameObject {
     private int hp;
     private int armor;
     private int duration;

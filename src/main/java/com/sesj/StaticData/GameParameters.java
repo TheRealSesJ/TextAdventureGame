@@ -4,7 +4,7 @@ package com.sesj.StaticData;
 import com.sesj.Exceptions.ConfigNullValueException;
 import com.sesj.Exceptions.MissingConfigException;
 import com.sesj.GameObjects.*;
-import com.sesj.World;
+import com.sesj.World.World;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

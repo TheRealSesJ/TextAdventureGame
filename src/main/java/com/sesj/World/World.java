@@ -1,4 +1,4 @@
-package com.sesj;
+package com.sesj.World;
 
 import com.sesj.Exceptions.ConfigException;
 import com.sesj.GameObjects.*;

@@ -13,6 +13,7 @@ import java.util.Random;
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.*;
 import com.sesj.Interfaces.Entity;
+import com.sesj.World.WorldManager;
 
 //prints to console, only object allowed to do so
 public class GameController{
@@ -249,7 +250,7 @@ public class GameController{
   //not referencable through reflection
   public static class Utils {
     //combat turn
-    public static void combatTurn(Entity attacker, Entity defender){ //TODO ADD COMBAT DAMAGE NUMBERS
+    public static void combatTurn(Entity attacker, Entity defender){ //TODO ADD COMBAT DAMAGE NUMBERS; TODO FIX ACCURACY CALCULATION
       p.println("\n-----------COMBAT----------\n");
       p.println("\n"+attacker+" Move!\n");
 
@@ -257,27 +258,26 @@ public class GameController{
       int attackRoll = RAND.nextInt(100)+1;
       int minCrit = 100-attacker.getWeapon().getAccuracy();
       if(defender.getWeapon().isRanged() && RAND.nextBoolean()) { //end with dodge if ranged
+        minCrit+=20; //if enemy is ranged and attack is not dodged they are harder to crit
         p.println("\n"+defender+" EVADED!\n");
         p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
 
         p.println("\n-----------COMBAT----------\n");
         return;
 
-      } else {
-        minCrit+=20; //if enemy is ranged and attack is not dodged they are harder to crit
       }
       p.println("Minimum roll to crit: "+minCrit);
       p.println("Attack roll: "+attackRoll);
 
       //check if attack has critical based on roll
       if(attackRoll<minCrit){
-        p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
-        int dmg = -1*attacker.getWeapon().getAttack()+defender.getArmor();
-        defender.updateHp(Math.min(dmg, 0));
+        int dmg = attacker.getWeapon().getAttack()-defender.getArmor();
+        p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +" for "+(dmg)+" damage!\n");
+        defender.updateHp(Math.min(-1*dmg, 0));
       } else {
-        p.println("\n>>CRITICAL<< Attack landed with "+attacker.getWeapon()+" on "+ defender +"!\n");
-        int dmg = (int) -1.5*attacker.getWeapon().getAttack()+defender.getArmor();
-        defender.updateHp(Math.min(dmg, 0));
+        int dmg = (int) (1.5*attacker.getWeapon().getAttack())-defender.getArmor();
+        p.println("\n>>CRITICAL<< Attack landed with "+attacker.getWeapon()+" on "+ defender +" for "+(dmg)+" damage!\n");
+        defender.updateHp(Math.min(-1*dmg, 0));
       }
       if(attacker.getWeapon().getConsumable()!= null){
         defender.buff(new Buff(attacker.getWeapon().getConsumable()));
