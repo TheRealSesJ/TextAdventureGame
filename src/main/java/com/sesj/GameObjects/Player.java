@@ -145,15 +145,16 @@ public class Player implements Entity, GameObject{
   public void tick(){
     System.out.println("I tick");
     this.weapon.reset();
-    if(this.buffs.size()==0) return;
-    for(int i = 0; i<this.buffs.size(); i++){
-      if(this.buffs.get(i).getDuration()>0){
-        if((this.hp<this.MAX_HP)) this.hp+=this.buffs.get(i).getHp(); //TODO make all stat references methods for items
-        if(this.buffs.get(i).getArmor()!=0) this.armor = this.buffs.get(i).getArmor();
-        this.buffs.get(i).tick(this);
-      } else {
-        this.armor= baseArmor;
-        this.buffs.remove(i);
+    if(this.buffs.size()!=0){
+      for(int i = 0; i<this.buffs.size(); i++){
+        if(this.buffs.get(i).getDuration()>0){
+          if((this.hp<this.MAX_HP)) this.hp+=this.buffs.get(i).getHp();
+          if(this.buffs.get(i).getArmor()!=0) this.armor = this.buffs.get(i).getArmor();
+          this.buffs.get(i).tick(this);
+        } else {
+          this.armor= baseArmor;
+          this.buffs.remove(i);
+        }
       }
     }
   }

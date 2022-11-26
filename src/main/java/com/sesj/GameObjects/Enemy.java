@@ -12,7 +12,7 @@ public class Enemy implements Entity, GameObject {
   private Point position;
 
   private int hp;
-  private int maxHp;
+  private final int MAX_HP;
   private final Weapon weapon;
   private int armor;
   private final int baseArmor;
@@ -23,7 +23,7 @@ public class Enemy implements Entity, GameObject {
   
   public Enemy(int hp, Weapon weapon, int armor, boolean canMove, String name){
     this.hp = hp;
-    this.maxHp = hp;
+    this.MAX_HP = hp;
     this.weapon = weapon; 
     this.armor=armor;
     this.baseArmor = armor;
@@ -40,7 +40,7 @@ public class Enemy implements Entity, GameObject {
   }
 
   public int getMaxHp(){
-    return maxHp;
+    return MAX_HP;
   }
 
   public void updateHp(int update){
@@ -71,7 +71,7 @@ public class Enemy implements Entity, GameObject {
     if(this.buffs.size()!=0){
       for(int i = 0; i<this.buffs.size(); i++){
         if(this.buffs.get(i).getDuration()>0){
-          if((this.hp<this.maxHp)) this.hp+=this.buffs.get(i).getHp();
+          if((this.hp<this.MAX_HP)) this.hp+=this.buffs.get(i).getHp();
           if(this.buffs.get(i).getArmor()!=0) this.armor = this.buffs.get(i).getArmor();
           this.buffs.get(i).tick(this);
         } else {
