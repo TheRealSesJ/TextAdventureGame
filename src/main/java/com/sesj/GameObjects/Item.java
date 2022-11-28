@@ -34,7 +34,7 @@ public class Item implements GameObject {
   }
 
   
-  public String toString(){ return name; }
+  public String getName(){ return name; }
 
   //weapon related getters
   public int getAttackBoost(){
@@ -75,7 +75,7 @@ public class Item implements GameObject {
   }
 
   public String getStats(){
-    return "\nItem: "+this+"\n"
+    return "\nItem: "+this.name+"\n"
     +"\n\tWeapon Related:"
     +"\n\t\tattack boost: "+ this.attackBoost
     +"\n\t\tspeed: "+ this.speedBoost

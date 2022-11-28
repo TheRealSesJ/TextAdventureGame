@@ -31,6 +31,6 @@ public class Consumable implements GameObject {
     public int getHp(){ return hp; }
 
     @Override
-    public String toString(){ return name; }
+    public String getName(){ return name; }
 
 }

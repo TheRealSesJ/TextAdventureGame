@@ -45,7 +45,7 @@ public class Weapon implements GameObject {
 
   public Consumable getConsumable(){ return this.cons; }
 
-  public String toString(){ return this.name; }
+  public String getName(){ return this.name; }
 
   public Weapon effect(Item item){
     this.boostedAttack = item.getAttackBoost();
@@ -65,11 +65,11 @@ public class Weapon implements GameObject {
   }
 
   public String getStats(){
-    String returnStr = "\nWeapon: "+ this
-            +"\n\tAttack: "+ getAttack()
-            +"\n\tSpeed: "+ getSpeed()
-            +"\n\tAccuracy: "+ getAccuracy()
-            +"\n\tRanged: "+ isRanged()
+    String returnStr = "\nWeapon: "+ this.name
+            +"\n\tAttack: "+ this.getAttack()
+            +"\n\tSpeed: "+ this.getSpeed()
+            +"\n\tAccuracy: "+ this.getAccuracy()
+            +"\n\tRanged: "+ this.isRanged()
             +"\n\tApplied Status Effect: ";
     if(cons!=null){
       returnStr += this.cons.getStats()

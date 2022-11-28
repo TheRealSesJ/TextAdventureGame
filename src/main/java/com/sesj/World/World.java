@@ -5,12 +5,12 @@ import com.sesj.GameObjects.*;
 import com.sesj.StaticData.GameParameters;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class World {
     private final Scene[][] worldMap;
+    private HashMap<Point, ArrayList<Enemy>> enemyMap = new HashMap<>();
+    private final ArrayList<Enemy> ENEMY_CONTAINER = new ArrayList<>();
 
     public World(Scene[][] map, ArrayList<Enemy> enemies, ArrayList<Item> items,
                  ArrayList<Weapon> weapons, ArrayList<Consumable> consumables) {
@@ -23,10 +23,15 @@ public class World {
             int last = enemies.size()-1;
             int x = rand.nextInt(size);
             int y = rand.nextInt(size);
-            if((worldMap[y][x].isTraversable() || enemies.get(last).canTraverse()) && worldMap[y][x].setEnemy(enemies.get(last))){
-                enemies.get(last).initPos(new Point(x, y));
-                enemies.remove(last);
+            if(enemyMap.get(new Point(x, y))==null){
+                ArrayList<Enemy> arr = new ArrayList<>();
+                arr.add(enemies.get(last));
+                enemyMap.put(new Point(x, y), arr);
+            } else {
+                enemyMap.get(new Point(x, y)).add(enemies.get(last));
             }
+            enemies.get(last).initPos(new Point(x, y));
+            ENEMY_CONTAINER.add(enemies.remove(last));
         }
 
         //items
@@ -55,8 +60,27 @@ public class World {
 
     }
 
+    public ArrayList<Enemy> getEnemies(Point pos){
+        enemyMap.computeIfAbsent(pos, k -> new ArrayList<>()); //TODO understand this lambda function
+        return enemyMap.get(pos);
+    }
+
+    public ArrayList<Enemy> getEnemies(Point pos, Point offset){
+        enemyMap.computeIfAbsent(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())), k -> new ArrayList<>());
+        return enemyMap.get(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())));
+    }
+
+
     public Scene getLocation(Point pos){
         return worldMap[(int) pos.getY()][(int) pos.getX()];
+    }
+
+    public Scene getLocation(Point pos, Point offset){
+        int xPos = (int) pos.getX();
+        int yPos = (int) pos.getY();
+        int xOffset = (int) offset.getX();
+        int yOffset = (int) offset.getY();
+        return worldMap[yPos+yOffset][xPos+xOffset];
     }
 
     public Scene getLocation(Point pos, int x, int y){
@@ -73,11 +97,15 @@ public class World {
         return worldMap;
     }
 
-    public void tick(){
-        for(Scene[] row : worldMap){
-            for(Scene scene : row){
-                if(scene.getEnemy()!=null) scene.getEnemy().tick();
-            }
+    public void tick(){ //TODO iterate over the listed objects
+        for(int i=0; i<ENEMY_CONTAINER.size();i++){
+            ENEMY_CONTAINER.get(i).tick();
         }
+    }
+
+    public void destroy(Enemy enemy){
+        ENEMY_CONTAINER.remove(enemy);
+        System.out.println("removing");
+        enemyMap.get(enemy.getPosition()).remove(enemy);
     }
 }

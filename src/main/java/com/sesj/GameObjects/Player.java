@@ -77,7 +77,7 @@ public class Player implements Entity, GameObject{
     return this.consumable;
   }
 
-  public String toString() { return "Player"; }
+  public String getName() { return "Player"; }
 
 
   public Weapon equip(Weapon weapon){
@@ -165,7 +165,7 @@ public class Player implements Entity, GameObject{
     +"\n"
     +this.item.getStats()
     +"\n"
-    +"\nPlayer: (effected by "+this.item.toString()+")"
+    +"\nPlayer: (effected by "+this.item.getName()+")"
     +"\n\n\tHp: "+this.hp+"/"+this.getMaxHp()+ "+("+this.item.getHpBoost()+")"
     +"\n\tArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
     +"\n";

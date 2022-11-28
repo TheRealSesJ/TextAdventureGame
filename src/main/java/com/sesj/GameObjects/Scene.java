@@ -27,7 +27,7 @@ public class Scene implements GameObject {
     this.name=name;
   }
 
-  public String toString(){ return this.name; }
+  public String getName(){ return this.name; }
 
   public String getIcon(){ return icon; }
 
@@ -111,14 +111,12 @@ public class Scene implements GameObject {
 
   public String getStats(){
     String data = "";
-    try{ data += "\n"+this.enemy.getStats()+"\n"; }
-    catch(NullPointerException e){ data += "\nno enemy\n";}
     try{ data += "\n"+this.item.getStats()+"\n"; }
-    catch(NullPointerException e){ data += "\nno item\n";}
+    catch(NullPointerException e){}
     try{ data += "\n"+this.weapon.getStats()+"\n"; }
-    catch(NullPointerException e){ data += "\nno weapon\n";}
+    catch(NullPointerException e){}
     try{ data += "\n"+this.consumable.getStats()+"\n"; }
-    catch(NullPointerException e){ data += "\nno consumable\n";}
+    catch(NullPointerException e){}
     return "\n"+this.name.toUpperCase()+":\n"+data;
   }
 

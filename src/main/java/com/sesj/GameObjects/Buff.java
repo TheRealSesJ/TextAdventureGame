@@ -21,7 +21,7 @@ public class Buff implements GameObject {
         this.hp = cons.getHp();
         this.armor = cons.getArmor();
         this.duration= cons.getDuration();
-        this.name = cons.toString();
+        this.name = cons.getName();
     }
 
 
@@ -34,6 +34,8 @@ public class Buff implements GameObject {
     public int getHp(){ return this.hp; }
 
     public int getArmor(){ return this.armor; }
+
+    public String getName(){ return this.name; }
 
     public String getStats(){
         return "\nStatus Effect: "+this.name+" Duration: " + this.duration

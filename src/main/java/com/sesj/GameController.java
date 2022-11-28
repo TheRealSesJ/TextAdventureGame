@@ -27,34 +27,40 @@ public class GameController{
   public static boolean scan(String[] input, Player player) throws MissingParameterException, NumberFormatException,
           MovementOutOfRangeException, MovementOutOfBoundsException, NotScannableException {
       if(input.length==1){
-        p.println(WorldManager.getWorld().getLocation(player.getPosition()).getStats());
+        for(int i=0; i<WorldManager.getWorld().getEnemies(player.getPosition()).size(); i++){
+          p.println(WorldManager.getWorld().getEnemies(player.getPosition()).get(i).getStats());
+        }
+        p.println(WorldManager.getWorld().getLocation(player.getPosition()).getStats()); //TODO stats of the point location, not the scene (point hashmap rework)
       } else {
 //look for missing input parameters throw exception
         try{input[2]=input[2];}
         catch (IndexOutOfBoundsException e){throw new MissingParameterException();}
 //make sure scan is less than player move capabilities or else throw exception
-          if(Math.abs(Integer.parseInt(input[1]))>player.getMovement() || Math.abs(Integer.parseInt(input[2]))>player.getMovement()){
+        if(Math.abs(Integer.parseInt(input[1]))>player.getMovement() || Math.abs(Integer.parseInt(input[2]))>player.getMovement()){
             throw new MovementOutOfRangeException();
-          }
+        }
 //look for missing index in world array throw exception
+        try{
+          Point pointOffset = new Point(Integer.parseInt(input[1]), Integer.parseInt(input[2]));
+          Scene location = WorldManager.getWorld().getLocation(player.getPosition(), Integer.parseInt(input[1]), Integer.parseInt(input[2]));
+          //check for null item or item scan boost
+          boolean scan = false;
           try{
-            Scene location = WorldManager.getWorld().getLocation(player.getPosition(), Integer.parseInt(input[1]), Integer.parseInt(input[2]));
-            //check for null item or item scan boost
-            boolean scan = false;
-            try{
-              scan = player.getItem().getScanBoost();
-            } catch (NullPointerException e){
+            scan = player.getItem().getScanBoost();
+          } catch (NullPointerException e){}
+//--------------if scannable scan else throw exception
+          if(location.isScannable() || scan){
+            for(int i=0; i<WorldManager.getWorld().getEnemies(player.getPosition(), pointOffset).size(); i++){
+              p.println(WorldManager.getWorld().getEnemies(player.getPosition(), pointOffset).get(i).getStats());
             }
-            //if scannable scan else throw exception
-            if(location.isScannable() || scan){
-              p.println(location.getStats());
-            } else {
-              throw new NotScannableException();
-            }
-
-          } catch(IndexOutOfBoundsException e){
-            throw new MovementOutOfBoundsException();
+            p.println(location.getStats());
+          } else {
+            throw new NotScannableException();
           }
+//---------------------------------------------------
+        } catch(IndexOutOfBoundsException e){
+          throw new MovementOutOfBoundsException();
+        }
           
       } 
     return true;
@@ -96,8 +102,8 @@ public class GameController{
   public static class CombatController{
     //fight
     public static boolean fight(String[] input, Player player){ //TODO fix the flipped accuracy
-      Scene scene = WorldManager.getWorld().getLocation(player.getPosition());
-      Enemy enemy = scene.getEnemy();
+      Scene scene = WorldManager.getWorld().getLocation(player.getPosition()); //TODO scene could inform the way interactions are handled with all GameObject types
+      Enemy enemy = WorldManager.getWorld().getEnemies(player.getPosition()).get(0);
       //calculate who goes first
 
       //player turn
@@ -105,7 +111,7 @@ public class GameController{
         Utils.combatTurn(player, enemy);
         if(enemy.getHp()<=0) {
           p.println("\nEnemy Vanquished!\n");
-          scene.setEnemy(null);
+          WorldManager.getWorld().destroy(enemy); //TODO fix this
           return true;
         } //end sequence if enemy is dead
         Utils.combatTurn(enemy, player);
@@ -120,7 +126,7 @@ public class GameController{
       //check to remove enemy after sequence if dead
       if(enemy.getHp()<=0) {
         p.println("\nEnemy Vanquished!\n");
-        scene.setEnemy(null);
+        WorldManager.getWorld().destroy(enemy); //TODO fix this
       } //end sequence if enemy is dead
       return true;
     }
@@ -167,7 +173,7 @@ public class GameController{
         Item old = player.equip(scene.getItem());
         scene.setItem(null);
         scene.setItem(old);
-        p.println("you grabbed "+player.getItem().toString());
+        p.println("you grabbed "+player.getItem().getName());
         p.println(""+old+" was dropped");
         return true;
     }
@@ -183,8 +189,8 @@ public class GameController{
         Consumable old = player.equip(scene.getConsumable());
         scene.setConsumable(null);
         scene.setConsumable(old);
-        p.println("you grabbed "+player.getConsumable().toString());
-        if(old!=null) p.println(""+old.toString()+" was dropped");
+        p.println("you grabbed "+player.getConsumable().getName());
+        if(old!=null) p.println(""+old.getName()+" was dropped");
         return true;
       } catch(NullPointerException e){
         throw new NullGameObjectException();
@@ -201,8 +207,8 @@ public class GameController{
         Weapon old = player.equip(scene.getWeapon());
         scene.setWeapon(null);
         scene.setWeapon(old);
-        p.println("you grabbed "+player.getWeapon().toString());
-        p.println(""+old.toString()+" was dropped");
+        p.println("you grabbed "+player.getWeapon().getName());
+        p.println(""+old.getName()+" was dropped");
         return true;
     }
 
@@ -213,7 +219,7 @@ public class GameController{
       } catch (NullPointerException e){
         throw new NullGameObjectException();
       }
-      String name = player.getConsumable().toString();
+      String name = player.getConsumable().getName();
       boolean used = player.consume();
       if(used) p.println("Consumable "+name+" used!");
       else p.println("Consumable "+name+" could not be used, effect is already active");
@@ -230,9 +236,12 @@ public class GameController{
       for(int j=0; j<9; j++){
         try{
           Scene loc = WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1);
+          Point coordinate = new Point(j/3-1, i/3-1);
+          boolean isEnemy = WorldManager.getWorld().getEnemies(player.getPosition(), coordinate)!= null &&
+                  !WorldManager.getWorld().getEnemies(player.getPosition(), coordinate).isEmpty();
           if(i==4 && j==4){
             p.print("@ ");
-          } else if(((double) (j-1)/3) == (j-1)/3 && ((double) (i-1)/3) == (i-1)/3 && loc.getEnemy()!=null && loc.isScannable()){
+          } else if(((double) (j-1)/3) == (j-1)/3 && ((double) (i-1)/3) == (i-1)/3 && isEnemy && loc.isScannable()){
             p.print("E ");
           } else {
             p.print(WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1).getIcon()+" ");
@@ -303,25 +312,6 @@ public class GameController{
       }
       if(locations.size()==0) return new int[]{0,0}; //null movement
       return locations.get(locations.size()==1? 0 : RAND.nextInt(locations.size()-1));
-    }
-
-    public static void enemyTurn(){
-      Scene[][] world = WorldManager.getWorld().getArray();
-      for(Scene[] row : world){
-        for(Scene scene : row){
-          if(scene.getEnemy()!=null){
-            Enemy enemy = scene.getEnemy();
-            //movement
-            int[] move = getRandomMove(enemy);
-            Scene newScene = WorldManager.getWorld().getLocation(enemy.getPosition(), move[0], move[1]);
-              if(RAND.nextInt(5)>2 && newScene.getEnemy()==null){
-                enemy.updateCoords(move[0], move[1]);
-                newScene.setEnemy(enemy);
-                scene.setEnemy(null);
-              }
-          }
-        }
-      }
     }
   }
   

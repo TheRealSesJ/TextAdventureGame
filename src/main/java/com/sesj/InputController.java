@@ -6,6 +6,7 @@
 package com.sesj;
 
 //import com.sesj.GameObjects.Scenes.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -36,67 +37,56 @@ public class InputController{
 
       GameParameters.configLoad();
       WorldManager.build();
-
-      
       Player player = GameParameters.getPlayer();
       p.println("Welcome to text adventure!");
 
-
       //game loop
       while(playing){
-        
   //----------------------------take turn
         try{
           GameController.minimap(new String[]{""}, player);
           if(WorldManager.isDungeon(player.getPosition())){
             p.println("\n<<DUNGEON LOCATED>>\n");
           }
-          if(WorldManager.getWorld().getLocation(player.getPosition()).getEnemy()==null){
+
+          if(WorldManager.getWorld().getEnemies(player.getPosition())==null || WorldManager.getWorld().getEnemies(player.getPosition()).isEmpty()){
             while(!scanInput(SCAN.nextLine(), player, GameController.WorldController.class)){
               p.println("\nplease enter an allowed action\n");
             }
-            //------------------end sequence
-            GameController.Utils.enemyTurn();
-            p.println("\nNext turn: (Press ENTER)");
-            SCAN.nextLine();
-            p.println("<------------------------------------->\n");
-
           } else { //if enemy is not null do a combat turn
-            p.println("\n<<AN ENEMY HAS APPEARED>>\n");
-            p.println("\nPlayer Hp: "+player.getHp()+"\n");
-            p.println(WorldManager.getWorld().getLocation(player.getPosition()).getEnemy().getStats());
+            for(int i=0; i<WorldManager.getWorld().getEnemies(player.getPosition()).size(); i++){
+              p.println("\n<<AN ENEMY HAS APPEARED>>\n");
+              p.println(WorldManager.getWorld().getEnemies(player.getPosition()).get(i).getStats());
+            }
             while(!scanInput(SCAN.nextLine(), player, GameController.CombatController.class)){
               p.println("\nplease enter an allowed action\n");
             }
-
             //------check for game over condition
             if(player.getHp()<=0){
               playing = false;
               break;
             }
-            //------------------end sequence
-            p.println("\nNext turn: (Press ENTER)");
-            SCAN.nextLine();
-            p.println("-------------------------------------\n");
           }
+          //------------------end sequence
+          p.println("\nNext turn: (Press ENTER)");
+          SCAN.nextLine();
+          p.println("-------------------------------------\n");
+          //--------------tick the entities
+          //GameController.Utils.enemyTurn();
+          player.tick();
+          WorldManager.getWorld().tick();
+          //-----check for game over condition again
+          if(player.getHp()<=0) {
+            playing = false;
+            break;
+          }
+
         }
   //----------------handles game end with exception from end_game input
         catch(InterruptedIOException e){
           playing = false;
           break;
         }
-
-  //-----check for game over condition again
-        if(player.getHp()<=0) {
-          playing = false;
-          break;
-        }
-
-//--------------tick the entities
-        player.tick();
-        WorldManager.getWorld().tick();
-
-
       }
     } catch (ConfigException e){
       e.printStackTrace();
