@@ -2,5 +2,5 @@ package com.sesj.Interfaces;
 
 public interface GameObject {
     public String getStats();
-    String getName();
+    String getId();
 }

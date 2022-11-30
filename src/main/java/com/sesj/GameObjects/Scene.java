@@ -1,13 +1,11 @@
 package com.sesj.GameObjects;
-import com.sesj.GameObjects.Enemy;
-import com.sesj.GameObjects.Item;
 import com.sesj.Interfaces.GameObject;
 //import GameObjects.Weapons.*;
 
 public class Scene implements GameObject {
 
   private final String icon;
-  private final String name;
+  private final String id;
 
   private Enemy enemy;
   private Item item;
@@ -19,15 +17,15 @@ public class Scene implements GameObject {
   private final boolean escapable;
   private final boolean traversable;
   
-  public Scene(boolean scannable, boolean escapable, boolean traversable, String icon, String name){
+  public Scene(boolean scannable, boolean escapable, boolean traversable, String icon, String id){
     this.scannable=scannable;
     this.escapable=escapable;
     this.traversable =traversable;
     this.icon = icon;
-    this.name=name;
+    this.id = id;
   }
 
-  public String getName(){ return this.name; }
+  public String getId(){ return this.id; }
 
   public String getIcon(){ return icon; }
 
@@ -117,7 +115,7 @@ public class Scene implements GameObject {
     catch(NullPointerException e){}
     try{ data += "\n"+this.consumable.getStats()+"\n"; }
     catch(NullPointerException e){}
-    return "\n"+this.name.toUpperCase()+":\n"+data;
+    return "\n"+this.id.toUpperCase()+":\n"+data;
   }
 
   public boolean isEscapable(){

@@ -4,24 +4,24 @@ import com.sesj.Interfaces.Entity;
 import com.sesj.Interfaces.GameObject;
 
 public class Buff implements GameObject {
-    private int hp;
-    private int armor;
+    private final int hp;
+    private final int armor;
     private int duration;
-    private String name;
+    private final String id;
 
 
-    public Buff(int hp, int armor, int duration, String name){
+    public Buff(int hp, int armor, int duration, String id){
          this.hp = hp;
          this.armor = armor;
          this.duration= duration;
-         this.name = name;
+         this.id = id;
     }
 
     public Buff(Consumable cons){ //implementation with
         this.hp = cons.getHp();
         this.armor = cons.getArmor();
         this.duration= cons.getDuration();
-        this.name = cons.getName();
+        this.id = cons.getId();
     }
 
 
@@ -35,14 +35,14 @@ public class Buff implements GameObject {
 
     public int getArmor(){ return this.armor; }
 
-    public String getName(){ return this.name; }
+    public String getId(){ return this.id; }
 
     public String getStats(){
-        return "\nStatus Effect: "+this.name+" Duration: " + this.duration
+        return "\nStatus Effect: "+this.id +" Duration: " + this.duration
                 +"\n\n\tHp: "+this.hp
                 +"\n\tArmor: "+this.armor;
     }
 
     @Override
-    public boolean equals(Object obj) { return (((Buff) obj).name.equals(this.name)); }
+    public boolean equals(Object obj) { return (((Buff) obj).id.equals(this.id)); }
 }

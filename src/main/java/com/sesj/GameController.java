@@ -173,7 +173,7 @@ public class GameController{
         Item old = player.equip(scene.getItem());
         scene.setItem(null);
         scene.setItem(old);
-        p.println("you grabbed "+player.getItem().getName());
+        p.println("you grabbed "+player.getItem().getId());
         p.println(""+old+" was dropped");
         return true;
     }
@@ -189,8 +189,8 @@ public class GameController{
         Consumable old = player.equip(scene.getConsumable());
         scene.setConsumable(null);
         scene.setConsumable(old);
-        p.println("you grabbed "+player.getConsumable().getName());
-        if(old!=null) p.println(""+old.getName()+" was dropped");
+        p.println("you grabbed "+player.getConsumable().getId());
+        if(old!=null) p.println(""+old.getId()+" was dropped");
         return true;
       } catch(NullPointerException e){
         throw new NullGameObjectException();
@@ -207,8 +207,8 @@ public class GameController{
         Weapon old = player.equip(scene.getWeapon());
         scene.setWeapon(null);
         scene.setWeapon(old);
-        p.println("you grabbed "+player.getWeapon().getName());
-        p.println(""+old.getName()+" was dropped");
+        p.println("you grabbed "+player.getWeapon().getId());
+        p.println(""+old.getId()+" was dropped");
         return true;
     }
 
@@ -219,7 +219,7 @@ public class GameController{
       } catch (NullPointerException e){
         throw new NullGameObjectException();
       }
-      String name = player.getConsumable().getName();
+      String name = player.getConsumable().getId();
       boolean used = player.consume();
       if(used) p.println("Consumable "+name+" used!");
       else p.println("Consumable "+name+" could not be used, effect is already active");
@@ -261,14 +261,14 @@ public class GameController{
     //combat turn
     public static void combatTurn(Entity attacker, Entity defender){ //TODO ADD COMBAT DAMAGE NUMBERS; TODO FIX ACCURACY CALCULATION
       p.println("\n-----------COMBAT----------\n");
-      p.println("\n"+attacker+" Move!\n");
+      p.println("\n"+attacker.getName()+" Move!\n");
 
       //weapons have 1 to 100 critical chance (accuracy)
       int attackRoll = RAND.nextInt(100)+1;
       int minCrit = 100-attacker.getWeapon().getAccuracy();
       if(defender.getWeapon().isRanged() && RAND.nextBoolean()) { //end with dodge if ranged
         minCrit+=20; //if enemy is ranged and attack is not dodged they are harder to crit
-        p.println("\n"+defender+" EVADED!\n");
+        p.println("\n"+defender.getName()+" EVADED!\n");
         p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
 
         p.println("\n-----------COMBAT----------\n");
@@ -281,17 +281,17 @@ public class GameController{
       //check if attack has critical based on roll
       if(attackRoll<minCrit){
         int dmg = attacker.getWeapon().getAttack()-defender.getArmor();
-        p.println("\nAttack landed with "+attacker.getWeapon()+" on "+ defender +" for "+(dmg)+" damage!\n");
+        p.println("\nAttack landed with "+attacker.getWeapon().getId()+" on "+ defender.getName() +" for "+(dmg)+" damage!\n");
         defender.updateHp(Math.min(-1*dmg, 0));
       } else {
         int dmg = (int) (1.5*attacker.getWeapon().getAttack())-defender.getArmor();
-        p.println("\n>>CRITICAL<< Attack landed with "+attacker.getWeapon()+" on "+ defender +" for "+(dmg)+" damage!\n");
+        p.println("\n>>CRITICAL<< Attack landed with "+attacker.getWeapon().getId()+" on "+ defender.getName() +" for "+(dmg)+" damage!\n");
         defender.updateHp(Math.min(-1*dmg, 0));
       }
       if(attacker.getWeapon().getConsumable()!= null){
         defender.buff(new Buff(attacker.getWeapon().getConsumable()));
       }
-      p.println("\n"+defender+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
+      p.println("\n"+defender.getName()+" hp: "+defender.getHp()+"/"+defender.getMaxHp()+"\n");
 
       p.println("\n-----------COMBAT----------\n");
     }

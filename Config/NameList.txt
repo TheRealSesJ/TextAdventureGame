@@ -1,0 +1,14 @@
+[evil_beast]
+Azgour
+Kazul
+Baehrog
+Jezeab
+Ilniae
+
+[magic]
+Altau
+Edward
+Wenic
+Ultmos
+Yisten
+Ombur

@@ -11,9 +11,9 @@ public interface Entity {
   Weapon getWeapon();
   void updateHp(int update);
   int getArmor();
-  String getStats();
   Point getPosition();
   boolean canTraverse();
   void tick();
   boolean buff(Buff buff);
+  String getName();
 }

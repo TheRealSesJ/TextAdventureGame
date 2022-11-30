@@ -2,6 +2,10 @@ package com.sesj.GameObjects;
 
 import com.sesj.Interfaces.GameObject;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+
 public class Weapon implements GameObject {
 
   private Consumable cons;
@@ -15,16 +19,16 @@ public class Weapon implements GameObject {
   private int boostedAccuracy = 0;
   private boolean boostedRange = false;
   
-  private final String name;
+  private final String id;
   
-  public Weapon(int attack, int speed, int accuracy, boolean ranged, Consumable cons, String name){
+  public Weapon(int attack, int speed, int accuracy, boolean ranged, Consumable cons, String id){
     this.attack = attack;
     this.speed = speed;
     this.accuracy = accuracy;
     this.ranged = ranged;
     this.cons = cons;
     if(cons.getArmor()==0 && cons.getHp()==0) this.cons = null;
-    this.name=name;
+    this.id = id;
   }
 
   public int getAttack(){
@@ -34,18 +38,18 @@ public class Weapon implements GameObject {
   public int getSpeed(){
     return speed+boostedSpeed;
   }
-  
+
   public int getAccuracy(){
     return accuracy+boostedAccuracy;
   }
-  
+
   public boolean isRanged(){
     return ranged||boostedRange;
   }
 
   public Consumable getConsumable(){ return this.cons; }
 
-  public String getName(){ return this.name; }
+  public String getId(){ return this.id; }
 
   public Weapon effect(Item item){
     this.boostedAttack = item.getAttackBoost();
@@ -65,7 +69,7 @@ public class Weapon implements GameObject {
   }
 
   public String getStats(){
-    String returnStr = "\nWeapon: "+ this.name
+    String returnStr = "\nWeapon: "+ this.id
             +"\n\tAttack: "+ this.getAttack()
             +"\n\tSpeed: "+ this.getSpeed()
             +"\n\tAccuracy: "+ this.getAccuracy()

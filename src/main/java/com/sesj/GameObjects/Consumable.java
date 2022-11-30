@@ -3,23 +3,23 @@ package com.sesj.GameObjects;
 import com.sesj.Interfaces.GameObject;
 
 public class Consumable implements GameObject {
-    final int hp;
-    final int armor;
-    final int duration; //when buffs are added
-    final String name;
+    private final int hp;
+    private final int armor;
+    private final int duration; //when buffs are added
+    private final String id;
 
 
 
 
-    public Consumable(int hp, int armor, int duration, String name){
+    public Consumable(int hp, int armor, int duration, String id){
         this.hp = hp;
         this.armor = armor;
         this.duration = duration;
-        this.name = name;
+        this.id = id;
     }
 
     public String getStats(){
-        return "\nConsumable: "+this.name+" Duration: " + (duration==-1? "single use" : String.valueOf(duration))
+        return "\nConsumable: "+this.id +" Duration: " + (duration==-1? "single use" : String.valueOf(duration))
                 +"\n\n\tHp: "+this.hp
                 +"\n\tArmor: "+this.armor;
     }
@@ -30,7 +30,6 @@ public class Consumable implements GameObject {
 
     public int getHp(){ return hp; }
 
-    @Override
-    public String getName(){ return name; }
+    public String getId(){ return id; }
 
 }

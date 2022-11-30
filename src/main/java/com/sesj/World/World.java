@@ -70,6 +70,10 @@ public class World {
         return enemyMap.get(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())));
     }
 
+    public ArrayList<Enemy> getEnemies(){
+        return ENEMY_CONTAINER;
+    }
+
 
     public Scene getLocation(Point pos){
         return worldMap[(int) pos.getY()][(int) pos.getX()];

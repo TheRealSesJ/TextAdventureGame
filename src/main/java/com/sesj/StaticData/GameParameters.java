@@ -14,12 +14,12 @@ import java.util.ArrayList;
 
 public class GameParameters{
 
-  private static JSONObject file;
+  private static JSONObject jsonConfig;
 
-  public static void configLoad() throws MissingConfigException {
+  public static void load() throws MissingConfigException {
     try{
       JSONParser parser = new JSONParser();
-      file = (JSONObject)parser.parse(new FileReader("Config\\Config.json"));
+      jsonConfig = (JSONObject)parser.parse(new FileReader("Config\\Config.json"));
     } catch (Exception e){
       throw new MissingConfigException();
     }
@@ -27,7 +27,7 @@ public class GameParameters{
 
   public static World[][] getDungeonLocations() throws ConfigNullValueException {
     try{
-      JSONObject map = (JSONObject) file.get("dungeon_placement_map");
+      JSONObject map = (JSONObject) jsonConfig.get("dungeon_placement_map");
       try{
         int size = ((JSONArray) map.get("row1")).size();
         World[][] dungeonArray = new World[size][size];
@@ -54,7 +54,7 @@ public class GameParameters{
 
   public static World getWorld(String worldID) throws ConfigNullValueException{
     try{
-      JSONObject world = (JSONObject) file.get(worldID);
+      JSONObject world = (JSONObject) jsonConfig.get(worldID);
 
       //get the WorldMap
       Scene[][] worldArray;
@@ -124,14 +124,14 @@ public class GameParameters{
 
   public static Scene getScene(String name) throws ConfigNullValueException {
     try{
-      JSONObject scene = (JSONObject) ((JSONObject) file.get("scene_stats")).get(name);
+      JSONObject scene = (JSONObject) ((JSONObject) jsonConfig.get("scene_stats")).get(name);
       try{
         return new Scene(
                 Boolean.parseBoolean((String) scene.get("scannable")),
                 Boolean.parseBoolean((String) scene.get("escapable")),
                 Boolean.parseBoolean((String) scene.get("traversable")),
                 (String) scene.get("icon"),
-                (String) scene.get("name"));
+                (String) scene.get("id"));
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in scene stats");
       }
@@ -142,14 +142,15 @@ public class GameParameters{
 
   public static Enemy getEnemy(String name) throws ConfigNullValueException {
     try{
-      JSONObject enemy = (JSONObject) ((JSONObject) file.get("enemy_stats")).get(name);
+      JSONObject enemy = (JSONObject) ((JSONObject) jsonConfig.get("enemy_stats")).get(name);
       try{
         return new Enemy(
                 Integer.parseInt((String) enemy.get("hp")), //hp
                 getWeapon((String) enemy.get("weapon")), //weapon
                 Integer.parseInt((String) enemy.get("armor")), //armor
                 Boolean.parseBoolean((String) enemy.get("canMove")),
-                (String) enemy.get("name")); //name
+                (String) enemy.get("namePool"),
+                (String) enemy.get("id")); //name
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in enemy stats");
       }
@@ -161,7 +162,7 @@ public class GameParameters{
 
   public static Item getItem(String name) throws ConfigNullValueException {
     try{
-      JSONObject item = (JSONObject) ((JSONObject) file.get("item_stats")).get(name);
+      JSONObject item = (JSONObject) ((JSONObject) jsonConfig.get("item_stats")).get(name);
       try{
         return new Item(
                 Integer.parseInt((String) item.get("attack")), //attack boost
@@ -173,7 +174,7 @@ public class GameParameters{
                 Boolean.parseBoolean((String) item.get("scan")), //scan boost
                 Integer.parseInt((String) item.get("hp")), //hp boost
                 Integer.parseInt((String) item.get("armor")), //armor boost
-                (String) item.get("name")); //name
+                (String) item.get("id")); //name
       } catch(Exception e) {
         throw new ConfigNullValueException("in item stats");
       }
@@ -185,7 +186,7 @@ public class GameParameters{
 
   public static Weapon getWeapon(String name) throws ConfigNullValueException {
     try{
-      JSONObject weapon = (JSONObject) ((JSONObject) file.get("weapon_stats")).get(name);
+      JSONObject weapon = (JSONObject) ((JSONObject) jsonConfig.get("weapon_stats")).get(name);
       try{
         return new Weapon(
                 Integer.parseInt((String) weapon.get("attack")), //attack
@@ -193,7 +194,7 @@ public class GameParameters{
                 Integer.parseInt((String) weapon.get("accuracy")), //accuracy
                 Boolean.parseBoolean((String) weapon.get("range")), //range
                 getConsumable((String) weapon.get("consumable")), //status effect
-                (String) weapon.get("name")); //name;
+                (String) weapon.get("id")); //name;
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in weapon stats");
       }
@@ -205,7 +206,7 @@ public class GameParameters{
 
   public static Player getPlayer() throws ConfigNullValueException {
     try{
-      JSONObject player = (JSONObject) file.get("player_stats");
+      JSONObject player = (JSONObject) jsonConfig.get("player_stats");
       try{
         return new Player(
                 Integer.parseInt((String) player.get("hp")), //hp
@@ -226,13 +227,13 @@ public class GameParameters{
 
   public static Consumable getConsumable(String name) throws ConfigNullValueException {
     try{
-      JSONObject item = (JSONObject) ((JSONObject) file.get("consumable_stats")).get(name);
+      JSONObject item = (JSONObject) ((JSONObject) jsonConfig.get("consumable_stats")).get(name);
       try{
         return new Consumable(
                 Integer.parseInt((String) item.get("hp")), //hp boost
                 Integer.parseInt((String) item.get("armor")), //armor boost
                 Integer.parseInt((String) item.get("duration")), //duration
-                (String) item.get("name")); //name
+                (String) item.get("id")); //name
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in consumable stats");
       }

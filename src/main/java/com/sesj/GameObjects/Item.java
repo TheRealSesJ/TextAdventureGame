@@ -18,9 +18,9 @@ public class Item implements GameObject {
   private final int hpBoost;
   private final int armorBoost;
 
-  private final String name;
+  private final String id;
 
-  public Item(int attack, int speed, int accuracy, boolean range, int movement, boolean traversal, boolean scan, int hp, int armor, String name){
+  public Item(int attack, int speed, int accuracy, boolean range, int movement, boolean traversal, boolean scan, int hp, int armor, String id){
     this.attackBoost=attack;
     this.speedBoost=speed;
     this.accuracyBoost=accuracy;
@@ -30,11 +30,11 @@ public class Item implements GameObject {
     this.scanBoost = scan;
     this.hpBoost=hp;
     this.armorBoost=armor;
-    this.name=name;
+    this.id = id;
   }
 
   
-  public String getName(){ return name; }
+  public String getId(){ return id; }
 
   //weapon related getters
   public int getAttackBoost(){
@@ -75,7 +75,7 @@ public class Item implements GameObject {
   }
 
   public String getStats(){
-    return "\nItem: "+this.name+"\n"
+    return "\nItem: "+this.id +"\n"
     +"\n\tWeapon Related:"
     +"\n\t\tattack boost: "+ this.attackBoost
     +"\n\t\tspeed: "+ this.speedBoost

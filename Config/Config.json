@@ -43,14 +43,16 @@
             "weapon":"claws",
             "armor":"3",
             "canMove": "true",
-            "name":"Wild Beast"
+            "namePool": "evil_beast",
+            "id":"Wild Beast"
         },
         "witch":{
             "hp":"15",
             "weapon":"stick",
             "armor":"1",
             "canMove": "true",
-            "name":"Witch"
+            "namePool": "magic",
+            "id":"Witch"
         }
     },
 
@@ -65,7 +67,7 @@
             "scan":"false",
             "hp":"0",
             "armor":"5",
-            "name":"Chainmail"
+            "id":"Chainmail"
         },
         
         "holy_sandals":{
@@ -78,7 +80,7 @@
             "scan":"false",
             "hp":"0",
             "armor":"0",
-            "name":"Holy Sandals"
+            "id":"Holy Sandals"
         },
         "power_amulet":{
             "attack":"4",
@@ -90,7 +92,7 @@
             "scan":"false",
             "hp":"0",
             "armor":"0",
-            "name":"Power Amulet"
+            "id":"Power Amulet"
         },
         "rag":{
             "attack":"0",
@@ -102,7 +104,7 @@
             "scan":"false",
             "hp":"0",
             "armor":"0",
-            "name":"Useless Rag"
+            "id":"Useless Rag"
         }
     },
 
@@ -113,7 +115,7 @@
             "accuracy": "70",
             "range": "true",
             "consumable": "none",
-            "name": "Bow"
+            "id": "Bow"
         },
         "claws": {
             "attack": "7",
@@ -121,7 +123,7 @@
             "accuracy": "80",
             "range": "false",
             "consumable": "none",
-            "name": "Claws"
+            "id": "Claws"
         },
         "stick": {
             "attack": "3",
@@ -129,7 +131,7 @@
             "accuracy": "45",
             "range": "false",
             "consumable": "none",
-            "name": "Stick"
+            "id": "Stick"
         },
         "sword": {
             "attack": "10",
@@ -137,7 +139,7 @@
             "accuracy": "70",
             "range": "false",
             "consumable": "none",
-            "name": "Sword"
+            "id": "Sword"
         },
         "flaming_sword": {
             "attack": "8",
@@ -145,7 +147,7 @@
             "accuracy": "40",
             "range": "false",
             "consumable": "fire",
-            "name": "Flaming Sword"
+            "id": "Flaming Sword"
         }
     },
 
@@ -155,28 +157,28 @@
             "escapable": "true",
             "traversable": "true",
             "icon": ".",
-            "name": "Desert"
+            "id": "Desert"
         },
         "forest":{
             "scannable":"false",
             "escapable": "true",
             "traversable": "true",
             "icon": "t",
-            "name": "Forest"
+            "id": "Forest"
         },
         "lake":{
             "scannable":"true",
             "escapable": "true",
             "traversable": "false",
             "icon": "~",
-            "name": "Lake"
+            "id": "Lake"
         },
         "mountains":{
             "scannable":"true",
             "escapable": "false",
             "traversable": "true",
             "icon": "^",
-            "name": "Mountains"
+            "id": "Mountains"
         }
     },
 
@@ -185,37 +187,37 @@
             "hp":"5",
             "armor":"0",
             "duration": "-1",
-            "name":"Apple"
+            "id":"Apple"
         },
         "silver_apple":{
             "hp":"3",
             "armor":"5",
             "duration": "-1",
-            "name":"Silver Apple"
+            "id":"Silver Apple"
         },
         "chitinous_brew":{
             "hp":"0",
             "armor":"5",
             "duration": "8",
-            "name":"Chitinous Brew"
+            "id":"Chitinous Brew"
         },
         "golden_berry":{
             "hp":"4",
             "armor":"0",
             "duration": "10",
-            "name":"Golden Berry"
+            "id":"Golden Berry"
         },
         "none":{
             "hp":"0",
             "armor":"0",
             "duration": "0",
-            "name":"none"
+            "id":"none"
         },
         "fire":{
             "hp":"-2",
             "armor":"0",
             "duration": "3",
-            "name":"Fire"
+            "id":"Fire"
         }
     },
 

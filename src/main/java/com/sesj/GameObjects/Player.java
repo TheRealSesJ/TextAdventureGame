@@ -7,7 +7,7 @@ import com.sesj.World.WorldManager;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Player implements Entity, GameObject{
+public class Player implements Entity, GameObject {
   //world position
   private Point position;
 
@@ -77,7 +77,7 @@ public class Player implements Entity, GameObject{
     return this.consumable;
   }
 
-  public String getName() { return "Player"; }
+  public String getId() { return "Player"; }
 
 
   public Weapon equip(Weapon weapon){
@@ -130,6 +130,8 @@ public class Player implements Entity, GameObject{
     return true;
   }
 
+  public String getName() { return "Player"; } //TODO players have names?
+
   public boolean consume(){
     if(this.consumable.getDuration()==-1){
       this.hp+=this.consumable.getHp();
@@ -165,7 +167,7 @@ public class Player implements Entity, GameObject{
     +"\n"
     +this.item.getStats()
     +"\n"
-    +"\nPlayer: (effected by "+this.item.getName()+")"
+    +"\nPlayer: (effected by "+this.item.getId()+")"
     +"\n\n\tHp: "+this.hp+"/"+this.getMaxHp()+ "+("+this.item.getHpBoost()+")"
     +"\n\tArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
     +"\n";
@@ -180,5 +182,7 @@ public class Player implements Entity, GameObject{
 
     return returnStr;
   }
+
+
   
 }

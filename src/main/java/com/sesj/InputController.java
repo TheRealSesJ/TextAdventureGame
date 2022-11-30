@@ -6,13 +6,13 @@
 package com.sesj;
 
 //import com.sesj.GameObjects.Scenes.*;
-import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.Player;
+import com.sesj.StaticData.EntityGenerator;
 import com.sesj.StaticData.GameParameters;
 import com.sesj.World.WorldManager;
 
@@ -35,7 +35,8 @@ public class InputController{
     //load the config, if missing throw an error, game inside try-catch
     try{
 
-      GameParameters.configLoad();
+      GameParameters.load();
+      EntityGenerator.load();
       WorldManager.build();
       Player player = GameParameters.getPlayer();
       p.println("Welcome to text adventure!");

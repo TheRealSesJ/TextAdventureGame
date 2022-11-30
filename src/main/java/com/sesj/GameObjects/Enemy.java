@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class Enemy implements Entity, GameObject {
 
+
   private Point position;
 
   private int hp;
@@ -19,17 +20,20 @@ public class Enemy implements Entity, GameObject {
   private final int baseArmor;
   private final boolean canMove;
   private ArrayList<Buff> buffs = new ArrayList<>();
+  private final String namePool;
+  private String name;
   
-  private final String name;
+  private final String id;
   
-  public Enemy(int hp, Weapon weapon, int armor, boolean canMove, String name){
+  public Enemy(int hp, Weapon weapon, int armor, boolean canMove, String namePool, String id){
     this.hp = hp;
     this.MAX_HP = hp;
     this.weapon = weapon; 
     this.armor=armor;
     this.baseArmor = armor;
     this.canMove = canMove;
-    this.name = name; 
+    this.namePool = namePool;
+    this.id = id;
   }
 
   public Weapon getWeapon(){
@@ -52,7 +56,13 @@ public class Enemy implements Entity, GameObject {
     return this.armor;
   }
 
-  public String getName() { return name; }
+  public String getId() { return id; }
+
+  public String getName(){ return this.name + " the "+this.id; }
+
+  public void setName(String name){ this.name = name; }
+
+  public String getNamePool(){ return this.namePool; }
 
   public Point getPosition(){ return this.position; }
 
@@ -85,7 +95,7 @@ public class Enemy implements Entity, GameObject {
     move();
     //destroy this enemy if its hp is at 0 or below
     if(this.hp<=0) WorldManager.getWorld().destroy(this);
-    System.out.println(name+ this + " @" + position + " has ticked!");
+    System.out.println(id + this + " @" + position + " has ticked!");
   }
 
 
@@ -124,13 +134,13 @@ public class Enemy implements Entity, GameObject {
       WorldManager.getWorld().getEnemies(position).remove(this);
       WorldManager.getWorld().getEnemies(move).add(this);
       initPos(move);
-      System.out.println(this.name+this+" has moved");
+      System.out.println(this.id +this+" has moved");
     }
   }
 
   //returns the enemy's stats as a string, intended to give the user information
   public String getStats(){
-    String returnStr = "\nEnemy: "+this.name+"\n"
+    String returnStr = "\nEnemy: "+this.getName() +"\n"
     +this.weapon.getStats()
     +"\n\tHp: "+this.hp
     +"\n\tArmor: "+this.armor
