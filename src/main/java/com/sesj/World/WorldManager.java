@@ -3,11 +3,10 @@ package com.sesj.World;
 import com.sesj.Exceptions.ConfigException;
 
 import java.awt.*;
+import java.util.ArrayList;
 
-import com.sesj.GameObjects.Enemy;
-import com.sesj.Interfaces.Entity;
+import com.sesj.Interfaces.AIEntity;
 import com.sesj.StaticData.*;
-import com.sesj.World.World;
 
 public class WorldManager {
   private static World world;
@@ -17,7 +16,7 @@ public class WorldManager {
 
   public static void build() throws ConfigException{
     world = GameParameters.getWorld("main_world");
-    EntityGenerator.name(world.getEnemies());
+    EntityGenerator.name(world.getEntities());
     dungeonMaps = GameParameters.getDungeonLocations();
   }
 

@@ -3,7 +3,7 @@
 the game has a 2d array of scenes that the player exists it
 there are items and enemies scattered around the map
 the player can advenutre to each of the different biomes to find them
-I plan on adding more interfaces for simplicity in the future, the only one that exists is entity
+I plan on adding more interfaces for simplicity in the future, the only one that exists is combatEntity
 All objects are organized into packagaes based on their purpose and superclass
 GameParamters is a static class that contains all arbitrary game constants
 this class is where the main method is located

@@ -7,7 +7,7 @@ import com.sesj.World.WorldManager;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Player implements Entity, GameObject {
+public class Player implements CombatEntity, GameObject {
   //world position
   private Point position;
 
@@ -32,7 +32,7 @@ public class Player implements Entity, GameObject {
     this.position = new Point(initialX, initialY);
   }
 
-  //takes into account the ammount of tiles the player is allowed to move, as well as whether or not the area being entered is traversible. *also takes item buffs into consideration*
+  //takes into account the ammount of tiles the player is allowed to move, as well as whether the area being entered is traversable. *also takes item buffs into consideration*
   //illegal acess exception used for case where tile is not traversible
   public boolean translate(int xTiles, int yTiles) throws NotTraversableException, MovementOutOfRangeException, MovementOutOfBoundsException {
     try{

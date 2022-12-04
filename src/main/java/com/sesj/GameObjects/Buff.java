@@ -1,6 +1,6 @@
 package com.sesj.GameObjects;
 
-import com.sesj.Interfaces.Entity;
+import com.sesj.Interfaces.CombatEntity;
 import com.sesj.Interfaces.GameObject;
 
 public class Buff implements GameObject {
@@ -25,7 +25,7 @@ public class Buff implements GameObject {
     }
 
 
-    public void tick(Entity target){
+    public void tick(CombatEntity target){
         this.duration--;
     }
 

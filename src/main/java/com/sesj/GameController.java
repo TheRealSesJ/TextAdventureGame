@@ -12,7 +12,7 @@ import java.util.Random;
 
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.*;
-import com.sesj.Interfaces.Entity;
+import com.sesj.Interfaces.CombatEntity;
 import com.sesj.World.WorldManager;
 
 //prints to console, only object allowed to do so
@@ -259,7 +259,7 @@ public class GameController{
   //not referencable through reflection
   public static class Utils {
     //combat turn
-    public static void combatTurn(Entity attacker, Entity defender){ //TODO ADD COMBAT DAMAGE NUMBERS; TODO FIX ACCURACY CALCULATION
+    public static void combatTurn(CombatEntity attacker, CombatEntity defender){ //TODO ADD COMBAT DAMAGE NUMBERS; TODO FIX ACCURACY CALCULATION
       p.println("\n-----------COMBAT----------\n");
       p.println("\n"+attacker.getName()+" Move!\n");
 
@@ -297,13 +297,13 @@ public class GameController{
     }
 
     //sends a movable coordinate location of the entity as an array of ints
-    public static int[] getRandomMove(Entity entity){
+    public static int[] getRandomMove(CombatEntity combatEntity){
       ArrayList<int[]> locations = new ArrayList<int[]>();
       for(int i=-1;i<2;i++){
         for(int j=-1;j<2;j++){
           try{
-            Scene loc = WorldManager.getWorld().getLocation(entity.getPosition(), i, j);
-            if(!(i==0 && j==0) && (loc.isTraversable() || entity.canTraverse())){
+            Scene loc = WorldManager.getWorld().getLocation(combatEntity.getPosition(), i, j);
+            if(!(i==0 && j==0) && (loc.isTraversable() || combatEntity.canTraverse())){
               locations.add(new int[]{i, j});
             }
           }

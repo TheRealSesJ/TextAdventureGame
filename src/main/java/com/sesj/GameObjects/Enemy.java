@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
-public class Enemy implements Entity, GameObject {
+public class Enemy implements CombatEntity, GameObject, AIEntity {
 
 
   private Point position;
@@ -66,7 +66,7 @@ public class Enemy implements Entity, GameObject {
 
   public Point getPosition(){ return this.position; }
 
-  public void initPos(Point position){
+  public void setPosition(Point position){
     this.position = position;
   }
 
@@ -95,7 +95,7 @@ public class Enemy implements Entity, GameObject {
     move();
     //destroy this enemy if its hp is at 0 or below
     if(this.hp<=0) WorldManager.getWorld().destroy(this);
-    System.out.println(id + this + " @" + position + " has ticked!");
+    System.out.println(id + " " + this + " @" + position + " has ticked!");
   }
 
 
@@ -133,7 +133,7 @@ public class Enemy implements Entity, GameObject {
       Point move = locations.get(locations.size() == 1 ? 0 : (int) (Math.random() * locations.size() - 1));
       WorldManager.getWorld().getEnemies(position).remove(this);
       WorldManager.getWorld().getEnemies(move).add(this);
-      initPos(move);
+      setPosition(move);
       System.out.println(this.id +this+" has moved");
     }
   }

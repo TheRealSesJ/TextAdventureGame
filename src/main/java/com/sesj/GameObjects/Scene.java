@@ -29,24 +29,6 @@ public class Scene implements GameObject {
 
   public String getIcon(){ return icon; }
 
-  public Enemy getEnemy(){
-    Enemy e = this.enemy;
-    if(e==null){
-      return null;
-    }
-    return this.enemy;
-  }
-
-  public boolean setEnemy(Enemy enemy){
-  //these two null checks make sure a new real enemy is not replacing another
-    if((this.enemy==null || enemy==null)){
-      this.enemy = enemy;
-      if(enemy!=null) return enemy.canTraverse() || isTraversable();
-      return true;
-    }
-    return false;
-  }
-
   public Item getItem(){ 
     Item e = this.item;
     if(e==null){

@@ -1,6 +1,7 @@
 package com.sesj.StaticData;
 
 import com.sesj.GameObjects.Enemy;
+import com.sesj.Interfaces.AIEntity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,17 +29,21 @@ public class EntityGenerator {
             String currentString = scan.next();
             if(currentString.startsWith("[")){
                 namePools.add(new ArrayList<>(Arrays.asList(currentString)));
-                currentString = scan.next();
+                //pool detected
+            } else if(currentString.startsWith("//")){
+                //comment detected
+            } else {
+                namePools.get(namePools.size()-1).add(currentString);
             }
-            namePools.get(namePools.size()-1).add(currentString);
+
         }
     }
 
-    public static void name(ArrayList<Enemy> enemies){
-        for(Enemy e : enemies){
+    public static void name(ArrayList<AIEntity> enemies){
+        for(AIEntity e : enemies){
             String namePool = e.getNamePool();
             for(ArrayList<String> arr : namePools){
-                if(arr.get(0).substring(1, arr.get(0).length()-1).equals(namePool)){
+                if(arr.get(0).startsWith("[") && arr.get(0).endsWith("]") && arr.get(0).substring(1, arr.get(0).length()-1).equals(namePool)){
                     e.setName(arr.get(1+(int) (Math.random()*arr.size()-1)));
                 }
             }

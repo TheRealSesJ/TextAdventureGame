@@ -5,7 +5,7 @@ import com.sesj.GameObjects.Weapon;
 
 import java.awt.Point;
 
-public interface Entity {
+public interface CombatEntity {
   int getHp();
   int getMaxHp();
   Weapon getWeapon();
@@ -13,7 +13,6 @@ public interface Entity {
   int getArmor();
   Point getPosition();
   boolean canTraverse();
-  void tick();
   boolean buff(Buff buff);
   String getName();
 }

@@ -1,8 +1,7 @@
 package com.sesj.World;
 
-import com.sesj.Exceptions.ConfigException;
 import com.sesj.GameObjects.*;
-import com.sesj.StaticData.GameParameters;
+import com.sesj.Interfaces.AIEntity;
 
 import java.awt.*;
 import java.util.*;
@@ -10,7 +9,8 @@ import java.util.*;
 public class World {
     private final Scene[][] worldMap;
     private HashMap<Point, ArrayList<Enemy>> enemyMap = new HashMap<>();
-    private final ArrayList<Enemy> ENEMY_CONTAINER = new ArrayList<>();
+    private HashMap<Point, ArrayList<NPC>> npcMap = new HashMap<>();
+    private final ArrayList<AIEntity> ENTITY_CONTAINER = new ArrayList<>();
 
     public World(Scene[][] map, ArrayList<Enemy> enemies, ArrayList<Item> items,
                  ArrayList<Weapon> weapons, ArrayList<Consumable> consumables) {
@@ -30,9 +30,12 @@ public class World {
             } else {
                 enemyMap.get(new Point(x, y)).add(enemies.get(last));
             }
-            enemies.get(last).initPos(new Point(x, y));
-            ENEMY_CONTAINER.add(enemies.remove(last));
+            enemies.get(last).setPosition(new Point(x, y));
+            ENTITY_CONTAINER.add(enemies.remove(last));
         }
+
+        //npcs
+        ENTITY_CONTAINER.add(new NPC("hello my friend", "blacksmith", "Blacksmith")); //TODO STATIC ENTITY GENERATION
 
         //items
         while(items.size()>0){
@@ -70,8 +73,8 @@ public class World {
         return enemyMap.get(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())));
     }
 
-    public ArrayList<Enemy> getEnemies(){
-        return ENEMY_CONTAINER;
+    public ArrayList<AIEntity> getEntities(){
+        return ENTITY_CONTAINER;
     }
 
 
@@ -102,13 +105,13 @@ public class World {
     }
 
     public void tick(){ //TODO iterate over the listed objects
-        for(int i=0; i<ENEMY_CONTAINER.size();i++){
-            ENEMY_CONTAINER.get(i).tick();
+        for(int i=0; i<ENTITY_CONTAINER.size();i++){
+            ENTITY_CONTAINER.get(i).tick();
         }
     }
 
     public void destroy(Enemy enemy){
-        ENEMY_CONTAINER.remove(enemy);
+        ENTITY_CONTAINER.remove(enemy);
         System.out.println("removing");
         enemyMap.get(enemy.getPosition()).remove(enemy);
     }
