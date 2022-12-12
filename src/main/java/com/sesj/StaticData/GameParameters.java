@@ -150,6 +150,7 @@ public class GameParameters{
                 Integer.parseInt((String) enemy.get("armor")), //armor
                 Boolean.parseBoolean((String) enemy.get("canMove")),
                 (String) enemy.get("namePool"),
+                Integer.parseInt((String) enemy.get("xp")),
                 (String) enemy.get("id")); //name
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in enemy stats");

@@ -3,7 +3,7 @@
 //java -jar build\libs\tag.jar
 //run command
 
-package com.sesj;
+package com.sesj.GameControl;
 
 //import com.sesj.GameObjects.Scenes.*;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +11,10 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import com.sesj.Exceptions.*;
+import com.sesj.GameControl.GameController;
 import com.sesj.GameObjects.Player;
+import com.sesj.Interfaces.AIEntity;
+import com.sesj.Interfaces.GameObject;
 import com.sesj.StaticData.EntityGenerator;
 import com.sesj.StaticData.GameParameters;
 import com.sesj.World.WorldManager;
@@ -45,23 +48,24 @@ public class InputController{
       while(playing){
   //----------------------------take turn
         try{
+          //print new turn information
           GameController.minimap(new String[]{""}, player);
           if(WorldManager.isDungeon(player.getPosition())){
             p.println("\n<<DUNGEON LOCATED>>\n");
           }
 
-          if(WorldManager.getWorld().getEnemies(player.getPosition())==null || WorldManager.getWorld().getEnemies(player.getPosition()).isEmpty()){
-            while(!scanInput(SCAN.nextLine(), player, GameController.WorldController.class)){
-              p.println("\nplease enter an allowed action\n");
+          if(WorldManager.getWorld().getEnemies(player.getPosition()).isEmpty()){
+            if(!WorldManager.getWorld().getNPCs(player.getPosition()).isEmpty()){ //needs to not be an enemy first
+              displayObjects(WorldManager.getWorld().getNPCs(player.getPosition()));
+            }
+            try{
+              takeTurn("\nWorld interaction: (\"help\" for options)\n", player, GameController.WorldController.class);
+            } catch (NPCInterfaceException e){ //---------------------for npc interaction
+              takeTurn("\nNPC interaction: (menu) (buy) (leave)\n", player, GameController.NPCInteractions.class);
             }
           } else { //if enemy is not null do a combat turn
-            for(int i=0; i<WorldManager.getWorld().getEnemies(player.getPosition()).size(); i++){
-              p.println("\n<<AN ENEMY HAS APPEARED>>\n");
-              p.println(WorldManager.getWorld().getEnemies(player.getPosition()).get(i).getStats());
-            }
-            while(!scanInput(SCAN.nextLine(), player, GameController.CombatController.class)){
-              p.println("\nplease enter an allowed action\n");
-            }
+            displayObjects(WorldManager.getWorld().getEnemies(player.getPosition()));
+            takeTurn("\nCombat interaction: (\"help\" for options)\n", player, GameController.CombatController.class);
             //------check for game over condition
             if(player.getHp()<=0){
               playing = false;
@@ -76,21 +80,16 @@ public class InputController{
           //GameController.Utils.enemyTurn();
           player.tick();
           WorldManager.getWorld().tick();
-          //-----check for game over condition again
-          if(player.getHp()<=0) {
-            playing = false;
-            break;
-          }
-
+          player.updateXp(WorldManager.getWorld().xpConsume()); //TODO might reconfigure this timing (deferral)
         }
   //----------------handles game end with exception from end_game input
         catch(InterruptedIOException e){
           playing = false;
           break;
-        }
+        } catch(NPCInterfaceException ignored){} //only thrown by WorldController class and it is handled
       }
     } catch (ConfigException e){
-      e.printStackTrace();
+      e.printStackTrace(); //helps with fixing config
     }
 
 //----end of the game----
@@ -103,18 +102,23 @@ public class InputController{
 
   //input mappings for normal inputs, uses up one turn if a correct input is executed
   //methods here can return false in order to not advance the player turn, namely the help function
-  public static boolean scanInput(String input, Player player, Class<?> type) throws InterruptedIOException{
+  public static boolean scanInput(String input, Player player, Class<?> type) throws InterruptedIOException, NPCInterfaceException {
     String[] inputArr = input.split("\s+");
     //check if world input
     Method inputAction;
     try {
-      //catch two special cases
+      //catch three special cases
       if(inputArr[0].equals("end_game")){
         throw new InterruptedIOException();
       }
       if(inputArr[0].equals("r") && previousCommand!=null && previousArgs!=null && (previousCommand.getDeclaringClass().equals(type) || previousCommand.getDeclaringClass().equals(GameController.class))){
         p.println("invoking: " + previousCommand.getName());
         return (boolean) previousCommand.invoke(null, previousArgs, player);
+      }
+      if(inputArr[0].equals("interact")){
+        boolean returnVal = GameController.Utils.interact(inputArr, player);
+        if(returnVal) throw new NPCInterfaceException();
+        else return false;
       }
 
       inputAction = GameController.class.getDeclaredMethod((inputArr[0]), String[].class, Player.class);
@@ -145,6 +149,13 @@ public class InputController{
           previousArgs = inputArr;
 
           return (boolean) inputAction.invoke(null, inputArr, player);
+        } else if (type.equals(GameController.NPCInteractions.class)){
+          inputAction = type.getDeclaredMethod((inputArr[0]), String[].class, Player.class);
+          //set previous
+          previousCommand = inputAction;
+          previousArgs = inputArr;
+
+          return (boolean) inputAction.invoke(null, inputArr, player);
         }
       } catch (NoSuchMethodException ex) {
         return false;
@@ -159,5 +170,21 @@ public class InputController{
     return false;
   }
 
+  //takes a turn and if fails (false) repeats
+  public static void takeTurn(String introMessage, Player player, Class<?> area) throws InterruptedIOException, NPCInterfaceException {
+    p.println(introMessage);
+    while(!scanInput(SCAN.nextLine(), player, area)){
+      p.println("\nplease enter an allowed action\n");
+    }
+  }
+
+  //give player information about Entities in this location
+  public static void displayObjects(ArrayList<?> list){
+    for (int i=0; i<list.size(); i++) {
+      GameObject e = (GameObject) list.get(i);
+      p.println("\n<<AN "+e.getClass().getSimpleName().toUpperCase()+" HAS APPEARED>>\n");
+      p.println(e.getStats());
+    }
+  }
   
 }

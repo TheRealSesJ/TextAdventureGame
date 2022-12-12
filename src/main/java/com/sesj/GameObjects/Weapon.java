@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class Weapon implements GameObject {
 
+  private int level;
+
   private Consumable cons;
   private int attack;
   private int speed;
@@ -47,6 +49,10 @@ public class Weapon implements GameObject {
     return ranged||boostedRange;
   }
 
+  public int getLevel(){ return this.level; }
+
+  public void updateLevel(int level){ this.level += level;}
+
   public Consumable getConsumable(){ return this.cons; }
 
   public String getId(){ return this.id; }
@@ -74,6 +80,7 @@ public class Weapon implements GameObject {
             +"\n\tSpeed: "+ this.getSpeed()
             +"\n\tAccuracy: "+ this.getAccuracy()
             +"\n\tRanged: "+ this.isRanged()
+            +"\n\tLevel: "+ this.level
             +"\n\tApplied Status Effect: ";
     if(cons!=null){
       returnStr += this.cons.getStats()

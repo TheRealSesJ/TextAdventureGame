@@ -5,6 +5,8 @@ import com.sesj.Exceptions.*;
 import com.sesj.World.WorldManager;
 
 import java.awt.*;
+import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 
 public class Player implements CombatEntity, GameObject {
@@ -20,6 +22,7 @@ public class Player implements CombatEntity, GameObject {
   private final int MAX_HP;
   private int armor;
   private int baseArmor;
+  private int xp;
   
   public Player(int hp, Weapon weapon, Item item, int armor, int movement, int initialX, int initialY){
     this.hp = hp;
@@ -121,6 +124,12 @@ public class Player implements CombatEntity, GameObject {
     return this.movement;
   }
 
+  public int getXp(){ return this.xp; }
+
+  public void updateXp(int xp){
+    this.xp += xp;
+  }
+
   public boolean buff(Buff buff){
     for(Buff e: this.buffs){
       if(e.equals(buff)) return false;
@@ -130,7 +139,7 @@ public class Player implements CombatEntity, GameObject {
     return true;
   }
 
-  public String getName() { return "Player"; } //TODO players have names?
+  public String getName() { return "Player"; }
 
   public boolean consume(){
     if(this.consumable.getDuration()==-1){
@@ -144,7 +153,7 @@ public class Player implements CombatEntity, GameObject {
     }
   }
 
-  public void tick(){
+  public void tick() throws InterruptedIOException {
     System.out.println("I tick");
     this.weapon.reset();
     if(this.buffs.size()!=0){
@@ -159,6 +168,7 @@ public class Player implements CombatEntity, GameObject {
         }
       }
     }
+    if(this.hp<=0) throw new InterruptedIOException();
   }
 
   //returns the players stats as a string, intended to give the user information
@@ -170,6 +180,7 @@ public class Player implements CombatEntity, GameObject {
     +"\nPlayer: (effected by "+this.item.getId()+")"
     +"\n\n\tHp: "+this.hp+"/"+this.getMaxHp()+ "+("+this.item.getHpBoost()+")"
     +"\n\tArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
+            +"\n\tXp: "+this.xp
     +"\n";
     if(this.consumable!=null){
       returnStr+=this.consumable.getStats()+"\n";

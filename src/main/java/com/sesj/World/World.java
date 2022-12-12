@@ -1,7 +1,7 @@
 package com.sesj.World;
 
 import com.sesj.GameObjects.*;
-import com.sesj.Interfaces.AIEntity;
+import com.sesj.Interfaces.*;
 
 import java.awt.*;
 import java.util.*;
@@ -11,6 +11,7 @@ public class World {
     private HashMap<Point, ArrayList<Enemy>> enemyMap = new HashMap<>();
     private HashMap<Point, ArrayList<NPC>> npcMap = new HashMap<>();
     private final ArrayList<AIEntity> ENTITY_CONTAINER = new ArrayList<>();
+    private int xpBank = 0;
 
     public World(Scene[][] map, ArrayList<Enemy> enemies, ArrayList<Item> items,
                  ArrayList<Weapon> weapons, ArrayList<Consumable> consumables) {
@@ -35,7 +36,11 @@ public class World {
         }
 
         //npcs
-        ENTITY_CONTAINER.add(new NPC("hello my friend", "blacksmith", "Blacksmith")); //TODO STATIC ENTITY GENERATION
+        NPC blacksmith = new NPC("hello my friend", "blacksmith", "Blacksmith", TYPE.BLACKSMITH);
+        ENTITY_CONTAINER.add(blacksmith); //TODO STATIC ENTITY GENERATION
+        blacksmith.setPosition(new Point(2, 2));
+        npcMap.put(new Point(2, 2), new ArrayList<>());
+        npcMap.get(new Point(2, 2)).add(blacksmith);
 
         //items
         while(items.size()>0){
@@ -71,6 +76,16 @@ public class World {
     public ArrayList<Enemy> getEnemies(Point pos, Point offset){
         enemyMap.computeIfAbsent(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())), k -> new ArrayList<>());
         return enemyMap.get(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())));
+    }
+
+    public ArrayList<NPC> getNPCs(Point pos){
+        npcMap.computeIfAbsent(pos, k -> new ArrayList<>()); //TODO understand this lambda function
+        return npcMap.get(pos);
+    }
+
+    public ArrayList<NPC> getNPCs(Point pos, Point offset){
+        npcMap.computeIfAbsent(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())), k -> new ArrayList<>());
+        return npcMap.get(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())));
     }
 
     public ArrayList<AIEntity> getEntities(){
@@ -114,5 +129,13 @@ public class World {
         ENTITY_CONTAINER.remove(enemy);
         System.out.println("removing");
         enemyMap.get(enemy.getPosition()).remove(enemy);
+        xpBank += enemy.getXp();
+    }
+
+    public int xpConsume(){
+        int returnVal = xpBank;
+        xpBank = 0;
+        System.out.println(returnVal+" xp consumed!");
+        return returnVal;
     }
 }

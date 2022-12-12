@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Enemy implements CombatEntity, GameObject, AIEntity {
 
 
+  private final int xp;
   private Point position;
 
   private int hp;
@@ -25,7 +26,7 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
   
   private final String id;
   
-  public Enemy(int hp, Weapon weapon, int armor, boolean canMove, String namePool, String id){
+  public Enemy(int hp, Weapon weapon, int armor, boolean canMove, String namePool, int xp, String id){
     this.hp = hp;
     this.MAX_HP = hp;
     this.weapon = weapon; 
@@ -33,12 +34,15 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
     this.baseArmor = armor;
     this.canMove = canMove;
     this.namePool = namePool;
+    this.xp = xp;
     this.id = id;
   }
 
   public Weapon getWeapon(){
     return this.weapon;
   }
+
+  public int getXp(){ return this.xp; }
 
   public int getHp(){
     return hp;
@@ -145,7 +149,8 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
     +"\n\tHp: "+this.hp
     +"\n\tArmor: "+this.armor
             +"\n\tCan Move: "+this.canMove
-            +"\nPosition: "+this.position
+            +"\n\tPosition: "+this.position
+            +"\n\tXP: "+this.xp
     +"\n";
     if(this.buffs.size()!=0){
       for(int i = 0; i<this.buffs.size(); i++){

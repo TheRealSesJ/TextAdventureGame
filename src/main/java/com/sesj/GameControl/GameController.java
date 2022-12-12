@@ -3,7 +3,7 @@
 //---------*IMPORTANT-------------
 //names of methods here must be the same as the command that runs them due to reflection constraints
 
-package com.sesj;
+package com.sesj.GameControl;
 
 import java.awt.*;
 import java.io.PrintStream;
@@ -13,6 +13,7 @@ import java.util.Random;
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.*;
 import com.sesj.Interfaces.CombatEntity;
+import com.sesj.Interfaces.TYPE;
 import com.sesj.World.WorldManager;
 
 //prints to console, only object allowed to do so
@@ -228,34 +229,6 @@ public class GameController{
 
   }
 
-
-  //minimap
-  public static boolean minimap(String[] input, Player player){
-    String[][] minimap = new String[9][9];
-    for(int i=8; i>=0; i--){
-      for(int j=0; j<9; j++){
-        try{
-          Scene loc = WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1);
-          Point coordinate = new Point(j/3-1, i/3-1);
-          boolean isEnemy = WorldManager.getWorld().getEnemies(player.getPosition(), coordinate)!= null &&
-                  !WorldManager.getWorld().getEnemies(player.getPosition(), coordinate).isEmpty();
-          if(i==4 && j==4){
-            p.print("@ ");
-          } else if(((double) (j-1)/3) == (j-1)/3 && ((double) (i-1)/3) == (i-1)/3 && isEnemy && loc.isScannable()){
-            p.print("E ");
-          } else {
-            p.print(WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1).getIcon()+" ");
-          }
-        } catch (IndexOutOfBoundsException e){
-          p.print("! ");
-        }
-
-      }
-      p.println();
-    }
-    return false;
-  }
-
   //not referencable through reflection
   public static class Utils {
     //combat turn
@@ -313,11 +286,75 @@ public class GameController{
       if(locations.size()==0) return new int[]{0,0}; //null movement
       return locations.get(locations.size()==1? 0 : RAND.nextInt(locations.size()-1));
     }
+
+    public static boolean interact(String[] input, Player player) throws NPCInterfaceException { //launches player into npc mode
+      return !WorldManager.getWorld().getNPCs(player.getPosition()).isEmpty();
+    }
+
   }
-  
-  
+
+  public static class NPCInteractions{
+    public static boolean menu(String[] input, Player player){
+      switch (WorldManager.getWorld().getNPCs(player.getPosition()).get(0).getType()){
+        case BLACKSMITH:{
+          p.println("\nWeapon and Item Upgrades: \n");
+          p.println(player.getItem().getStats());
+          p.println("\n\t---Increase all combat stats by 1---\n" +
+                  "\tCOST: 7 xp\n" +
+                  "\tBUY OPTION #: 1");
+          p.println(player.getWeapon().getStats());
+          p.println("\n\t---Increase all stats by 1---\n" +
+                  "\tCOST: 15 xp\n"+
+                  "\tBUY OPTION #: 2");
+        } case SHOPKEEPER: {
+
+        } case MERCHANT: {
+
+        }
+      }
+      return false;
+    }
+
+    public static boolean buy(String[] input, Player player) throws MissingParameterException {
+      if(input[1]==null) throw new MissingParameterException();
+      p.println("\nYou bought option #\n"+input[1]);
+      return true;
+    }
+
+    public static boolean leave(String[] input, Player player){
+      p.println("\nleaving...\n");
+      return true;
+    }
+  }
 
 
+
+
+  //minimap
+  public static boolean minimap(String[] input, Player player){
+    String[][] minimap = new String[9][9];
+    for(int i=8; i>=0; i--){
+      for(int j=0; j<9; j++){
+        try{
+          Scene loc = WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1);
+          Point coordinate = new Point(j/3-1, i/3-1);
+          boolean isEnemy = WorldManager.getWorld().getEnemies(player.getPosition(), coordinate)!= null &&
+                  !WorldManager.getWorld().getEnemies(player.getPosition(), coordinate).isEmpty();
+          if(i==4 && j==4){
+            p.print("@ ");
+          } else if(((double) (j-1)/3) == (j-1)/3 && ((double) (i-1)/3) == (i-1)/3 && isEnemy && loc.isScannable()){
+            p.print("E ");
+          } else {
+            p.print(WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1).getIcon()+" ");
+          }
+        } catch (IndexOutOfBoundsException e){
+          p.print("! ");
+        }
+      }
+      p.println();
+    }
+    return false;
+  }
 
 //help function
 
