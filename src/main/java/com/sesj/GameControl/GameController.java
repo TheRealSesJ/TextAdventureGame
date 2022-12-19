@@ -427,6 +427,9 @@ public class GameController{
     return true;
   }
 
-
-
+  public static boolean addHp(String[] input, Player player) throws MissingParameterException {
+    if(input.length==1) throw new MissingParameterException();
+    player.updateHp(Integer.parseInt(input[1]));
+    return true;
+  }
 }

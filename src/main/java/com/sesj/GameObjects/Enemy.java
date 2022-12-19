@@ -81,7 +81,7 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
   }
 
 
-  public void tick(){
+  public void tick(Player player){ //pass in player to influence movement
     //iterate over buffs
     if(this.buffs.size()!=0){
       for(int i = 0; i<this.buffs.size(); i++){
@@ -91,12 +91,12 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
           this.buffs.get(i).tick(this);
         } else {
           this.armor= baseArmor;
-          this.buffs.remove(i);
+          this.buffs.remove(i); //TODO compiler says could cause problems with loop and removal...
         }
       }
     }
     //do movement
-    move();
+    move(player);
     //destroy this enemy if its hp is at 0 or below
     if(this.hp<=0) WorldManager.getWorld().destroy(this);
     System.out.println(id + " " + this + " @" + position + " has ticked!");
@@ -117,7 +117,7 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
 
 
 
-  public void move(){ //TODO change the motives for why this enemy chooses to move
+  public void move(Player player){ //TODO change the motives for why this enemy chooses to move
     ArrayList<Point> locations = new ArrayList<>();
     for(int i=-1;i<2;i++){
       for(int j=-1;j<2;j++){
@@ -131,9 +131,8 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
       }
     }
 
-    if(locations.size()==0 || Math.random()>=0.5){
-
-    } else { //if cleared, do a movement TODO this is the only area where a GameObject has authority over the world, risky
+    if(locations.size()==0 || Math.random()>=0.5 || this.position.equals(player.getPosition())) return;
+    else { //if cleared, do a movement TODO this is the only area where a GameObject has authority over the world, risky
       Point move = locations.get(locations.size() == 1 ? 0 : (int) (Math.random() * locations.size() - 1));
       WorldManager.getWorld().getEnemies(position).remove(this);
       WorldManager.getWorld().getEnemies(move).add(this);

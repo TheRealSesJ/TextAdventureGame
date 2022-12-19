@@ -72,7 +72,7 @@ public class InputController{
         //--------------tick the entities
         //GameController.Utils.enemyTurn();
         player.tick();
-        WorldManager.getWorld().tick();
+        WorldManager.getWorld().tick(player); //pass in player to influence enemy tick functions
         player.updateXp(WorldManager.getWorld().xpConsume()); //TODO might reconfigure this timing (deferral)
       }
   //----------------handles game end with exception from end_game input

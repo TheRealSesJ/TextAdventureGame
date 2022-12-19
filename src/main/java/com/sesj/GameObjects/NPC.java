@@ -31,7 +31,7 @@ public class NPC implements GameObject, AIEntity {
     public Point getPosition() { return this.position; }
 
     @Override
-    public void tick() {
+    public void tick(Player player) {
         System.out.println(id + " " + this + " @" + position + " has ticked!");
     }
 

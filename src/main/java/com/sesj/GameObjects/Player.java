@@ -117,7 +117,7 @@ public class Player implements CombatEntity, GameObject {
       return this.armor+this.item.getArmorBoost();
   }
 
-  public void setArmor(int armor){ this.armor = armor; }
+  public void setBaseArmor(int armor){ this.armor = armor; }
 
   public int getMovement(){
     return this.movement;

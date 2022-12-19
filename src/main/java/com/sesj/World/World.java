@@ -119,9 +119,9 @@ public class World {
         return worldMap;
     }
 
-    public void tick(){ //TODO iterate over the listed objects
+    public void tick(Player player){ //TODO iterate over the listed objects
         for(int i=0; i<ENTITY_CONTAINER.size();i++){
-            ENTITY_CONTAINER.get(i).tick();
+            ENTITY_CONTAINER.get(i).tick(player);
         }
     }
 
