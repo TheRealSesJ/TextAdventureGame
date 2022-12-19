@@ -33,6 +33,13 @@ public class InputController{
   public static void main(String[] args) throws ConfigException {
 
     //load the config, if missing throw an error, game inside try-catch
+    p.println("""
+            ______     ____      ______
+           /_____/    / __ \\    | |
+             | |     / |__| \\   | |  ___
+             | |     | |  | |   | |    |
+             |_|     |_|  |_|   |_|____|
+            """);
     GameParameters.load();
     EntityGenerator.load();
     WorldManager.build();
