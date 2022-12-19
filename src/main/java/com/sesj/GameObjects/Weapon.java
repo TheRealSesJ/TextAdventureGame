@@ -2,10 +2,6 @@ package com.sesj.GameObjects;
 
 import com.sesj.Interfaces.GameObject;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
 public class Weapon implements GameObject {
 
   private int level;
@@ -31,6 +27,18 @@ public class Weapon implements GameObject {
     this.cons = cons;
     if(cons.getArmor()==0 && cons.getHp()==0) this.cons = null;
     this.id = id;
+  }
+
+  public void upgrade(double multiplier){
+    this.attack = updateStat(this.attack, multiplier);
+    this.speed = updateStat(this.speed, multiplier);
+    this.accuracy = updateStat(this.accuracy, multiplier);
+  }
+
+  private int updateStat(int stat, double multiplier){
+    System.out.println(stat+" "+multiplier);
+    System.out.println((stat==0)? 0 :Math.max((int)(stat*multiplier), stat+1));
+    return (stat==0)? 0 :Math.max((int)(stat*multiplier), stat+1);
   }
 
   public int getAttack(){

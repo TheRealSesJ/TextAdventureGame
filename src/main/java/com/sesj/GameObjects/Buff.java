@@ -44,5 +44,5 @@ public class Buff implements GameObject {
     }
 
     @Override
-    public boolean equals(Object obj) { return (((Buff) obj).id.equals(this.id)); }
+    public boolean equals(Object obj) { return (((Buff) obj).id.equals(this.id)); } //TODO compiler does not like this...
 }

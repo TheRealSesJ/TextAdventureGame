@@ -13,7 +13,6 @@ import java.util.Random;
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.*;
 import com.sesj.Interfaces.CombatEntity;
-import com.sesj.Interfaces.TYPE;
 import com.sesj.World.WorldManager;
 
 //prints to console, only object allowed to do so
@@ -175,7 +174,7 @@ public class GameController{
         scene.setItem(null);
         scene.setItem(old);
         p.println("you grabbed "+player.getItem().getId());
-        p.println(""+old+" was dropped");
+        p.println(""+old.getId()+" was dropped");
         return true;
     }
 
@@ -225,6 +224,14 @@ public class GameController{
       if(used) p.println("Consumable "+name+" used!");
       else p.println("Consumable "+name+" could not be used, effect is already active");
       return used;
+    }
+
+    public static boolean interact(String[] input, Player player) throws NPCInterfaceException { //launches player into npc mode
+      if(WorldManager.getWorld().getNPCs(player.getPosition()).isEmpty()){
+        return false;
+      } else {
+        throw new NPCInterfaceException();
+      }
     }
 
   }
@@ -286,11 +293,6 @@ public class GameController{
       if(locations.size()==0) return new int[]{0,0}; //null movement
       return locations.get(locations.size()==1? 0 : RAND.nextInt(locations.size()-1));
     }
-
-    public static boolean interact(String[] input, Player player) throws NPCInterfaceException { //launches player into npc mode
-      return !WorldManager.getWorld().getNPCs(player.getPosition()).isEmpty();
-    }
-
   }
 
   public static class NPCInteractions{
@@ -315,15 +317,39 @@ public class GameController{
       return false;
     }
 
-    public static boolean buy(String[] input, Player player) throws MissingParameterException {
-      if(input[1]==null) throw new MissingParameterException();
-      p.println("\nYou bought option #\n"+input[1]);
+    public static boolean buy(String[] input, Player player) throws MissingParameterException, NullGameObjectException, InsufficientXpException {
+      if(WorldManager.getWorld().getNPCs(player.getPosition()).isEmpty()) throw new NullGameObjectException(); //if no npc exit
+      if(input.length<2) throw new MissingParameterException(); //if missing parameters exit
+      NPC npc = WorldManager.getWorld().getNPCs(player.getPosition()).get(0);
+      switch (npc.getType()) {
+        case BLACKSMITH: {
+          if (Integer.parseInt(input[1]) == 1) { //TODO maybe make item less subjective than "case 1" and "15 xp"
+            if(player.getXp()<7) throw new InsufficientXpException(); //checks for insufficient xp and cancels buy request if true
+            player.getItem().upgrade(1.4);
+            p.println("\nYou bought option #"+input[1]);
+            p.println(player.getItem().getId()+" Upgraded!\n");
+          }
+          if(Integer.parseInt(input[1]) == 2){
+            if(player.getXp()<15) throw new InsufficientXpException(); //checks for insufficient xp and cancels buy request if true
+            player.getWeapon().upgrade(1.4);
+            p.println("\nYou bought option #"+input[1]);
+            p.println(player.getWeapon().getId()+" Upgraded!\n");
+          }
+        }
+        case SHOPKEEPER: {
+
+        }
+        case MERCHANT: {
+
+        }
+      }
+
       return true;
     }
 
-    public static boolean leave(String[] input, Player player){
+    public static boolean leave(String[] input, Player player) throws NPCInterfaceException {
       p.println("\nleaving...\n");
-      return true;
+      throw new NPCInterfaceException();
     }
   }
 
@@ -360,31 +386,45 @@ public class GameController{
 
   public static boolean help(String[] input, Player player){
     p.println(
-      "Command List:\n"
-      
-      +"\nNormal Commands:\n" 
-      +"\nscan: gives the user information about what is in the current scene"
-      +"\nscan <x> <y>: gives the user information about what is in the scene at (x,y) relative to the player"
-      +"\nmove <x> <y>: moves the player to the scene at (x,y) relative to the player"
-      +"\ninteract <object>: gives the player information about the <enemy> or <item> in the current scene"
-      +"\nminimap: displays the minimap (does not use a turn)"
-      +"\nstats: displays the stats of the player (does not use a turn)"
-      +"\nhelp: displays this command list (does not use a turn)"       
-      +"\ngrab_item: equips the item in the current scene to the player, the player drops its old item"
-      
-      +"\nCombat Commands:\n"
-      +"\nfight: takes a combat turn against the enemy"
-      +"\nrun: attempts to flee the scene to a nearby scene"
-      +"\nscan: gives the user information about what is in the current scene"
-      +"\nscan <x> <y>: gives the user information about what is in the scene at (x,y) relative to the player"
-      +"\ninteract <object>: gives the player information about the <enemy> or <item> in the current scene"
-      +"\nminimap: displays the minimap (does not use a turn)"
-      +"\nstats: displays the stats of the player (does not use a turn)"
-      +"\nhelp: displays this command list (does not use a turn)"       
-             
-      +"\nall coordinates are assumed to be Cartesian ordered pairs\n"           
+            """
+
+                    Command List:    (replace arguments in () with integer input parameters)
+
+                    Normal Commands:
+                      scan:          gives the user information about what is in the current scene
+                      scan (x) (y):  gives the user information about what is in the scene at (x,y) relative to the player
+                      interact:      if player is in a scene with an NPC, player enters NPC menu
+                      minimap:       displays the minimap (does not use a turn)
+                      enter:         if player is on a du+ngeon tile enter the dungeon
+                      exit:          if player is inside a dungeon exit the dungeon and return to the world center (2,2)
+                      stats:         displays the stats of the player (does not use a turn)
+                      end_game:      ends the game
+
+                    World Commands:
+                      move (x) (y):  moves the player to the scene at (x,y) relative to the player
+                      grab_item:     equips the item in the current scene to the player, the player drops its old item
+                      grab_weapon:   equips the weapon in the current scene to the player, the player drops its old weapon
+                      grab_cons:     equips the consumable in the current scene to the player, the player drops its old consumable
+                      use:           uses the players consumable and removes it from the player
+
+                    Combat Commands:
+                      fight:         takes a combat turn against the enemy
+                      run:           attempts to flee the scene to a nearby scene
+
+                    Github Link: https://github.com/TheRealSesJ/TextAdventureGame
+                    """
              );
     return false;
+  }
+
+
+
+
+  //dev commands, will refactor at some point so the user cannot use them
+  public static boolean addXp(String[] input, Player  player) throws MissingParameterException {
+    if(input.length==1) throw new MissingParameterException();
+    player.updateXp(Integer.parseInt(input[1]));
+    return true;
   }
 
 

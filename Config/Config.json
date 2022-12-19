@@ -7,7 +7,7 @@
             "row4":["forest","lake","lake","desert","desert"],
             "row5":["forest","lake","lake","desert","mountains"]
         },
-        "enemies":["wild_beast"],
+        "enemies":["wild_beast", "dragon", "dragon", "dragon", "dragon"],
         "items":["holy_sandals", "holy_sandals", "power_amulet", "power_amulet", "chainmail"],
         "weapons":["bow", "bow", "bow", "bow", "bow", "bow", "bow"],
         "consumables":["apple", "silver_apple", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry"]
@@ -55,6 +55,15 @@
             "namePool": "magic",
             "xp": "5",
             "id":"Witch"
+        },
+        "dragon":{
+            "hp":"200",
+            "weapon":"claws",
+            "armor":"10",
+            "canMove": "true",
+            "namePool": "evil_beast",
+            "xp": "150",
+            "id":"Dragon"
         }
     },
 
@@ -224,9 +233,9 @@
     },
 
     "player_stats": {
-        "hp": "400",
+        "hp": "20",
         "weapon": "flaming_sword",
-        "item": "rag",
+        "item": "chainmail",
         "armor": "1",
         "movement": "1",
         "initialX": "2",

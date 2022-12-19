@@ -11,9 +11,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import com.sesj.Exceptions.*;
-import com.sesj.GameControl.GameController;
 import com.sesj.GameObjects.Player;
-import com.sesj.Interfaces.AIEntity;
 import com.sesj.Interfaces.GameObject;
 import com.sesj.StaticData.EntityGenerator;
 import com.sesj.StaticData.GameParameters;
@@ -27,76 +25,68 @@ public class InputController{
   public static final Scanner SCAN = new Scanner(System.in);
   public static Method previousCommand;
   public static String[] previousArgs;
+  public static final String[] placeholder = {""};
+  public static boolean npcMode = false;
 
 //the game!!!
   
-  public static void main(String[] args){
-
-    //playing boolean
-    boolean playing = true;
+  public static void main(String[] args) throws ConfigException {
 
     //load the config, if missing throw an error, game inside try-catch
-    try{
-
-      GameParameters.load();
-      EntityGenerator.load();
-      WorldManager.build();
-      Player player = GameParameters.getPlayer();
-      p.println("Welcome to text adventure!");
+    GameParameters.load();
+    EntityGenerator.load();
+    WorldManager.build();
+    Player player = GameParameters.getPlayer();
+    p.println("Welcome to text adventure!");
 
       //game loop
-      while(playing){
+    while(true){
   //----------------------------take turn
-        try{
+      try{
           //print new turn information
-          GameController.minimap(new String[]{""}, player);
-          if(WorldManager.isDungeon(player.getPosition())){
-            p.println("\n<<DUNGEON LOCATED>>\n");
-          }
-
-          if(WorldManager.getWorld().getEnemies(player.getPosition()).isEmpty()){
-            if(!WorldManager.getWorld().getNPCs(player.getPosition()).isEmpty()){ //needs to not be an enemy first
-              displayObjects(WorldManager.getWorld().getNPCs(player.getPosition()));
-            }
-            try{
-              takeTurn("\nWorld interaction: (\"help\" for options)\n", player, GameController.WorldController.class);
-            } catch (NPCInterfaceException e){ //---------------------for npc interaction
-              takeTurn("\nNPC interaction: (menu) (buy) (leave)\n", player, GameController.NPCInteractions.class);
-            }
-          } else { //if enemy is not null do a combat turn
-            displayObjects(WorldManager.getWorld().getEnemies(player.getPosition()));
-            takeTurn("\nCombat interaction: (\"help\" for options)\n", player, GameController.CombatController.class);
-            //------check for game over condition
-            if(player.getHp()<=0){
-              playing = false;
-              break;
-            }
-          }
-          //------------------end sequence
-          p.println("\nNext turn: (Press ENTER)");
-          SCAN.nextLine();
-          p.println("-------------------------------------\n");
-          //--------------tick the entities
-          //GameController.Utils.enemyTurn();
-          player.tick();
-          WorldManager.getWorld().tick();
-          player.updateXp(WorldManager.getWorld().xpConsume()); //TODO might reconfigure this timing (deferral)
+        GameController.minimap(placeholder, player);
+        if(WorldManager.isDungeon(player.getPosition())){
+          p.println("\n<<DUNGEON LOCATED>>\n");
         }
-  //----------------handles game end with exception from end_game input
-        catch(InterruptedIOException e){
-          playing = false;
-          break;
-        } catch(NPCInterfaceException ignored){} //only thrown by WorldController class and it is handled
+        if(WorldManager.getWorld().getEnemies(player.getPosition()).isEmpty()){
+          if(!WorldManager.getWorld().getNPCs(player.getPosition()).isEmpty()){ //give player info about the entities
+            displayObjects(WorldManager.getWorld().getNPCs(player.getPosition()));
+          }
+          if(npcMode){ //do "safe" turns
+            takeTurn("\nNPC interaction: (menu) (buy) (leave)\n", player, GameController.NPCInteractions.class);
+          } else {
+            takeTurn("\nWorld interaction: (\"help\" for options)\n", player, GameController.WorldController.class);
+          }
+        } else { //if enemy is not null do a combat turn
+          displayObjects(WorldManager.getWorld().getEnemies(player.getPosition()));
+          takeTurn("\nCombat interaction: (\"help\" for options)\n", player, GameController.CombatController.class);
+          //------check for game over condition
+          if(player.getHp()<=0){
+            break;
+          }
+        }
+          //------------------end sequence
+        p.println("\nNext turn: (Press ENTER)");
+        SCAN.nextLine();
+        p.println("-------------------------------------\n");
+        //--------------tick the entities
+        //GameController.Utils.enemyTurn();
+        player.tick();
+        WorldManager.getWorld().tick();
+        player.updateXp(WorldManager.getWorld().xpConsume()); //TODO might reconfigure this timing (deferral)
       }
-    } catch (ConfigException e){
-      e.printStackTrace(); //helps with fixing config
+  //----------------handles game end with exception from end_game input
+      catch(InterruptedIOException e){
+        break;
+      } catch(NPCInterfaceException ignored){} //only thrown by WorldController class and it is handled
     }
 
-//----end of the game----
-      p.println("\nGAME OVER\n");
 
-      p.println("Press any button to exit:");
-      SCAN.nextLine();
+//----end of the game----
+    p.println("\nGAME OVER\n");
+
+    p.println("Press any button to exit:");
+    SCAN.nextLine();
 
   }
 
@@ -114,11 +104,6 @@ public class InputController{
       if(inputArr[0].equals("r") && previousCommand!=null && previousArgs!=null && (previousCommand.getDeclaringClass().equals(type) || previousCommand.getDeclaringClass().equals(GameController.class))){
         p.println("invoking: " + previousCommand.getName());
         return (boolean) previousCommand.invoke(null, previousArgs, player);
-      }
-      if(inputArr[0].equals("interact")){
-        boolean returnVal = GameController.Utils.interact(inputArr, player);
-        if(returnVal) throw new NPCInterfaceException();
-        else return false;
       }
 
       inputAction = GameController.class.getDeclaredMethod((inputArr[0]), String[].class, Player.class);
@@ -160,8 +145,13 @@ public class InputController{
       } catch (NoSuchMethodException ex) {
         return false;
       } catch (InvocationTargetException ex) {
+        //handle npc interaction, switch mode, interact makes true, leave makes false;
+        if(ex.getCause().getClass().equals(NPCInterfaceException.class)){
+          npcMode = !npcMode;
+          return true;
+        }
         //ex.printStackTrace(); //include for debugging
-          p.println("Input undefined: " + ex.getCause().getMessage());
+        p.println("Input undefined: " + ex.getCause().getMessage());
         return false;
       } catch (IllegalAccessException ex) {
         ex.printStackTrace();

@@ -5,7 +5,6 @@ import com.sesj.Exceptions.*;
 import com.sesj.World.WorldManager;
 
 import java.awt.*;
-import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 
