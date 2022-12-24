@@ -7,9 +7,9 @@
             "row4":["forest","lake","lake","desert","desert"],
             "row5":["forest","lake","lake","desert","mountains"]
         },
-        "enemies":["wild_beast", "dragon", "dragon", "dragon", "dragon"],
-        "items":["holy_sandals", "holy_sandals", "power_amulet", "power_amulet", "chainmail"],
-        "weapons":["bow", "bow", "bow", "bow", "bow", "bow", "bow"],
+        "enemies":["wild_beast","wild_beast","wild_beast","witch","witch","witch","witch","dragon","dragon"],
+        "items":["holy_sandals", "holy_sandals", "holy_sandals","holy_sandals","holy_sandals","power_amulet", "power_amulet", "chainmail"],
+        "weapons":["bow", "bow", "bow", "bow", "bow", "bow", "bow", "bow", "bow", "bow", "bow", "bow"],
         "consumables":["apple", "silver_apple", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry", "chitinous_brew", "golden_berry"]
     },
 
@@ -45,6 +45,7 @@
             "canMove": "true",
             "namePool": "evil_beast",
             "xp": "10",
+            "art": "wild_beast",
             "id":"Wild Beast"
         },
         "witch":{
@@ -54,6 +55,7 @@
             "canMove": "true",
             "namePool": "magic",
             "xp": "5",
+            "art": "witch",
             "id":"Witch"
         },
         "dragon":{
@@ -63,6 +65,7 @@
             "canMove": "true",
             "namePool": "evil_beast",
             "xp": "150",
+            "art": "dragon",
             "id":"Dragon"
         }
     },
@@ -78,6 +81,7 @@
             "scan":"false",
             "hp":"0",
             "armor":"5",
+            "art": "chainmail",
             "id":"Chainmail"
         },
         
@@ -91,6 +95,7 @@
             "scan":"false",
             "hp":"0",
             "armor":"0",
+            "art": "holy_sandals",
             "id":"Holy Sandals"
         },
         "power_amulet":{
@@ -103,6 +108,7 @@
             "scan":"false",
             "hp":"0",
             "armor":"0",
+            "art": "power_amulet",
             "id":"Power Amulet"
         },
         "rag":{
@@ -115,6 +121,7 @@
             "scan":"false",
             "hp":"0",
             "armor":"0",
+            "art": "rag",
             "id":"Useless Rag"
         }
     },
@@ -125,7 +132,8 @@
             "speed": "3",
             "accuracy": "70",
             "range": "true",
-            "consumable": "none",
+            "consumable": "null",
+            "art": "bow",
             "id": "Bow"
         },
         "claws": {
@@ -133,7 +141,8 @@
             "speed": "6",
             "accuracy": "80",
             "range": "false",
-            "consumable": "none",
+            "consumable": "null",
+            "art": "claws",
             "id": "Claws"
         },
         "stick": {
@@ -141,7 +150,8 @@
             "speed": "10",
             "accuracy": "45",
             "range": "false",
-            "consumable": "none",
+            "consumable": "null",
+            "art": "stick",
             "id": "Stick"
         },
         "sword": {
@@ -149,7 +159,8 @@
             "speed": "5",
             "accuracy": "70",
             "range": "false",
-            "consumable": "none",
+            "consumable": "null",
+            "art": "sword",
             "id": "Sword"
         },
         "flaming_sword": {
@@ -158,6 +169,7 @@
             "accuracy": "40",
             "range": "false",
             "consumable": "fire",
+            "art": "flaming_sword",
             "id": "Flaming Sword"
         }
     },
@@ -198,48 +210,55 @@
             "hp":"5",
             "armor":"0",
             "duration": "-1",
+            "art": "apple",
             "id":"Apple"
         },
         "silver_apple":{
             "hp":"3",
             "armor":"5",
             "duration": "-1",
+            "art": "silver_apple",
             "id":"Silver Apple"
         },
         "chitinous_brew":{
             "hp":"0",
             "armor":"5",
             "duration": "8",
+            "art": "chitinous_brew",
             "id":"Chitinous Brew"
         },
         "golden_berry":{
             "hp":"4",
             "armor":"0",
             "duration": "10",
+            "art": "golden_berry",
             "id":"Golden Berry"
         },
-        "none":{
+        "null":{
             "hp":"0",
             "armor":"0",
             "duration": "0",
-            "id":"none"
+            "art": "null",
+            "id":"null"
         },
         "fire":{
             "hp":"-2",
             "armor":"0",
             "duration": "3",
+            "art": "fire",
             "id":"Fire"
         }
     },
 
     "player_stats": {
-        "hp": "20",
+        "hp": "200",
         "weapon": "flaming_sword",
-        "item": "chainmail",
+        "item": "rag",
         "armor": "1",
         "movement": "1",
         "initialX": "2",
-        "initialY": "2"
+        "initialY": "2",
+        "art": "player"
     }
 
 

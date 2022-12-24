@@ -5,7 +5,6 @@
 
 package com.sesj.GameControl;
 
-//import com.sesj.GameObjects.Scenes.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -13,6 +12,7 @@ import java.util.*;
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.Player;
 import com.sesj.Interfaces.GameObject;
+import com.sesj.StaticData.ArtLoader;
 import com.sesj.StaticData.EntityGenerator;
 import com.sesj.StaticData.GameParameters;
 import com.sesj.World.WorldManager;
@@ -30,20 +30,16 @@ public class InputController{
 
 //the game!!!
   
-  public static void main(String[] args) throws ConfigException {
+  public static void main(String[] args) throws ConfigException, FileNotFoundException {
 
     //load the config, if missing throw an error, game inside try-catch
-    p.println("""
-            ______     ____      ______
-           /_____/    / __ \\    | |
-             | |     / |__| \\   | |  ___
-             | |     | |  | |   | |    |
-             |_|     |_|  |_|   |_|____|
-            """);
+
     GameParameters.load();
     EntityGenerator.load();
+    ArtLoader.load();
     WorldManager.build();
     Player player = GameParameters.getPlayer();
+    p.println(ArtLoader.getArt("title"));
     p.println("Welcome to text adventure!");
 
       //game loop
@@ -123,7 +119,7 @@ public class InputController{
       e.printStackTrace();
       return false;
     } catch(InvocationTargetException e){ //exception from invoked method
-      p.println(e.getCause().getMessage());
+      e.getCause().printStackTrace();
       return false;
     } catch(NoSuchMethodException e) { //for commands which are not in game parameters but in inner classes
       try {
@@ -171,7 +167,7 @@ public class InputController{
   public static void takeTurn(String introMessage, Player player, Class<?> area) throws InterruptedIOException, NPCInterfaceException {
     p.println(introMessage);
     while(!scanInput(SCAN.nextLine(), player, area)){
-      p.println("\nplease enter an allowed action\n");
+      p.println("\nplease enter an action\n");
     }
   }
 

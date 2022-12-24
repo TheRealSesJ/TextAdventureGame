@@ -151,6 +151,7 @@ public class GameParameters{
                 Boolean.parseBoolean((String) enemy.get("canMove")),
                 (String) enemy.get("namePool"),
                 Integer.parseInt((String) enemy.get("xp")),
+                ArtLoader.getArt((String) enemy.get("art")),
                 (String) enemy.get("id")); //name
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in enemy stats");
@@ -175,6 +176,7 @@ public class GameParameters{
                 Boolean.parseBoolean((String) item.get("scan")), //scan boost
                 Integer.parseInt((String) item.get("hp")), //hp boost
                 Integer.parseInt((String) item.get("armor")), //armor boost
+                ArtLoader.getArt((String) item.get("art")),
                 (String) item.get("id")); //name
       } catch(Exception e) {
         throw new ConfigNullValueException("in item stats");
@@ -195,6 +197,7 @@ public class GameParameters{
                 Integer.parseInt((String) weapon.get("accuracy")), //accuracy
                 Boolean.parseBoolean((String) weapon.get("range")), //range
                 getConsumable((String) weapon.get("consumable")), //status effect
+                ArtLoader.getArt((String) weapon.get("art")),
                 (String) weapon.get("id")); //name;
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in weapon stats");
@@ -216,7 +219,8 @@ public class GameParameters{
                 Integer.parseInt((String) player.get("armor")),
                 Integer.parseInt((String) player.get("movement")),
                 Integer.parseInt((String) player.get("initialX")),
-                Integer.parseInt((String) player.get("initialY"))); //movement
+                Integer.parseInt((String) player.get("initialY")),
+                ArtLoader.getArt((String) player.get("art"))); //movement
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in player stats");
       }
@@ -234,6 +238,7 @@ public class GameParameters{
                 Integer.parseInt((String) item.get("hp")), //hp boost
                 Integer.parseInt((String) item.get("armor")), //armor boost
                 Integer.parseInt((String) item.get("duration")), //duration
+                ArtLoader.getArt((String) item.get("art")),
                 (String) item.get("id")); //name
       } catch(NumberFormatException e) {
         throw new ConfigNullValueException("in consumable stats");

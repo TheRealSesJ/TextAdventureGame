@@ -26,12 +26,12 @@ public class EntityGenerator {
 
     public static void gatherNames(){
         while(scan.hasNext()){
-            String currentString = scan.next();
-            if(currentString.startsWith("[")){
+            String currentString = scan.nextLine();
+            if(currentString.startsWith("*[") && currentString.endsWith("]")){
                 namePools.add(new ArrayList<>(Arrays.asList(currentString)));
-                //pool detected
-            } else if(currentString.startsWith("//")){
-                //comment detected
+                //pool detected *[string]
+            } else if(currentString.startsWith("&&")){
+                //comment detected &&
             } else {
                 namePools.get(namePools.size()-1).add(currentString);
             }
@@ -43,7 +43,7 @@ public class EntityGenerator {
         for(AIEntity e : enemies){
             String namePool = e.getNamePool();
             for(ArrayList<String> arr : namePools){
-                if(arr.get(0).startsWith("[") && arr.get(0).endsWith("]") && arr.get(0).substring(1, arr.get(0).length()-1).equals(namePool)){
+                if(arr.get(0).startsWith("*[") && arr.get(0).endsWith("]") && arr.get(0).substring(2, arr.get(0).length()-1).equals(namePool)){
                     e.setName(arr.get(1+(int) (Math.random()*arr.size()-1)));
                 }
             }

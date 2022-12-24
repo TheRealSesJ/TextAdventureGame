@@ -1,23 +1,11 @@
-[evil_beast]
+*[evil_beast]
 Azgour
 Kazul
 Baehrog
 Jezeab
 Ilniae
-//this
-//is
-//a
-//large
-//test
-//it
-//might
-//not
-//work
-//but
-//if
-//it
-//does
-[magic]
+&&this is a comment
+*[magic]
 Altau
 Edward
 Wenic

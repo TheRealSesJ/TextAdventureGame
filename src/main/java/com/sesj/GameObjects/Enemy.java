@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
-public class Enemy implements CombatEntity, GameObject, AIEntity {
+public class Enemy implements CombatEntity, AIEntity, GameObject, ArtObject {
 
 
   private final int xp;
@@ -23,10 +23,11 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
   private ArrayList<Buff> buffs = new ArrayList<>();
   private final String namePool;
   private String name;
-  
+
+  private final String art;
   private final String id;
   
-  public Enemy(int hp, Weapon weapon, int armor, boolean canMove, String namePool, int xp, String id){
+  public Enemy(int hp, Weapon weapon, int armor, boolean canMove, String namePool, int xp, String art, String id){
     this.hp = hp;
     this.MAX_HP = hp;
     this.weapon = weapon; 
@@ -35,6 +36,7 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
     this.canMove = canMove;
     this.namePool = namePool;
     this.xp = xp;
+    this.art=art;
     this.id = id;
   }
 
@@ -59,6 +61,8 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
   public int getArmor(){
     return this.armor;
   }
+
+  public String getArt(){ return packageArt(art);}
 
   public String getId() { return id; }
 
@@ -131,7 +135,7 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
       }
     }
 
-    if(locations.size()==0 || Math.random()>=0.5 || this.position.equals(player.getPosition())) return;
+    if(locations.size()==0 || Math.random()>=0.5 || this.position.equals(player.getPosition())) return; //factor in player position
     else { //if cleared, do a movement TODO this is the only area where a GameObject has authority over the world, risky
       Point move = locations.get(locations.size() == 1 ? 0 : (int) (Math.random() * locations.size() - 1));
       WorldManager.getWorld().getEnemies(position).remove(this);
@@ -143,13 +147,15 @@ public class Enemy implements CombatEntity, GameObject, AIEntity {
 
   //returns the enemy's stats as a string, intended to give the user information
   public String getStats(){
-    String returnStr = "\nEnemy: "+this.getName() +"\n"
-    +this.weapon.getStats()
-    +"\n\tHp: "+this.hp
-    +"\n\tArmor: "+this.armor
-            +"\n\tCan Move: "+this.canMove
-            +"\n\tPosition: "+this.position
-            +"\n\tXP: "+this.xp
+    String returnStr = "\nEnemy: "+this.getName().toUpperCase() +"\n"
+            +"------------------------------->\n" //32 spaces
+            +"\n    Hp: "+this.hp
+            +"\n    Armor: "+this.armor
+            +"\n    Can Move: "+this.canMove
+            +"\n    Position: "+this.position
+            +"\n    XP: "+this.xp;
+    returnStr = appendArt(returnStr, packageArt(art));
+    returnStr+=this.weapon.getStats()
     +"\n";
     if(this.buffs.size()!=0){
       for(int i = 0; i<this.buffs.size(); i++){

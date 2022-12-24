@@ -1,10 +1,12 @@
 package com.sesj.GameObjects;
 
+import com.sesj.Interfaces.ArtObject;
 import com.sesj.Interfaces.GameObject;
 
-public class Weapon implements GameObject {
+public class Weapon implements GameObject, ArtObject {
 
   private int level;
+  private final String art;
 
   private Consumable cons;
   private int attack;
@@ -19,13 +21,15 @@ public class Weapon implements GameObject {
   
   private final String id;
   
-  public Weapon(int attack, int speed, int accuracy, boolean ranged, Consumable cons, String id){
+  public Weapon(int attack, int speed, int accuracy, boolean ranged, Consumable cons, String art, String id){
     this.attack = attack;
     this.speed = speed;
     this.accuracy = accuracy;
     this.ranged = ranged;
     this.cons = cons;
+    this.cons.attachToWeapon(); //TODO might be against OOP...
     if(cons.getArmor()==0 && cons.getHp()==0) this.cons = null;
+    this.art=art;
     this.id = id;
   }
 
@@ -83,20 +87,20 @@ public class Weapon implements GameObject {
   }
 
   public String getStats(){
-    String returnStr = "\nWeapon: "+ this.id
-            +"\n\tAttack: "+ this.getAttack()
-            +"\n\tSpeed: "+ this.getSpeed()
-            +"\n\tAccuracy: "+ this.getAccuracy()
-            +"\n\tRanged: "+ this.isRanged()
-            +"\n\tLevel: "+ this.level
-            +"\n\tApplied Status Effect: ";
+    String returnStr = "\nWeapon: "+ this.id.toUpperCase()+"\n"
+            +"------------------------------->" //should be 32 spaces
+            +"\n    Attack: "+ this.getAttack()+"+("+this.boostedAttack+")"
+            +"\n    Speed: "+ this.getSpeed()+"+("+this.boostedSpeed+")"
+            +"\n    Accuracy: "+ this.getAccuracy()+"+("+this.boostedAccuracy+")"
+            +"\n    Ranged: "+ this.isRanged()+"+("+this.boostedRange+")"
+            +"\n    Level: "+ this.level+"\n";
     if(cons!=null){
-      returnStr += this.cons.getStats()
+      returnStr += "\n    Applied Status Effect:\n\n"
+              +this.cons.getStats()
               +"\n";
-    } else {
-      returnStr += "none\n";
-    } return returnStr;
+    }
+    return appendArt(returnStr, packageArt(art));
   }
 
-  
+  public String getArt() { return packageArt(this.art); }
 }

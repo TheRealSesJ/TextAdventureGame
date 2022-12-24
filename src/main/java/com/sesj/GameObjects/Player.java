@@ -8,7 +8,7 @@ import java.awt.*;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 
-public class Player implements CombatEntity, GameObject {
+public class Player implements CombatEntity, GameObject, ArtObject {
   //world position
   private Point position;
 
@@ -22,8 +22,9 @@ public class Player implements CombatEntity, GameObject {
   private int armor;
   private int baseArmor;
   private int xp;
-  
-  public Player(int hp, Weapon weapon, Item item, int armor, int movement, int initialX, int initialY){
+  private String art;
+
+  public Player(int hp, Weapon weapon, Item item, int armor, int movement, int initialX, int initialY, String art){
     this.hp = hp;
     this.MAX_HP = hp;
     this.weapon = weapon;
@@ -32,6 +33,7 @@ public class Player implements CombatEntity, GameObject {
     this.baseArmor = armor;
     this.movement = movement;
     this.position = new Point(initialX, initialY);
+    this.art = art;
   }
 
   //takes into account the ammount of tiles the player is allowed to move, as well as whether the area being entered is traversable. *also takes item buffs into consideration*
@@ -78,6 +80,8 @@ public class Player implements CombatEntity, GameObject {
   public Consumable getConsumable(){
     return this.consumable;
   }
+
+  public String getArt(){ return packageArt(art); } //TODO implement
 
   public String getId() { return "Player"; }
 
@@ -172,15 +176,19 @@ public class Player implements CombatEntity, GameObject {
 
   //returns the players stats as a string, intended to give the user information
   public String getStats(){
-    String returnStr = this.weapon.getStats()
-    +"\n"
-    +this.item.getStats()
-    +"\n"
-    +"\nPlayer: (effected by "+this.item.getId()+")"
-    +"\n\n\tHp: "+this.hp+"/"+this.getMaxHp()+ "+("+this.item.getHpBoost()+")"
-    +"\n\tArmor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
-            +"\n\tXp: "+this.xp
-    +"\n";
+    String returnStr = //TODO Make returnStr a Buffer
+            "\n\nPLAYER:\n"
+                    +"------------------------------->"
+                    +"\n\n    Hp: "+this.hp+"/"+this.getMaxHp()+ "+("+this.item.getHpBoost()+")"
+                    +"\n"+this.getHealthbar(this.hp, this.MAX_HP)
+                    +"\n    Armor: "+this.armor+ "+("+this.item.getArmorBoost()+")"
+                    +"\n    Xp: "+this.xp
+                    +"\n";
+    returnStr = appendArt(returnStr, packageArt(art)); //add art before the gameobject stats
+    returnStr+="\n"+this.weapon.effect(this.item).getStats() //add gameobjects
+            +"\n"
+            +this.item.getStats()
+            +"\n";
     if(this.consumable!=null){
       returnStr+=this.consumable.getStats()+"\n";
     }

@@ -2,9 +2,12 @@
 
 package com.sesj.GameObjects;
 
+import com.sesj.Interfaces.ArtObject;
 import com.sesj.Interfaces.GameObject;
 
-public class Item implements GameObject {
+public class Item implements GameObject, ArtObject {
+
+  private final String art;
   //weapon related
   private int attackBoost;
   private int speedBoost;
@@ -20,7 +23,7 @@ public class Item implements GameObject {
 
   private final String id;
 
-  public Item(int attack, int speed, int accuracy, boolean range, int movement, boolean traversal, boolean scan, int hp, int armor, String id){
+  public Item(int attack, int speed, int accuracy, boolean range, int movement, boolean traversal, boolean scan, int hp, int armor, String art, String id){
     this.attackBoost=attack;
     this.speedBoost=speed;
     this.accuracyBoost=accuracy;
@@ -30,6 +33,7 @@ public class Item implements GameObject {
     this.scanBoost = scan;
     this.hpBoost=hp;
     this.armorBoost=armor;
+    this.art=art;
     this.id = id;
   }
 
@@ -89,20 +93,24 @@ public class Item implements GameObject {
     return this.armorBoost;
   }
 
+  public String getArt(){ return packageArt(this.art); }
+
   public String getStats(){
-    return "\nItem: "+this.id +"\n"
-    +"\n\tWeapon Related:"
-    +"\n\t\tattack boost: "+ this.attackBoost
-    +"\n\t\tspeed: "+ this.speedBoost
-    +"\n\t\taccuracy: "+ this.accuracyBoost
-    +"\n\t\tranged: "+ this.rangeBoost
+    String stats = "\nItem: "+this.id +"\n"
+            +"------------------------------->" //should be 32 spaces
+    +"\n    Weapon Related:"
+    +"\n        attack boost: "+ this.attackBoost
+    +"\n        speed: "+ this.speedBoost
+    +"\n        accuracy: "+ this.accuracyBoost
+    +"\n        ranged: "+ this.rangeBoost
     +"\n"
-    +"\n\tPlayer Related: "
-    +"\n\t\tmove boost: "+ this.moveBoost
-    +"\n\t\ttraversal boost: "+ this.traverseBoost
-    +"\n\t\tscan boost: "+ this.scanBoost
-    +"\n\t\thp boost:" + this.hpBoost
-    +"\n\t\tarmor boost: " + this.armorBoost
+    +"\n    Player Related: "
+    +"\n        move boost: "+ this.moveBoost
+    +"\n        traversal boost: "+ this.traverseBoost
+    +"\n        scan boost: "+ this.scanBoost
+    +"\n        hp boost: " + this.hpBoost
+    +"\n        armor boost: " + this.armorBoost
     +"\n";
+    return appendArt(stats, packageArt(art));
   }
 }
