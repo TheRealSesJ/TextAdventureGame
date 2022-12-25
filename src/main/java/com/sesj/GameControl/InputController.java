@@ -15,6 +15,7 @@ import com.sesj.Interfaces.GameObject;
 import com.sesj.StaticData.ArtLoader;
 import com.sesj.StaticData.EntityGenerator;
 import com.sesj.StaticData.GameParameters;
+import com.sesj.UtilityObjects.Coordinate;
 import com.sesj.World.WorldManager;
 
 import java.io.*;
@@ -37,10 +38,11 @@ public class InputController{
     GameParameters.load();
     EntityGenerator.load();
     ArtLoader.load();
+
     WorldManager.build();
     Player player = GameParameters.getPlayer();
     p.println(ArtLoader.getArt("title"));
-    p.println("Welcome to text adventure!");
+    p.println("\u001B[31m Welcome to text adventure!");
 
       //game loop
     while(true){

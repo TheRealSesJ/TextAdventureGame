@@ -3,15 +3,15 @@ package com.sesj.GameObjects;
 import com.sesj.Interfaces.AIEntity;
 import com.sesj.Interfaces.GameObject;
 import com.sesj.Interfaces.TYPE;
+import com.sesj.UtilityObjects.Coordinate;
 
-import java.awt.*;
 
 public class NPC implements GameObject, AIEntity {
     private final String id;
     private String name;
     private final String namePool;
     private final String message;
-    private Point position;
+    private Coordinate position;
     private TYPE type;
 
     public NPC(String message, String namePool, String id, TYPE type){
@@ -28,7 +28,7 @@ public class NPC implements GameObject, AIEntity {
     public void setName(String name) { this.name = name;}
 
     @Override
-    public Point getPosition() { return this.position; }
+    public Coordinate getPosition() { return this.position; }
 
     @Override
     public void tick(Player player) {
@@ -39,7 +39,7 @@ public class NPC implements GameObject, AIEntity {
     public String getName() { return this.name + " the "+this.id; }
 
     @Override
-    public void setPosition(Point position) { this.position = position; }
+    public void setPosition(Coordinate position) { this.position = position; }
 
     public TYPE getType(){ return this.type; }
 

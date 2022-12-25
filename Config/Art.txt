@@ -146,11 +146,11 @@ null
 && ------COMBAT_ENTITIES------
 &&
 *[player]
-    _____
-   MMMMMMM
-  ( 0   0 )
-   \  L  /
-    \_-_/
+  _____
+ MMMMMMM
+( 0   0 )
+ \  L  /
+  \_-_/
 *[dragon]
 ,      ,
 (\    /)

@@ -2,14 +2,14 @@ package com.sesj.World;
 
 import com.sesj.GameObjects.*;
 import com.sesj.Interfaces.*;
+import com.sesj.UtilityObjects.Coordinate;
 
-import java.awt.*;
 import java.util.*;
 
 public class World {
     private final Scene[][] worldMap;
-    private HashMap<Point, ArrayList<Enemy>> enemyMap = new HashMap<>();
-    private HashMap<Point, ArrayList<NPC>> npcMap = new HashMap<>();
+    private HashMap<Coordinate, ArrayList<Enemy>> enemyMap = new HashMap<>();
+    private HashMap<Coordinate, ArrayList<NPC>> npcMap = new HashMap<>();
     private final ArrayList<AIEntity> ENTITY_CONTAINER = new ArrayList<>();
     private int xpBank = 0;
 
@@ -24,24 +24,23 @@ public class World {
             int last = enemies.size()-1;
             int x = rand.nextInt(size);
             int y = rand.nextInt(size);
-            if(enemyMap.get(new Point(x, y))==null){
+            if(enemyMap.get(new Coordinate(x, y))==null){
                 ArrayList<Enemy> arr = new ArrayList<>();
                 arr.add(enemies.get(last));
-                enemyMap.put(new Point(x, y), arr);
+                enemyMap.put(new Coordinate(x, y), arr);
             } else {
-                enemyMap.get(new Point(x, y)).add(enemies.get(last));
+                enemyMap.get(new Coordinate(x, y)).add(enemies.get(last));
             }
-            enemies.get(last).setPosition(new Point(x, y));
+            enemies.get(last).setPosition(new Coordinate(x, y));
             ENTITY_CONTAINER.add(enemies.remove(last));
         }
 
         //npcs
         NPC blacksmith = new NPC("hello my friend", "blacksmith", "Blacksmith", TYPE.BLACKSMITH);
         ENTITY_CONTAINER.add(blacksmith); //TODO STATIC ENTITY GENERATION
-        blacksmith.setPosition(new Point(2, 2));
-        npcMap.put(new Point(2, 2), new ArrayList<>());
-        npcMap.get(new Point(2, 2)).add(blacksmith);
-
+        blacksmith.setPosition(new Coordinate(2, 2));
+        npcMap.put(new Coordinate(2, 2), new ArrayList<>());
+        npcMap.get(new Coordinate(2, 2)).add(blacksmith);
         //items
         while(items.size()>0){
             int last = items.size()-1;
@@ -68,24 +67,26 @@ public class World {
 
     }
 
-    public ArrayList<Enemy> getEnemies(Point pos){
+    public ArrayList<Enemy> getEnemies(Coordinate pos){
         enemyMap.computeIfAbsent(pos, k -> new ArrayList<>()); //TODO understand this lambda function
         return enemyMap.get(pos);
     }
 
-    public ArrayList<Enemy> getEnemies(Point pos, Point offset){
-        enemyMap.computeIfAbsent(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())), k -> new ArrayList<>());
-        return enemyMap.get(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())));
+    public ArrayList<Enemy> getEnemies(Coordinate pos, Coordinate offset){
+        Coordinate desiredPos = new Coordinate(pos.getX()+offset.getX(), pos.getY()+offset.getY());
+        enemyMap.computeIfAbsent(desiredPos, k -> new ArrayList<>());
+        return enemyMap.get(desiredPos);
     }
 
-    public ArrayList<NPC> getNPCs(Point pos){
+    public ArrayList<NPC> getNPCs(Coordinate pos){
         npcMap.computeIfAbsent(pos, k -> new ArrayList<>()); //TODO understand this lambda function
         return npcMap.get(pos);
     }
 
-    public ArrayList<NPC> getNPCs(Point pos, Point offset){
-        npcMap.computeIfAbsent(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())), k -> new ArrayList<>());
-        return npcMap.get(new Point((int) (pos.getX()+offset.getX()), (int) (pos.getY()+offset.getY())));
+    public ArrayList<NPC> getNPCs(Coordinate pos, Coordinate offset){
+        Coordinate desiredPos = new Coordinate(pos.getX()+offset.getX(), pos.getY()+offset.getY());
+        npcMap.computeIfAbsent(desiredPos, k -> new ArrayList<>());
+        return npcMap.get(desiredPos);
     }
 
     public ArrayList<AIEntity> getEntities(){
@@ -93,11 +94,11 @@ public class World {
     }
 
 
-    public Scene getLocation(Point pos){
+    public Scene getLocation(Coordinate pos){
         return worldMap[(int) pos.getY()][(int) pos.getX()];
     }
 
-    public Scene getLocation(Point pos, Point offset){
+    public Scene getLocation(Coordinate pos, Coordinate offset){
         int xPos = (int) pos.getX();
         int yPos = (int) pos.getY();
         int xOffset = (int) offset.getX();
@@ -105,7 +106,7 @@ public class World {
         return worldMap[yPos+yOffset][xPos+xOffset];
     }
 
-    public Scene getLocation(Point pos, int x, int y){
+    public Scene getLocation(Coordinate pos, int x, int y){
         int xPos = (int) pos.getX();
         int yPos = (int) pos.getY();
         return worldMap[yPos+y][xPos+x];

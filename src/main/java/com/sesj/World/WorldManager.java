@@ -2,11 +2,11 @@ package com.sesj.World;
 
 import com.sesj.Exceptions.ConfigException;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 import com.sesj.Interfaces.AIEntity;
 import com.sesj.StaticData.*;
+import com.sesj.UtilityObjects.Coordinate;
 
 public class WorldManager {
   private static World world;
@@ -25,15 +25,15 @@ public class WorldManager {
     return world;
   }
 
-  public static boolean isDungeon(Point pos){
-    int x = (int) pos.getX();
-    int y = (int) pos.getY();
+  public static boolean isDungeon(Coordinate pos){
+    int x = pos.getX();
+    int y = pos.getY();
     return dungeonMaps[y][x] != null;
   }
 
-  public static boolean enterDungeon(Point pos){
-    int x = (int) pos.getX();
-    int y = (int) pos.getY();
+  public static boolean enterDungeon(Coordinate pos){
+    int x = pos.getX();
+    int y = pos.getY();
     if(isDungeon(pos)){
       dungeonMap = dungeonMaps[y][x];
       return true;

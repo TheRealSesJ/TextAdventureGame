@@ -5,7 +5,6 @@
 
 package com.sesj.GameControl;
 
-import java.awt.*;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
@@ -13,6 +12,7 @@ import java.util.Random;
 import com.sesj.Exceptions.*;
 import com.sesj.GameObjects.*;
 import com.sesj.Interfaces.CombatEntity;
+import com.sesj.UtilityObjects.Coordinate;
 import com.sesj.World.WorldManager;
 
 //prints to console, only object allowed to do so
@@ -41,7 +41,7 @@ public class GameController{
         }
 //look for missing index in world array throw exception
         try{
-          Point pointOffset = new Point(Integer.parseInt(input[1]), Integer.parseInt(input[2]));
+          Coordinate pointOffset = new Coordinate(Integer.parseInt(input[1]), Integer.parseInt(input[2]));
           Scene location = WorldManager.getWorld().getLocation(player.getPosition(), Integer.parseInt(input[1]), Integer.parseInt(input[2]));
           //check for null item or item scan boost
           boolean scan = false;
@@ -82,7 +82,7 @@ public class GameController{
     if(!WorldManager.enterDungeon(player.getPosition())){
       throw new MovementOutOfBoundsException();
     }
-    player.setPosition(new Point(2,2));
+    player.setPosition(new Coordinate(2,2));
     //World.setDungeonMap(null);
     p.println("<<<<DUNGEON ENTERED>>>>");
     return true;
@@ -92,7 +92,7 @@ public class GameController{
     if(!WorldManager.exitDungeon()){
       throw new MovementOutOfBoundsException();
     }
-    player.setPosition(new Point(2,2));
+    player.setPosition(new Coordinate(2,2));
     //World.setDungeonMap(null);
     p.println("<<<<DUNGEON EXITED>>>>");
     return true;
@@ -363,7 +363,7 @@ public class GameController{
       for(int j=0; j<9; j++){
         try{
           Scene loc = WorldManager.getWorld().getLocation(player.getPosition(), j/3-1, i/3-1);
-          Point coordinate = new Point(j/3-1, i/3-1);
+          Coordinate coordinate = new Coordinate(j/3-1, i/3-1);
           boolean isEnemy = WorldManager.getWorld().getEnemies(player.getPosition(), coordinate)!= null &&
                   !WorldManager.getWorld().getEnemies(player.getPosition(), coordinate).isEmpty();
           if(i==4 && j==4){

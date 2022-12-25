@@ -2,9 +2,9 @@
 
 package com.sesj.GameObjects;
 import com.sesj.Interfaces.*;
+import com.sesj.UtilityObjects.Coordinate;
 import com.sesj.World.WorldManager;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 
@@ -12,7 +12,7 @@ public class Enemy implements CombatEntity, AIEntity, GameObject, ArtObject {
 
 
   private final int xp;
-  private Point position;
+  private Coordinate position;
 
   private int hp;
   private final int MAX_HP;
@@ -72,16 +72,16 @@ public class Enemy implements CombatEntity, AIEntity, GameObject, ArtObject {
 
   public String getNamePool(){ return this.namePool; }
 
-  public Point getPosition(){ return this.position; }
+  public Coordinate getPosition(){ return this.position; }
 
-  public void setPosition(Point position){
+  public void setPosition(Coordinate position){
     this.position = position;
   }
 
   public boolean canTraverse(){ return false; }
 
-  public void updateCoords(Point offset){
-    this.position.translate((int) offset.getX(), (int) offset.getY());
+  public void updateCoords(Coordinate offset){
+    this.position.translate(offset.getX(), offset.getY());
   }
 
 
@@ -122,13 +122,13 @@ public class Enemy implements CombatEntity, AIEntity, GameObject, ArtObject {
 
 
   public void move(Player player){ //TODO change the motives for why this enemy chooses to move
-    ArrayList<Point> locations = new ArrayList<>();
+    ArrayList<Coordinate> locations = new ArrayList<>();
     for(int i=-1;i<2;i++){
       for(int j=-1;j<2;j++){
         try{
           Scene loc = WorldManager.getWorld().getLocation(position, i, j);
           if(!(i==0 && j==0) && (loc.isTraversable() || this.canTraverse())){
-            locations.add(new Point((int) position.getX()+i, (int) position.getY()+j));
+            locations.add(new Coordinate(position.getX()+i, position.getY()+j));
           }
         }
         catch(IndexOutOfBoundsException e){}
@@ -137,7 +137,7 @@ public class Enemy implements CombatEntity, AIEntity, GameObject, ArtObject {
 
     if(locations.size()==0 || Math.random()>=0.5 || this.position.equals(player.getPosition())) return; //factor in player position
     else { //if cleared, do a movement TODO this is the only area where a GameObject has authority over the world, risky
-      Point move = locations.get(locations.size() == 1 ? 0 : (int) (Math.random() * locations.size() - 1));
+      Coordinate move = locations.get(locations.size() == 1 ? 0 : (int) (Math.random() * locations.size() - 1));
       WorldManager.getWorld().getEnemies(position).remove(this);
       WorldManager.getWorld().getEnemies(move).add(this);
       setPosition(move);

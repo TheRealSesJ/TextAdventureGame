@@ -19,10 +19,6 @@ public class ArtLoader {
             e.printStackTrace();
         }
         gatherArt();
-        Collection<StringBuffer> values= artList.values();
-        for(StringBuffer e : values){
-            System.out.println(e);
-        }
     }
 
     public static void gatherArt(){

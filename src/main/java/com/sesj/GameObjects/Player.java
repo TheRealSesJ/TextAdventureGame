@@ -2,15 +2,15 @@ package com.sesj.GameObjects;
 
 import com.sesj.Interfaces.*;
 import com.sesj.Exceptions.*;
+import com.sesj.UtilityObjects.Coordinate;
 import com.sesj.World.WorldManager;
 
-import java.awt.*;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 
 public class Player implements CombatEntity, GameObject, ArtObject {
   //world position
-  private Point position;
+  private Coordinate position;
 
   private Weapon weapon;
   private Item item; //starts empty
@@ -32,7 +32,7 @@ public class Player implements CombatEntity, GameObject, ArtObject {
     this.armor = armor;
     this.baseArmor = armor;
     this.movement = movement;
-    this.position = new Point(initialX, initialY);
+    this.position = new Coordinate(initialX, initialY);
     this.art = art;
   }
 
@@ -58,9 +58,9 @@ public class Player implements CombatEntity, GameObject, ArtObject {
     return true;
   }
 
-  public Point getPosition(){ return this.position; }
+  public Coordinate getPosition(){ return this.position; }
 
-  public void setPosition(Point pos){
+  public void setPosition(Coordinate pos){
     this.position = pos;
   }
 
